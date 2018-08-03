@@ -1,0 +1,23 @@
+ul.membreEquipementList {
+    text-align: left;
+    margin: 10px;
+}
+
+.expanded a {
+    cursor: pointer;
+    cursor: hand;
+}
+
+#profilInfos li.equipementEquipe {
+    list-style-type: disc;
+}
+#profilInfos li.equipementNonEquipe {
+    list-style-type: circle;
+}
+#profilInfos fieldset {
+    text-align: left;
+    margin: 5px auto;
+    width: 80%;
+    padding: 15px;
+    display: block;
+}
