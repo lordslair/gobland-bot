@@ -27,6 +27,8 @@ my $begin = <<"START_LOOP";
                                 <li><a href="equipement.html" title="Equipement des Gob' du Clan">Equipement du Clan</a></li>
                             </ul>
                        </li>
+                        <li><a href="" title="">Outils</a></li>
+                        <li><a href="" title="">Liens</a></li>
                     </ul>
                 </div>
             </div>
