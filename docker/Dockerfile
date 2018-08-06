@@ -20,6 +20,7 @@ COPY gobland-bot    /home/gobland-bot/gobland-bot
 COPY lib/           /home/gobland-bot/lib/
 COPY gl-config.yaml /home/gobland-bot/
 
+COPY .htpasswd      /var/www/localhost/htdocs/
 COPY htdocs/        /var/www/localhost/htdocs/
 
 EXPOSE 80
