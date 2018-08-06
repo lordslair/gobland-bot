@@ -34,6 +34,9 @@ h2 {
     text-align: center;
     font-size: 16px;
 }
+h3 {
+    text-align: center;
+} /* used fot CT count on index.html*/
 
 /* domcollapse */
 .trigger a, .expanded a {
@@ -44,4 +47,59 @@ h2 {
 }
 .hide {
     display: none;
+}
+
+/* Profil Table on index*/
+table {
+    text-align: center;
+    border: 1px solid #000000;
+    margin: 5px auto;
+}
+table th {
+    font-weight: bold;
+    padding: 10px;
+    border: 1px solid #000000;
+}
+table td {
+    font-size: 10px;
+    padding: 3px;
+    border: 1px solid #000000;
+}
+
+table#trollsList td.date {
+    text-align: right;
+}
+table#trollsList th {
+    padding: 10px 10px;
+}
+table#trollsList span.DLA {
+    font-weight: bold;
+}
+table#trollsList span.pDLA {
+    color: DarkGreen;
+}
+
+a:link {color: #FFFFFF}     /* unvisited link */
+a:visited {color: #FFFFFF}  /* visited link */
+a:hover {color: #FFFFFF}   /* mouse over link */
+a:active {color: #FFFFFF}   /* selected link */
+
+td.PADispo {
+    font-weight: bold;
+    background-color: #B8EEB8;
+    opacity: .5;
+    filter: alpha(opacity=50);
+}
+
+.vieContainer {
+    background-color: #CCC;
+    width: 50px;
+    height: 6px;
+    border: 1px solid #000;
+    text-align: left;
+}
+
+.vieContainer div {
+    height: 6px;
+    font-size: 0;
 }

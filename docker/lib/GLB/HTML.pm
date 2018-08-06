@@ -47,7 +47,76 @@ sub createIndex {
     binmode($fh, ":utf8");
 
     print $fh $begin;
+
+    print $fh '            <div id="content">'."\n";
+    print $fh '              <br><h1>Bienvenue chez les Rabatteurs de Khaket</h1><br>'."\n";
+    print $fh '              <table cellspacing="0" id="trollsList">'."\n";
+    print $fh '                <tr>'."\n";
+    print $fh '                  <th>Pseudo</th>'."\n";
+    print $fh '                  <th>Num</th>'."\n";
+    print $fh '                  <th>Race</th>'."\n";
+    print $fh '                  <th>Niv.</th>'."\n";
+    print $fh '                  <th>Position</th>'."\n";
+    print $fh '                  <th>PV</th>'."\n";
+    print $fh '                  <th>PA</th>'."\n";
+    print $fh '                  <th>Dates</th>'."\n";
+    print $fh '                  <th>Action</th>'."\n";
+    print $fh '                </tr>'."\n";
+
+    my $yaml       = '/home/gobland-bot/gl-config.yaml';
+    my $gobs_ref   = GLB::GLAPI::GetClanMembres($yaml);
+    my %gobs       = %{$gobs_ref};
+
+    my $gobs2_ref  = GLB::GLAPI::GetClanMembres2($yaml);
+    my %gobs2      = %{$gobs2_ref};
+
+    my $ct_total   = 0;
+
+    for my $gob_id ( sort keys %gobs )
+    {
+        my $position = $gobs{$gob_id}{'X'}.', '.$gobs{$gob_id}{'Y'}.', '.$gobs{$gob_id}{'N'};
+
+        my $pad;
+        if ( $gobs{$gob_id}{'PA'} > 0 )
+        {
+            $pad = ' class="PADispo"';
+        } else { $pad = ' ' }
+
+        my $green  = '#77EE77';
+        my $jaune  = '#EEEE77';
+        my $orange = '#EEAA77';
+        my $red    = '#B22222';
+        my $color  = '#FFFFFF';
+        my $percent = 100 * ($gobs{$gob_id}{'PV'} / $gobs2{$gob_id}{'PVMax'});
+        if    ( $percent > 75 ) { $color = $green }
+        elsif ( $percent > 50 ) { $color = $jaune }
+        elsif ( $percent > 25 ) { $color = $orange }
+        else  { $color = $red }
+        my $lifebar = '<br><div class="vieContainer"><div style="background-color:'.$color.'; width: '.$percent.'%">&nbsp;</div></div>';
+
+        $ct_total += $gobs{$gob_id}{'CT'};
+
+        print $fh '                <tr>'."\n";
+        print $fh '                  <td>'.$gobs{$gob_id}{'Nom'}.'</td>'."\n";
+        print $fh '                  <td>'.$gob_id.'</td>'."\n";
+        print $fh '                  <td>'.$gobs{$gob_id}{'Tribu'}.'</td>'."\n";
+        print $fh '                  <td>'.$gobs{$gob_id}{'Niveau'}.'</td>'."\n";
+        print $fh '                  <td>'.$position.'</td>'."\n";
+        print $fh '                  <td>'.$gobs{$gob_id}{'PV'}.' / '.$gobs2{$gob_id}{'PVMax'}.$lifebar.'</td>'."\n";
+        print $fh '                  <td'.$pad.'>'.$gobs{$gob_id}{'PA'}.'</td>'."\n";
+        print $fh '                  <td><span class="DLA"> DLA : '.$gobs{$gob_id}{'DLA'}.'</span><br><span class="pDLA">pDLA : [A CODER]</span></td>'."\n";
+        print $fh '                  <td><a href="http://games.gobland.fr/Profil.php?IdPJ='.$gob_id.'" title="Votre profil">PROFIL</a><br></td>'."\n";
+        print $fh '                </tr>'."\n";
+    }
+
+    print $fh '                </table>'."\n";
+
+    print $fh '                <div>'."\n";
+    print $fh '                    <h3>Fortune : '.$ct_total.' CT (gobelins)</h3>'."\n";
+    print $fh '                </div>'."\n";
+
     print $fh $end;
+    close $fh;
 }
 
 sub createEquipement {
