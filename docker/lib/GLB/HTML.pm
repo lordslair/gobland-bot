@@ -24,7 +24,7 @@ my $begin = <<"START_LOOP";
                         <li><a href="http://rabatteurs.lordslair.net/index.html" title="Page d'accueil">Accueil</a></li>
                         <li><a href="#">Consulter</a>
                             <ul>
-                                <li><a href="equipement.html" title="Equipement des Gob' du Clan">Equipement du Clan</a></li>
+                                <li><a href="http://rabatteurs.lordslair.net/equipement.html" title="Equipement des Gob' du Clan">Equipement du Clan</a></li>
                             </ul>
                        </li>
                         <li><a href="" title="">Outils</a></li>
