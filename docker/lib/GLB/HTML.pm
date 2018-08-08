@@ -191,6 +191,8 @@ sub createProfil {
     my %gobs      = %{$gobs_ref};
     my $gobs2_ref = GLB::GLAPI::GetClanMembres2($yaml);
     my %gobs2     = %{$gobs2_ref};
+    my $skill_ref = GLB::GLAPI::getClanSkills($yaml);
+    my %skill     = %{$skill_ref};
 
     for my $gob_id ( sort keys %gobs )
     {
@@ -234,6 +236,33 @@ sub createProfil {
         print $fh '                    <fieldset>'."\n";
         print $fh '                        <legend>Cafards</legend>'."\n";
         print $fh '                        Pas encore disponible dans les scripts Externes'."\n";
+        print $fh '                    </fieldset>'."\n";
+        print $fh '                    <fieldset>'."\n";
+        print $fh '                        <legend>Talents</legend>'."\n";
+        print $fh '                        <strong>Techniques</strong> :<br/>'."\n";
+        print $fh '                        <ul>'."\n";
+
+        foreach my $t_id ( sort keys %{$skill{$gob_id}{'Talents'}{'T'}} )
+        {
+            my $nom     = Encode::decode_utf8($skill{$gob_id}{'Talents'}{'T'}{$t_id}{'Nom'});
+            my $percent = $skill{$gob_id}{'Talents'}{'T'}{$t_id}{'Connaissance'};
+            my $niveau  = $skill{$gob_id}{'Talents'}{'T'}{$t_id}{'Niveau'};
+            print $fh '                            <li>'.$nom.' ('.$percent.' %) [Niv. '.$niveau.']</li>'."\n";
+        }
+
+        print $fh '                        </ul>'."\n";
+        print $fh '                        <strong>Competences</strong> :<br/>'."\n";
+        print $fh '                        <ul>'."\n";
+
+        foreach my $t_id ( sort keys %{$skill{$gob_id}{'Talents'}{'C'}} )
+        {
+            my $nom     = Encode::decode_utf8($skill{$gob_id}{'Talents'}{'C'}{$t_id}{'Nom'});
+            my $percent = $skill{$gob_id}{'Talents'}{'C'}{$t_id}{'Connaissance'};
+            my $niveau  = $skill{$gob_id}{'Talents'}{'C'}{$t_id}{'Niveau'};
+            print $fh '                            <li>'.$nom.' ('.$percent.' %) [Niv. '.$niveau.']</li>'."\n";
+        }
+
+        print $fh '                        </ul>'."\n";
         print $fh '                    </fieldset>'."\n";
         print $fh '                </div>'."\n";
 

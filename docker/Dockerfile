@@ -19,6 +19,7 @@ RUN apk update \
 
 COPY gobland-bot    /home/gobland-bot/gobland-bot
 COPY lib/           /home/gobland-bot/lib/
+COPY data/          /home/gobland-bot/data/
 COPY gl-config.yaml /home/gobland-bot/
 
 COPY .htpasswd      /var/www/localhost/htdocs/

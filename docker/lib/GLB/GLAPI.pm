@@ -147,4 +147,55 @@ sub GetClanMembres2
     }
 }
 
+sub getClanSkills
+{
+    use lib '/home/gobland-bot/lib/';
+    use GLB::functions;
+
+    my $COMPS_ref = GLB::functions::GetComps();
+    my %COMPS     = %{$COMPS_ref};
+    my $TECHS_ref = GLB::functions::GetTechs();
+    my %TECHS     = %{$TECHS_ref};
+
+    my $glfile = '/home/gobland-bot/gl-config.yaml';
+    my $glyaml = YAML::Tiny->read( $glfile );
+    my %MEMBRES;
+
+    my $browser = new LWP::UserAgent;
+    my $request = new HTTP::Request( GET => "http://ie.gobland.fr/IE_ClanTalents.php?id=$glyaml->[0]{gl_user}&passwd=$glyaml->[0]{gl_api_key}" );
+    my $headers = $request->headers();
+       $headers->header( 'User-Agent','Mozilla/5.0 (compatible; Konqueror/3.4; Linux) KHTML/3.4.2 (like Gecko)');
+       $headers->header( 'Accept', 'text/html, image/jpeg, image/png, text/*, image/*, */*');
+       $headers->header( 'Accept-Encoding','x-gzip, x-deflate, gzip, deflate');
+       $headers->header( 'Accept-Charset', 'iso-8859-15, utf-8;q=0.5, *;q=0.5');
+       $headers->header( 'Accept-Language', 'fr, en');
+       $headers->header( 'Referer', 'http://ie.gobland.fr');
+    my $response = $browser->request($request);
+
+    if ($response->is_success)
+    {
+        foreach my $line (split(/\n/,$response->content))
+        {
+            chomp ($line);
+            #"Id";"Type";"IdTalent";"Niveau";"Connaissance"
+            $line =~ s/"//g;
+            if ( $line !~ /IdTalent/ )
+            {
+                my @line = split /;/, $line;
+                $MEMBRES{$line[0]}{'Talents'}{$line[1]}{$line[2]}{'Niveau'}       = $line[3];
+                $MEMBRES{$line[0]}{'Talents'}{$line[1]}{$line[2]}{'Connaissance'} = $line[4];
+                if ( $line[1] eq 'C' )
+                {
+                    $MEMBRES{$line[0]}{'Talents'}{$line[1]}{$line[2]}{'Nom'}      = $COMPS{$line[2]}{'Nom'};
+                }
+                elsif ( $line[1] eq 'T' )
+                {
+                    $MEMBRES{$line[0]}{'Talents'}{$line[1]}{$line[2]}{'Nom'}      = $TECHS{$line[2]}{'Nom'};
+                }
+            }
+        }
+        return \%MEMBRES;
+    }
+}
+
 1;
