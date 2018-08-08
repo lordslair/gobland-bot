@@ -7,3 +7,4 @@ use GLB::HTML;
 
 GLB::HTML::createIndex();
 GLB::HTML::createEquipement();
+GLB::HTML::createEquipement();

@@ -116,10 +116,31 @@ sub GetClanMembres2
             #"MM";"BMM";"BPMM";"BMMM";"RM";"BRM";"BPRM";"BMRM";"MT";"BMT";"BPMT";"BMMT";"RT";"BRT";"BPRT";"BMRT";
             #"MR";"BMR";"BPMR";"BMMR";"RR";"BRR";"BPRR";"BMRR";"MS";"BMS";"BPMS";"BMMS";"RS";"BRS";"BPRS";"BMRS";
             #"MC";"BMC";"BPMC";"BMMC";"RC";"BRC";"BPRC";"BMRC";"MP";"BMP";"BPMP";"BMMP";"RP";"BRP";"BPRP";"BMRP"
-            if ( $line =~ /^"(\d*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)"/ )
+            if ( $line =~ /^"(\d*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)"/ )
             {
-                $MEMBRES{$1}{'PVMax'} = $6;
+                $MEMBRES{$1}{'DLA'}     = $3;
+                $MEMBRES{$1}{'BPDLA'}   = $4;
+                $MEMBRES{$1}{'BMDLA'}   = $5;
+                $MEMBRES{$1}{'PVMax'}   = $6;
+                $MEMBRES{$1}{'ATT'}     = $9;
+                $MEMBRES{$1}{'BPATT'}   = $10;
+                $MEMBRES{$1}{'BMATT'}   = $11;
+                $MEMBRES{$1}{'ESQ'}     = $12;
+                $MEMBRES{$1}{'BPESQ'}   = $13;
+                $MEMBRES{$1}{'BMESQ'}   = $14;
+                $MEMBRES{$1}{'DEG'}     = $15;
+                $MEMBRES{$1}{'BPDEG'}   = $16;
+                $MEMBRES{$1}{'BMDEG'}   = $17;
+                $MEMBRES{$1}{'REG'}     = $18;
+                $MEMBRES{$1}{'BPREG'}   = $19;
+                $MEMBRES{$1}{'BMREG'}   = $20;
+                $MEMBRES{$1}{'PER'}     = $21;
+                $MEMBRES{$1}{'BPPER'}   = $22;
+                $MEMBRES{$1}{'BMPER'}   = $23;
+                $MEMBRES{$1}{'BPArm'}   = $24;
+                $MEMBRES{$1}{'BMArm'}   = $25;
                 $MEMBRES{$1}{'PITotal'} = Encode::decode_utf8($26);
+                $MEMBRES{$1}{'Faim'}    = $27;
             }
         }
         return \%MEMBRES;

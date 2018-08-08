@@ -103,3 +103,32 @@ td.PADispo {
     height: 6px;
     font-size: 0;
 }
+/* Page de profil */
+#profilInfos fieldset {
+    text-align: left;
+    margin: 5px auto;
+    width: 60%;
+    padding: 15px;
+    display: block;
+}
+#profilInfos li.equipementEquipe {
+    list-style-type: disc;
+}
+#profilInfos li.equipementNonEquipe {
+    list-style-type: circle;
+}
+#profilInfos li.mouchePresente {
+    list-style-type: disc;
+}
+#profilInfos li.moucheAbsente {
+    list-style-type: circle;
+}
+#profilInfos #infosMouches div {
+    float: left;
+    width: 350px;
+}
+#profilInfos legend {
+    color: #000000;
+    margin-bottom: 5px;
+    font-weight: bold;
+}

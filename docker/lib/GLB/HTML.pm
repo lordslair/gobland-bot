@@ -21,7 +21,7 @@ my $begin = <<"START_LOOP";
                 <br><br><br><br><br><br><br><br>
                 <div id="nav">
                     <ul id="menu">
-                        <li><a href="index.html" title="Page d'accueil">Accueil</a></li>
+                        <li><a href="http://rabatteurs.lordslair.net/index.html" title="Page d'accueil">Accueil</a></li>
                         <li><a href="#">Consulter</a>
                             <ul>
                                 <li><a href="equipement.html" title="Equipement des Gob' du Clan">Equipement du Clan</a></li>
@@ -105,7 +105,7 @@ sub createIndex {
         print $fh '                  <td>'.$gobs{$gob_id}{'PV'}.' / '.$gobs2{$gob_id}{'PVMax'}.$lifebar.'</td>'."\n";
         print $fh '                  <td'.$pad.'>'.$gobs{$gob_id}{'PA'}.'</td>'."\n";
         print $fh '                  <td><span class="DLA"> DLA : '.$gobs{$gob_id}{'DLA'}.'</span><br><span class="pDLA">pDLA : [A CODER]</span></td>'."\n";
-        print $fh '                  <td><a href="http://games.gobland.fr/Profil.php?IdPJ='.$gob_id.'" title="Votre profil">PROFIL</a><br></td>'."\n";
+        print $fh '                  <td><a href="http://rabatteurs.lordslair.net/gobelins/'.$gob_id.'.html" title="Votre profil">PROFIL</a><br></td>'."\n";
         print $fh '                </tr>'."\n";
     }
 
@@ -182,6 +182,64 @@ sub createEquipement {
     print $fh '                </table>'."\n";
     print $fh $end;
     close $fh;
+}
+
+sub createProfil {
+
+    my $yaml      = '/home/gobland-bot/gl-config.yaml';
+    my $gobs_ref  = GLB::GLAPI::GetClanMembres($yaml);
+    my %gobs      = %{$gobs_ref};
+    my $gobs2_ref = GLB::GLAPI::GetClanMembres2($yaml);
+    my %gobs2     = %{$gobs2_ref};
+
+    for my $gob_id ( sort keys %gobs )
+    {
+        my $filename = '/var/www/localhost/htdocs/gobelins/'.$gob_id.'.html';
+        open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
+        binmode($fh, ":utf8");
+        print $fh $begin;
+
+        print $fh '            <div id="content">'."\n";
+
+        my $position = $gobs{$gob_id}{'X'}.', '.$gobs{$gob_id}{'Y'}.', '.$gobs{$gob_id}{'N'};
+
+        print $fh '                <h1>Profil de '.$gobs{$gob_id}{'Nom'}.'</h1>'."\n";
+        print $fh '                <div id="profilInfos">'."\n";
+        print $fh '                    <fieldset>'."\n";
+        print $fh '                        <legend>Caracteristiques</legend>'."\n";
+        print $fh '                        <strong>Tribu</strong> : '.$gobs{$gob_id}{'Tribu'}.'<br/>'."\n";
+        print $fh '                        <strong>Niveau</strong> : '.$gobs{$gob_id}{'Niveau'}.'<br/>'."\n";
+        print $fh '                        <strong>Date Limite d\'Action</strong> : '.$gobs{$gob_id}{'DLA'}.'<br/>'."\n";
+        print $fh '                        <strong>Position</strong> : '.$position.'<br/>'."\n";
+        print $fh '                        <br>'."\n";
+        print $fh '                        <strong>ATT</strong> : '.$gobs2{$gob_id}{'ATT'}.'D +'.$gobs2{$gob_id}{'BPATT'}.' +'.$gobs2{$gob_id}{'BMATT'}.'<br/>'."\n";
+        print $fh '                        <strong>ESQ</strong> : '.$gobs2{$gob_id}{'ESQ'}.'D +'.$gobs2{$gob_id}{'BPESQ'}.' +'.$gobs2{$gob_id}{'BMESQ'}.'<br/>'."\n";
+        print $fh '                        <strong>DEG</strong> : '.$gobs2{$gob_id}{'DEG'}.'D +'.$gobs2{$gob_id}{'BPDEG'}.' +'.$gobs2{$gob_id}{'BMDEG'}.'<br/>'."\n";
+        print $fh '                        <strong>REG</strong> : '.$gobs2{$gob_id}{'REG'}.'D +'.$gobs2{$gob_id}{'BPREG'}.' +'.$gobs2{$gob_id}{'BMREG'}.'<br/>'."\n";
+        print $fh '                        <strong>PER</strong> : '.$gobs2{$gob_id}{'PER'}.' +'. $gobs2{$gob_id}{'BPPER'}.' +'.$gobs2{$gob_id}{'BMPER'}.'<br/>'."\n";
+        print $fh '                        <strong>ARM</strong> : '.                             $gobs2{$gob_id}{'BPArm'}.' +'.$gobs2{$gob_id}{'BMArm'}.'<br/>'."\n";
+        print $fh '                        <strong>PVs</strong> : '.$gobs{$gob_id}{'PV'}.' / '.$gobs2{$gob_id}{'PVMax'}.'<br/>'."\n";
+        print $fh '                        <br>'."\n";
+        print $fh '                        <strong>Faim</strong> : '.$gobs2{$gob_id}{'Faim'}.'<br/>'."\n";
+        print $fh '                        <br>'."\n";
+        print $fh '                        <strong>Duree normale du tour</strong> : '.$gobs2{$gob_id}{'DLA'}.'<br/>'."\n";
+        print $fh '                        <strong>Bonus / Malus de duree</strong> : '.($gobs2{$gob_id}{'BPDLA'}+$gobs2{$gob_id}{'BMDLA'}).'<br/>'."\n";
+        print $fh '                        <strong>Augmentation due aux blessures</strong> : [A CODER]</span><br/>'."\n";
+        print $fh '                        <strong>Poids des possessions</strong> : [A CODER]</span><br/>'."\n";
+        print $fh '                        <strong>Duree totale du tour</strong> : [A CODER]</span><br/>'."\n";
+        print $fh '                        <strong>Prochaine DLA</strong> : [A CODER]</span><br/>'."\n";
+        print $fh '                        <br>'."\n";
+        print $fh '                        <strong>Canines de Trolls</strong> : '.$gobs{$gob_id}{'CT'}.' CT<br/>'."\n";
+        print $fh '                    </fieldset>'."\n";
+        print $fh '                    <fieldset>'."\n";
+        print $fh '                        <legend>Cafards</legend>'."\n";
+        print $fh '                        Pas encore disponible dans les scripts Externes'."\n";
+        print $fh '                    </fieldset>'."\n";
+        print $fh '                </div>'."\n";
+
+        print $fh $end;
+        close $fh;
+    }
 }
 
 1;
