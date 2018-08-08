@@ -25,19 +25,21 @@ sub GetClanEquipement
         {
             chomp ($line);
             #"IdGob";"Id";"Type";"Identifie";"Nom";"Magie";"Desc";"Poids";"Taille";"Qualite";"Utilise";"Matiere"
-            if ( $line =~ /^"(\d*)";"(\d*)";"([^"]*)";"(\w*)";"([^"]*)";"(\w*)";"([^"]*)";"(\d*)";"(\d*)";"(\d*)";"(\w*)";"(\w*)"/ )
+            $line =~ s/"//g;
+            my @line = split /;/, $line;
+            if ( $line !~ /^#/ )
             {
-                if ( $11 eq 'FAUX' ) { $equipe = 'NonEquipe' } else { $equipe = 'Equipe'}
-                $INVENTAIRE{$1}{$equipe}{$2}{'Type'}      = $3;
-                $INVENTAIRE{$1}{$equipe}{$2}{'Identifie'} = $4;
-                $INVENTAIRE{$1}{$equipe}{$2}{'Nom'}       = Encode::decode_utf8($5);
-                $INVENTAIRE{$1}{$equipe}{$2}{'Magie'}     = $6;
-                $INVENTAIRE{$1}{$equipe}{$2}{'Desc'}      = $7;
-                $INVENTAIRE{$1}{$equipe}{$2}{'Poids'}     = $8;
-                $INVENTAIRE{$1}{$equipe}{$2}{'Taille'}    = $9;
-                $INVENTAIRE{$1}{$equipe}{$2}{'Qualite'}   = $10;
-                $INVENTAIRE{$1}{$equipe}{$2}{'Utilise'}   = $11;
-                $INVENTAIRE{$1}{$equipe}{$2}{'Matiere'}   = $12;
+                if ( $line[10] eq 'FAUX' ) { $equipe = 'NonEquipe' } else { $equipe = 'Equipe'}
+                $INVENTAIRE{$line[0]}{$equipe}{$line[1]}{'Type'}      = $line[2];
+                $INVENTAIRE{$line[0]}{$equipe}{$line[1]}{'Identifie'} = $line[3];
+                $INVENTAIRE{$line[0]}{$equipe}{$line[1]}{'Nom'}       = Encode::decode_utf8($line[4]);
+                $INVENTAIRE{$line[0]}{$equipe}{$line[1]}{'Magie'}     = $line[5];
+                $INVENTAIRE{$line[0]}{$equipe}{$line[1]}{'Desc'}      = $line[6];
+                $INVENTAIRE{$line[0]}{$equipe}{$line[1]}{'Poids'}     = $line[7];
+                $INVENTAIRE{$line[0]}{$equipe}{$line[1]}{'Taille'}    = $line[8];
+                $INVENTAIRE{$line[0]}{$equipe}{$line[1]}{'Qualite'}   = $line[9];
+                $INVENTAIRE{$line[0]}{$equipe}{$line[1]}{'Utilise'}   = $line[10];
+                $INVENTAIRE{$line[0]}{$equipe}{$line[1]}{'Matiere'}   = $line[11];
             }
         }
         return \%INVENTAIRE;
