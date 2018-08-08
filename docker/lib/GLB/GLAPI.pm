@@ -69,21 +69,23 @@ sub GetClanMembres
         {
             chomp ($line);
             #"Id";"Nom";"Race";"Tribu";"Niveau";"X";"Y";"N";"Z";"DLA";"Etat";"PA";"PV";"PX";"PXPerso";"PI";"CT";"CARAC"
-            if ( $line =~ /^"(\d*)";"([^"]*)";"(\w*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)";"([^"]*)"/ )
+            $line =~ s/"//g;
+            my @line = split /;/, $line;
+            if ( $line !~ /^#/ )
             {
-                $MEMBRES{$1}{'Nom'}   = Encode::decode_utf8($2);
-                $MEMBRES{$1}{'Race'}  = $3;
-                $MEMBRES{$1}{'Tribu'} = $4;
-                $MEMBRES{$1}{'Niveau'} = $5;
-                $MEMBRES{$1}{'X'} = $6;
-                $MEMBRES{$1}{'Y'} = $7;
-                $MEMBRES{$1}{'N'} = $8;
-                $MEMBRES{$1}{'Z'} = $9;
-                $MEMBRES{$1}{'DLA'} = $10;
-                $MEMBRES{$1}{'Etat'} = $11;
-                $MEMBRES{$1}{'PA'} = $12;
-                $MEMBRES{$1}{'PV'} = $13;
-                $MEMBRES{$1}{'CT'} = $17;
+                $MEMBRES{$line[0]}{'Nom'}    = Encode::decode_utf8($line[1]);
+                $MEMBRES{$line[0]}{'Race'}   = $line[2];
+                $MEMBRES{$line[0]}{'Tribu'}  = $line[3];
+                $MEMBRES{$line[0]}{'Niveau'} = $line[4];
+                $MEMBRES{$line[0]}{'X'}      = $line[5];
+                $MEMBRES{$line[0]}{'Y'}      = $line[6];
+                $MEMBRES{$line[0]}{'N'}      = $line[7];
+                $MEMBRES{$line[0]}{'Z'}      = $line[8];
+                $MEMBRES{$line[0]}{'DLA'}    = $line[9];
+                $MEMBRES{$line[0]}{'Etat'}   = $line[10];
+                $MEMBRES{$line[0]}{'PA'}     = $line[11];
+                $MEMBRES{$line[0]}{'PV'}     = $line[12];
+                $MEMBRES{$line[0]}{'CT'}     = $line[16];
             }
         }
         return \%MEMBRES;
