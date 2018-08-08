@@ -181,9 +181,9 @@ sub getClanSkills
             chomp ($line);
             #"Id";"Type";"IdTalent";"Niveau";"Connaissance"
             $line =~ s/"//g;
-            if ( $line !~ /IdTalent/ )
+            my @line = split /;/, $line;
+            if ( $line !~ /^#/ )
             {
-                my @line = split /;/, $line;
                 $MEMBRES{$line[0]}{'Talents'}{$line[1]}{$line[2]}{'Niveau'}       = $line[3];
                 $MEMBRES{$line[0]}{'Talents'}{$line[1]}{$line[2]}{'Connaissance'} = $line[4];
                 if ( $line[1] eq 'C' )
