@@ -44,6 +44,17 @@ my $end   = <<"END_LOOP";
 </html>
 END_LOOP
 
+my $yaml       = '/home/gobland-bot/gl-config.yaml';
+
+my $gobs_ref   = GLB::GLAPI::GetClanMembres($yaml);
+my %gobs       = %{$gobs_ref};
+my $gobs2_ref  = GLB::GLAPI::GetClanMembres2($yaml);
+my %gobs2      = %{$gobs2_ref};
+my $stuff_ref  = GLB::GLAPI::GetClanEquipement($yaml);
+my %stuff      = %{$stuff_ref};
+my $skill_ref  = GLB::GLAPI::getClanSkills($yaml);
+my %skill      = %{$skill_ref};
+
 sub createIndex {
     my $t_start  = [gettimeofday()]; 
     my $filename = '/var/www/localhost/htdocs/index.html';
@@ -66,13 +77,6 @@ sub createIndex {
     print $fh '                  <th>Dates</th>'."\n";
     print $fh '                  <th>Action</th>'."\n";
     print $fh '                </tr>'."\n";
-
-    my $yaml       = '/home/gobland-bot/gl-config.yaml';
-    my $gobs_ref   = GLB::GLAPI::GetClanMembres($yaml);
-    my %gobs       = %{$gobs_ref};
-
-    my $gobs2_ref  = GLB::GLAPI::GetClanMembres2($yaml);
-    my %gobs2      = %{$gobs2_ref};
 
     my $ct_total   = 0;
 
@@ -132,12 +136,6 @@ sub createEquipement {
     print $fh '                <h2 class="expanded">Equipements Gobelins</h2>'."\n";
     print $fh '                <table cellspacing="0" id="profilInfos">'."\n";
 
-    my $yaml      = '/home/gobland-bot/gl-config.yaml';
-    my $stuff_ref = GLB::GLAPI::GetClanEquipement($yaml);
-    my %stuff     = %{$stuff_ref};
-    my $gobs_ref  = GLB::GLAPI::GetClanMembres($yaml);
-    my %gobs      = %{$gobs_ref};
-
     for my $gob_id ( sort keys %stuff )
     {
         my $date = strftime "%d/%m/%y %H:%M:%S", localtime;
@@ -188,14 +186,6 @@ sub createEquipement {
 }
 
 sub createProfil {
-
-    my $yaml      = '/home/gobland-bot/gl-config.yaml';
-    my $gobs_ref  = GLB::GLAPI::GetClanMembres($yaml);
-    my %gobs      = %{$gobs_ref};
-    my $gobs2_ref = GLB::GLAPI::GetClanMembres2($yaml);
-    my %gobs2     = %{$gobs2_ref};
-    my $skill_ref = GLB::GLAPI::getClanSkills($yaml);
-    my %skill     = %{$skill_ref};
 
     for my $gob_id ( sort keys %gobs )
     {
