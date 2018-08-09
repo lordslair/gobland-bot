@@ -1,5 +1,7 @@
 package GLB::HTML;
 
+use Time::HiRes qw[gettimeofday tv_interval];
+
 use lib '/home/gobland-bot/lib/';
 use GLB::GLAPI;
 use GLB::functions;
@@ -43,6 +45,7 @@ my $end   = <<"END_LOOP";
 END_LOOP
 
 sub createIndex {
+    my $t_start  = [gettimeofday()]; 
     my $filename = '/var/www/localhost/htdocs/index.html';
     open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
     binmode($fh, ":utf8");
@@ -107,6 +110,9 @@ sub createIndex {
     print $fh '                    <h3>Fortune : '.$ct_total.' CT (gobelins)</h3>'."\n";
     print $fh '                </div>'."\n";
 
+    my $t_elapsed = sprintf ("%0.3f", tv_interval($t_start));
+    print $fh '                <div class="footer">[HTML generated in '.$t_elapsed.' sec.] - [Updated @'.localtime.']</div>'."\n";
+
     print $fh $end;
     close $fh;
 }
@@ -115,6 +121,7 @@ sub createEquipement {
 
     use POSIX qw(strftime);
 
+    my $t_start  = [gettimeofday()];
     my $filename = '/var/www/localhost/htdocs/equipement.html';
     open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
     binmode($fh, ":utf8");
@@ -172,6 +179,10 @@ sub createEquipement {
     }
 
     print $fh '                </table>'."\n";
+
+    my $t_elapsed = sprintf ("%0.3f", tv_interval($t_start));
+    print $fh '                <div class="footer">[HTML generated in '.$t_elapsed.' sec.] - [Updated @'.localtime.']</div>'."\n";
+
     print $fh $end;
     close $fh;
 }
@@ -188,6 +199,7 @@ sub createProfil {
 
     for my $gob_id ( sort keys %gobs )
     {
+        my $t_start  = [gettimeofday()];
         my $filename = '/var/www/localhost/htdocs/gobelins/'.$gob_id.'.html';
         open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
         binmode($fh, ":utf8");
@@ -257,6 +269,9 @@ sub createProfil {
         print $fh '                        </ul>'."\n";
         print $fh '                    </fieldset>'."\n";
         print $fh '                </div>'."\n";
+
+        my $t_elapsed = sprintf ("%0.3f", tv_interval($t_start));
+        print $fh '                <div class="footer">[HTML generated in '.$t_elapsed.' sec.] - [Updated @'.localtime.']</div>'."\n";
 
         print $fh $end;
         close $fh;

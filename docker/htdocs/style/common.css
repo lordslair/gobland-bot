@@ -132,3 +132,13 @@ td.PADispo {
     margin-bottom: 5px;
     font-weight: bold;
 }
+
+/* footer */
+div.footer {
+    text-align:center;
+    padding: 5px;
+    border: 1px solid black;
+    background-image: url(/images/vue_footer.jpg);
+    width: 400px;
+    margin: 0px auto;
+}
