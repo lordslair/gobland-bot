@@ -3,6 +3,44 @@ package GLB::functions;
 use warnings;
 use strict;
 
+our $begin = <<"START_LOOP";
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <title>Sopratrolls</title>
+        <link rel="stylesheet" type="text/css" href="/style/common.css" />
+        <link rel="stylesheet" type="text/css" href="/style/menu.css" />
+        <link rel="stylesheet" type="text/css" href="/style/equipement.css" />
+        <script type="text/javascript" src="/js/common.js"></script>
+        <script type="text/javascript" src="/js/domcollapse.js"></script>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+    <body>
+        <div id="page">
+            <div id="header">
+                <br><br><br><br><br><br><br><br>
+                <div id="nav">
+                    <ul id="menu">
+                        <li><a href="http://rabatteurs.lordslair.net/index.html" title="Page d'accueil">Accueil</a></li>
+                        <li><a href="#">Consulter</a>
+                            <ul>
+                                <li><a href="equipement.html" title="Equipement des Gob' du Clan">Equipement du Clan</a></li>
+                            </ul>
+                       </li>
+                        <li><a href="" title="">Outils</a></li>
+                        <li><a href="" title="">Liens</a></li>
+                    </ul>
+                </div>
+            </div>
+START_LOOP
+
+our $end   = <<"END_LOOP";
+            </div>
+        </div>
+    </body>
+</html>
+END_LOOP
+
 sub GetComps
 {
     my %SKILLS;

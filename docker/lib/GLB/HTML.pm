@@ -6,44 +6,6 @@ use lib '/home/gobland-bot/lib/';
 use GLB::GLAPI;
 use GLB::functions;
 
-my $begin = <<"START_LOOP";
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
-    <head>
-        <title>Sopratrolls</title>
-        <link rel="stylesheet" type="text/css" href="/style/common.css" />
-        <link rel="stylesheet" type="text/css" href="/style/menu.css" />
-        <link rel="stylesheet" type="text/css" href="/style/equipement.css" />
-        <script type="text/javascript" src="/js/common.js"></script>
-        <script type="text/javascript" src="/js/domcollapse.js"></script>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    </head>
-    <body>
-        <div id="page">
-            <div id="header">
-                <br><br><br><br><br><br><br><br>
-                <div id="nav">
-                    <ul id="menu">
-                        <li><a href="http://rabatteurs.lordslair.net/index.html" title="Page d'accueil">Accueil</a></li>
-                        <li><a href="#">Consulter</a>
-                            <ul>
-                                <li><a href="http://rabatteurs.lordslair.net/equipement.html" title="Equipement des Gob' du Clan">Equipement du Clan</a></li>
-                            </ul>
-                       </li>
-                        <li><a href="" title="">Outils</a></li>
-                        <li><a href="" title="">Liens</a></li>
-                    </ul>
-                </div>
-            </div>
-START_LOOP
-
-my $end   = <<"END_LOOP";
-            </div>
-        </div>
-    </body>
-</html>
-END_LOOP
-
 my $yaml       = '/home/gobland-bot/gl-config.yaml';
 
 my $gobs_ref   = GLB::GLAPI::GetClanMembres($yaml);
@@ -61,7 +23,7 @@ sub createIndex {
     open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
     binmode($fh, ":utf8");
 
-    print $fh $begin;
+    print $fh $GLB::functions::begin;
 
     print $fh '            <div id="content">'."\n";
     print $fh '              <br><h1>Bienvenue chez les Rabatteurs de Khaket</h1><br>'."\n";
@@ -117,7 +79,7 @@ sub createIndex {
     my $t_elapsed = sprintf ("%0.3f", tv_interval($t_start));
     print $fh '                <div class="footer">[HTML generated in '.$t_elapsed.' sec.] - [Updated @'.localtime.']</div>'."\n";
 
-    print $fh $end;
+    print $fh $GLB::functions::end;
     close $fh;
 }
 
@@ -129,7 +91,7 @@ sub createEquipement {
     my $filename = '/var/www/localhost/htdocs/equipement.html';
     open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
     binmode($fh, ":utf8");
-    print $fh $begin;
+    print $fh $GLB::functions::begin;
 
     print $fh '            <div id="content">'."\n";
     print $fh '                <h1>Possessions</h1>'."\n";
@@ -181,7 +143,7 @@ sub createEquipement {
     my $t_elapsed = sprintf ("%0.3f", tv_interval($t_start));
     print $fh '                <div class="footer">[HTML generated in '.$t_elapsed.' sec.] - [Updated @'.localtime.']</div>'."\n";
 
-    print $fh $end;
+    print $fh $GLB::functions::end;
     close $fh;
 }
 
@@ -193,7 +155,7 @@ sub createProfil {
         my $filename = '/var/www/localhost/htdocs/gobelins/'.$gob_id.'.html';
         open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
         binmode($fh, ":utf8");
-        print $fh $begin;
+        print $fh $GLB::functions::begin;
 
         print $fh '            <div id="content">'."\n";
 
@@ -263,7 +225,7 @@ sub createProfil {
         my $t_elapsed = sprintf ("%0.3f", tv_interval($t_start));
         print $fh '                <div class="footer">[HTML generated in '.$t_elapsed.' sec.] - [Updated @'.localtime.']</div>'."\n";
 
-        print $fh $end;
+        print $fh $GLB::functions::end;
         close $fh;
     }
 }
