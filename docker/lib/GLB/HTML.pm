@@ -2,6 +2,7 @@ package GLB::HTML;
 
 use lib '/home/gobland-bot/lib/';
 use GLB::GLAPI;
+use GLB::functions;
 
 my $begin = <<"START_LOOP";
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -82,16 +83,7 @@ sub createIndex {
             $pad = ' class="PADispo"';
         } else { $pad = ' ' }
 
-        my $green  = '#77EE77';
-        my $jaune  = '#EEEE77';
-        my $orange = '#EEAA77';
-        my $red    = '#B22222';
-        my $color  = '#FFFFFF';
-        my $percent = 100 * ($gobs{$gob_id}{'PV'} / $gobs2{$gob_id}{'PVMax'});
-        if    ( $percent > 75 ) { $color = $green }
-        elsif ( $percent > 50 ) { $color = $jaune }
-        elsif ( $percent > 25 ) { $color = $orange }
-        else  { $color = $red }
+        my $color   = GLB::functions::GetColor($gobs{$gob_id}{'PV'},$gobs2{$gob_id}{'PVMax'});
         my $lifebar = '<br><div class="vieContainer"><div style="background-color:'.$color.'; width: '.$percent.'%">&nbsp;</div></div>';
 
         $ct_total += $gobs{$gob_id}{'CT'};

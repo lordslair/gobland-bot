@@ -33,4 +33,35 @@ sub GetTechs
     return \%TECHS;
 }
 
+sub GetColor
+{
+    my $pv_now = shift;
+    my $pv_max = shift;
+
+    my $green  = '#77EE77';
+    my $jaune  = '#EEEE77';
+    my $orange = '#EEAA77';
+    my $red    = '#B22222';
+
+    my $color  = '#FFFFFF';
+    my $percent = 100 * ($pv_now / $pv_max);
+
+    if    ( $percent > 75 )
+    {
+        $color = $green;
+    }
+    elsif ( $percent > 50 )
+    {
+        $color = $jaune;
+    }
+    elsif ( $percent > 25 )
+    {
+        $color = $orange;
+    }
+    else
+    {
+        $color = $red;
+    }
+}
+
 1;
