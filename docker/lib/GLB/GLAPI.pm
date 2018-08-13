@@ -1,4 +1,6 @@
 package GLB::GLAPI;
+use strict;
+use warnings;
 
 use LWP;
 use YAML::Tiny;
@@ -7,6 +9,7 @@ sub GetClanEquipement
 {
     my $glfile = shift;
     my $glyaml = YAML::Tiny->read( $glfile );
+    my %INVENTAIRE;
 
     my $browser = new LWP::UserAgent;
     my $request = new HTTP::Request( GET => "http://ie.gobland.fr/IE_ClanEquipement?id=$glyaml->[0]{gl_user}&passwd=$glyaml->[0]{gl_api_key}" );
@@ -29,7 +32,8 @@ sub GetClanEquipement
             my @line = split /;/, $line;
             if ( $line !~ /^#/ )
             {
-                if ( $line[10] eq 'FAUX' ) { $equipe = 'NonEquipe' } else { $equipe = 'Equipe'}
+                my $equipe = 'Equipe';
+                if ( $line[10] eq 'FAUX' ) { $equipe = 'NonEquipe' }
                 $INVENTAIRE{$line[0]}{$equipe}{$line[1]}{'Type'}      = $line[2];
                 $INVENTAIRE{$line[0]}{$equipe}{$line[1]}{'Identifie'} = $line[3];
                 $INVENTAIRE{$line[0]}{$equipe}{$line[1]}{'Nom'}       = Encode::decode_utf8($line[4]);

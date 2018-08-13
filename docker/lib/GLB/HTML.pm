@@ -1,4 +1,6 @@
 package GLB::HTML;
+use strict;
+use warnings;
 
 use Time::HiRes qw[gettimeofday tv_interval];
 
