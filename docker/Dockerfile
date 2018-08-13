@@ -15,7 +15,8 @@ RUN apk update \
     && sed -i 's#/var/log/apache2/#/web/logs/#g' /etc/logrotate.d/apache2 \
     && sed -i 's/Options Indexes/Options /g' /etc/apache2/httpd.conf \
     && mkdir /home/gobland-bot/ \
-    && mkdir /var/www/localhost/htdocs/gobelins
+    && mkdir /var/www/localhost/htdocs/gobelins \
+    && mkdir /var/www/localhost/htdocs/vue
 
 COPY gobland-bot    /home/gobland-bot/gobland-bot
 COPY lib/           /home/gobland-bot/lib/

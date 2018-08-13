@@ -208,4 +208,62 @@ sub getClanSkills
     }
 }
 
+sub getVue
+{
+    my $glfile = shift;
+    my $gob_id = shift;
+    my $glyaml = YAML::Tiny->read( $glfile );
+    my %VUE;
+
+    my $browser = new LWP::UserAgent;
+    my $request = new HTTP::Request( GET => "http://ie.gobland.fr/IE_Vue.php?id=$gob_id&passwd=$glyaml->[0]->{clan}{$gob_id}" );
+    my $headers = $request->headers();
+       $headers->header( 'User-Agent','Mozilla/5.0 (compatible; Konqueror/3.4; Linux) KHTML/3.4.2 (like Gecko)');
+       $headers->header( 'Accept', 'text/html, image/jpeg, image/png, text/*, image/*, */*');
+       $headers->header( 'Accept-Encoding','x-gzip, x-deflate, gzip, deflate');
+       $headers->header( 'Accept-Charset', 'iso-8859-15, utf-8;q=0.5, *;q=0.5');
+       $headers->header( 'Accept-Language', 'fr, en');
+       $headers->header( 'Referer', 'http://ie.gobland.fr');
+    my $response = $browser->request($request);
+
+    if ($response->is_success)
+    {
+        foreach my $line (split(/\n/,$response->content))
+        {
+            chomp ($line);
+            #"Categorie";"Dist";"Id";"Nom";"Niveau";"Type";"Clan";"X";"Y";"N";"Z"
+            $line =~ s/"//g;
+            my @line = split /;/, $line;
+            if ( $line !~ /^#/)
+            {
+                if ( ($line[0] eq 'C') and ($line[5] =~ /Musculeux|Nodef|Trad|Yonnair|Zozo|Mentalo|Gobelin/) )
+                {
+                    $VUE{'G'}{$line[2]}{'Dist'}   = $line[1];
+                    $VUE{'G'}{$line[2]}{'Nom'}    = $line[3];
+                    $VUE{'G'}{$line[2]}{'Niveau'} = $line[4];
+                    $VUE{'G'}{$line[2]}{'Type'}   = $line[5];
+                    $VUE{'G'}{$line[2]}{'Clan'}   = $line[6];
+                    $VUE{'G'}{$line[2]}{'X'}      = $line[7];
+                    $VUE{'G'}{$line[2]}{'Y'}      = $line[8];
+                    $VUE{'G'}{$line[2]}{'N'}      = $line[9];
+                    $VUE{'G'}{$line[2]}{'Z'}      = $line[10];
+                }
+                else
+                {
+                    $VUE{$line[0]}{$line[2]}{'Dist'}   = $line[1];
+                    $VUE{$line[0]}{$line[2]}{'Nom'}    = $line[3];
+                    $VUE{$line[0]}{$line[2]}{'Niveau'} = $line[4];
+                    $VUE{$line[0]}{$line[2]}{'Type'}   = $line[5];
+                    $VUE{$line[0]}{$line[2]}{'Clan'}   = $line[6];
+                    $VUE{$line[0]}{$line[2]}{'X'}      = $line[7];
+                    $VUE{$line[0]}{$line[2]}{'Y'}      = $line[8];
+                    $VUE{$line[0]}{$line[2]}{'N'}      = $line[9];
+                    $VUE{$line[0]}{$line[2]}{'Z'}      = $line[10];
+                }
+            }
+        }
+        return \%VUE;
+    }
+}
+
 1;

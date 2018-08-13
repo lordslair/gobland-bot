@@ -3,6 +3,7 @@ use strict;
 use warnings;
 
 use Time::HiRes qw[gettimeofday tv_interval];
+use YAML::Tiny;
 
 use lib '/home/gobland-bot/lib/';
 use GLB::GLAPI;
@@ -68,7 +69,10 @@ sub createIndex {
         print $fh '                  <td>'.$gobs{$gob_id}{'PV'}.' / '.$gobs2{$gob_id}{'PVMax'}.$lifebar.'</td>'."\n";
         print $fh '                  <td'.$pad.'>'.$gobs{$gob_id}{'PA'}.'</td>'."\n";
         print $fh '                  <td><span class="DLA"> DLA : '.$gobs{$gob_id}{'DLA'}.'</span><br><span class="pDLA">pDLA : [A CODER]</span></td>'."\n";
-        print $fh '                  <td><a href="http://rabatteurs.lordslair.net/gobelins/'.$gob_id.'.html" title="Votre profil">PROFIL</a><br></td>'."\n";
+        print $fh '                  <td>'."\n";
+        print $fh '                      <a href="http://rabatteurs.lordslair.net/gobelins/'.$gob_id.'.html" title="Votre profil">PROFIL</a>'."\n";
+        print $fh '                      <a href="http://rabatteurs.lordslair.net/vue/'.$gob_id.'.html" title="Votre vue">VUE</a>'."\n";
+        print $fh '                  </td>'."\n";
         print $fh '                </tr>'."\n";
     }
 
@@ -229,6 +233,137 @@ sub createProfil {
 
         print $fh $GLB::functions::end;
         close $fh;
+    }
+}
+
+sub createVue {
+
+    for my $gob_id ( sort keys %gobs )
+    {
+        my $glyaml = YAML::Tiny->read( $yaml );
+        if ( $glyaml->[0]->{clan}{$gob_id} )
+        {
+            my $t_start  = [gettimeofday()];
+            my $filename = '/var/www/localhost/htdocs/vue/'.$gob_id.'.html';
+            open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
+            binmode($fh, ":utf8");
+            print $fh $GLB::functions::begin;
+
+            my $VUE_ref    = GLB::GLAPI::getVue($yaml, $gob_id);
+            my %VUE        = %{$VUE_ref};
+            my %ITEMS;
+
+            my $T_emoji = '<img src="/images/1f4b0.png" width="16" height="16">'; #💰
+            my $L_emoji = '<img src="/images/1f3e0.png" width="16" height="16">'; #🏠
+            my $G_emoji = '<img src="/images/1f60e.png" width="16" height="16">'; #😎
+            my $C_emoji = '<img src="/images/1f47f.png" width="16" height="16">'; #👿
+            my $W_emoji = '<img src="/images/1f6a7.png" width="16" height="16">'; #🚧
+
+            my $T_count = 0;
+            my $C_count = 0;
+            my $L_count = 0;
+            my $G_count = 0;
+
+            foreach my $type ( keys %VUE )
+            {
+                foreach my $id ( keys %{$VUE{$type}} )
+                {
+                    if ( $type eq 'T' ) { $T_count++ }
+                    elsif ( $type eq 'C' ) { $C_count++ }
+                    elsif ( $type eq 'G' ) { $G_count++ }
+                    elsif ( $type eq 'L' && $VUE{$type}{$id}{'Nom'} ne 'Mur' ) { $L_count++ }
+
+                    my $x = $VUE{$type}{$id}{'X'};
+                    my $y = $VUE{$type}{$id}{'Y'};
+                    if (! $ITEMS{$x}{$y})
+                    {
+                        $ITEMS{$x}{$y}{'td'} = '';
+                        $ITEMS{$x}{$y}{'tt'} = "<center>&nbsp;&nbsp;X = $x | Y = $y<br><br></center>";
+                    }
+
+                    if ( $type eq 'T' && $ITEMS{$x}{$y}{'td'} !~ /1f4b0/ )
+                    {
+                        $ITEMS{$x}{$y}{'td'} .= $T_emoji;
+                    }
+                    elsif ( $type eq 'L' && $ITEMS{$x}{$y}{'td'} !~ /1f3e0/ && $VUE{$type}{$id}{'Nom'} ne 'Mur')
+                    {
+                        $ITEMS{$x}{$y}{'td'} .= $L_emoji;
+                    }
+                    elsif ( $type eq 'L' && $VUE{$type}{$id}{'Nom'} eq 'Mur')
+                    {
+                        $ITEMS{$x}{$y}{'td'} .= $W_emoji;
+                    }
+                    elsif ( $type eq 'C' && $ITEMS{$x}{$y}{'td'} !~ /1f47f/ )
+                    {
+                        $ITEMS{$x}{$y}{'td'} .= $C_emoji;
+                    }
+                    elsif ( $type eq 'G' && $ITEMS{$x}{$y}{'td'} !~ /1f60e/ )
+                    {
+                        $ITEMS{$x}{$y}{'td'} .= $G_emoji;
+                    }
+
+                    my $n = $VUE{$type}{$id}{'N'};
+                    if ( $ITEMS{$x}{$y}{'tt'} !~ /N = $n/ )
+                    {
+                        $ITEMS{$x}{$y}{'tt'} .= "&nbsp;&nbsp;N = $n<br>";
+                    }
+
+                    my $tt_text_c = 'black';
+                    if ($type eq 'G') { $tt_text_c = 'blue'};
+                    $ITEMS{$x}{$y}{'tt'} .= "&nbsp;&nbsp;[$id] <span style='color:$tt_text_c'>".Encode::decode_utf8($VUE{$type}{$id}{'Nom'}).'</span><br>';
+                }
+            }
+
+            my $cases = $gobs2{$gob_id}{'PER'} + $gobs2{$gob_id}{'BPPER'} + $gobs2{$gob_id}{'BMPER'};
+            my $X     = $gobs{$gob_id}{'X'};
+            my $Y     = $gobs{$gob_id}{'Y'};
+
+            print $fh '            <div id="content">'."\n";
+
+            print $fh '<h1>Vue de '.$gobs{$gob_id}{'Nom'}.' ('.$cases.' cases)'.'</h1>'."\n";
+            print $fh '<table cellspacing="0" id="GobVue">'."\n";
+            print $fh '    <caption>'."\n";
+            print $fh '        <br>'.$T_emoji.'Tresors ('.$T_count.') | '.$G_emoji.'Gobelins ('.$G_count.') | '.$L_emoji.' Lieux ('.$L_count.')<br>'."\n";
+            print $fh '            '.$C_emoji.'Monstres ('.$C_count.')<br>'."\n";
+            print $fh '    <caption>'."\n";
+            print $fh '    <tbody>'."\n";
+            print $fh '        <tr>'."\n";
+            print $fh '            <td class="blank"></td>'."\n";
+            for (my $td = $X - $cases; $td <= $X + $cases; $td++) {print $fh '            <th>'.$td.'</th>'."\n" }
+
+            for (my $tr = $Y + $cases; $tr >= $Y - $cases; $tr--)
+            {
+                print $fh '        <tr>'."\n";
+                print $fh '            <th>'.$tr.'</th>'."\n";
+                for (my $td = $X - $cases; $td <= $X + $cases; $td++)
+                {
+                    my $tdcolor;
+                    if ( $td == $X and $tr == $Y ) { $tdcolor = 'style="background-color: white"' } else { $tdcolor = '' }
+                    if ( defined $ITEMS{$td}{$tr}{'td'} )
+                    {
+                        print $fh '            <td '.$tdcolor.'>'."\n";
+                        print $fh '                <div class="tt">'."\n";
+                        print $fh '                    '.$ITEMS{$td}{$tr}{'td'}."\n";
+                        print $fh '                    <span class="tt_text">'.$ITEMS{$td}{$tr}{'tt'}.'</span>'."\n";
+                        print $fh '                </div>'."\n";
+                        print $fh '            </td>'."\n";
+                    }
+                    else
+                    {
+                        print $fh '            <td '.$tdcolor.'></td>'."\n";
+                    }
+                }
+                print $fh '        </tr>'."\n";
+            }
+            print $fh '    </tbody>'."\n";
+            print $fh '</table>'."\n";
+
+            my $t_elapsed = sprintf ("%0.3f", tv_interval($t_start));
+            print $fh '                <div class="footer">[HTML generated in '.$t_elapsed.' sec.] - [Updated @'.localtime.']</div>'."\n";
+
+            print $fh $GLB::functions::end;
+            close $fh;
+        }
     }
 }
 

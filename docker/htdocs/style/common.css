@@ -142,3 +142,53 @@ div.footer {
     width: 400px;
     margin: 0px auto;
 }
+/* Vue */
+table#GobVue {
+    text-align: center;
+    margin: 5px auto;
+    caption-side:bottom;
+}
+table#GobVue td {
+    border: 1px solid #000000;
+    width: 34px;
+    height: 34px;
+    padding: 0px;
+    background-color: #FEF4DE;
+}
+table#GobVue th {
+    padding: 0px;
+    border: 0px;
+    background-color: none;
+}
+table#GobVue td.blank {
+    padding: 0px;
+    border: 0px;
+    background-color: transparent;
+    width: 15px;
+    height: 15px;
+}
+/* Vue (ToolTip) */
+.tt {
+    position: relative;
+    display: inline-block;
+}
+.tt .tt_text {
+    visibility: hidden;
+    width: 250px;
+    background-color: #555;
+    color: #fff;
+    text-align: left;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    left: 50%;
+    margin-left: -125px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.tt:hover .tt_text {
+    visibility: visible;
+    opacity: 1;
+}

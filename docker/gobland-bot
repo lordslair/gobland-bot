@@ -8,3 +8,4 @@ use GLB::HTML;
 GLB::HTML::createIndex();
 GLB::HTML::createEquipement();
 GLB::HTML::createProfil();
+GLB::HTML::createVue();
