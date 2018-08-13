@@ -91,8 +91,6 @@ sub createIndex {
 
 sub createEquipement {
 
-    use POSIX qw(strftime);
-
     my $t_start  = [gettimeofday()];
     my $filename = '/var/www/localhost/htdocs/equipement.html';
     open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
@@ -101,14 +99,13 @@ sub createEquipement {
 
     print $fh '            <div id="content">'."\n";
     print $fh '                <h1>Possessions</h1>'."\n";
+
     print $fh '                <h2 class="expanded">Equipements Gobelins</h2>'."\n";
     print $fh '                <table cellspacing="0" id="profilInfos">'."\n";
-
     for my $gob_id ( sort keys %stuff )
     {
-        my $date = strftime "%d/%m/%y %H:%M:%S", localtime;
         print $fh '                    <tr class="expanded">'."\n";
-        print $fh '                        <th>Equipement(s) de '.$gobs{$gob_id}{'Nom'}.' ('.$gob_id.') '."<em>[maj : $date]</em></th>\n";
+        print $fh '                        <th>Equipement(s) de '.$gobs{$gob_id}{'Nom'}.' ('.$gob_id.') </th>'."\n";
         print $fh '                    </tr>'."\n";
         print $fh '                    <tr>'."\n";
         print $fh '                        <td>'."\n";
@@ -135,7 +132,10 @@ sub createEquipement {
                 {
                     $type = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Type'});
                 }
-                print $fh ' ' x 32, '<li class="equipement'.$equipe.'">['.$item_id.'] '.$type.' : '.$nom.' ('.$desc.')'.$min.'</li>'."\n";
+                if ( $type ne 'Composant' )
+                {
+                    print $fh ' ' x 32, '<li class="equipement'.$equipe.'">['.$item_id.'] '.$type.' : '.$nom.' ('.$desc.')'.$min.'</li>'."\n";
+                }
             }
             if ( $e eq 'Equipe' ) { print $fh '                                <br>'."\n" }
         }
@@ -143,7 +143,55 @@ sub createEquipement {
         print $fh '                        </td>'."\n";
         print $fh '                    </tr>'."\n";
     }
+    print $fh '                </table>'."\n";
 
+    print $fh '                <h2 class="expanded">Composants Gobelins</h2>'."\n";
+    print $fh '                <table cellspacing="0" id="profilInfos">'."\n";
+    for my $gob_id ( sort keys %stuff )
+    {
+        my $compos = '';
+        foreach my $e ( sort keys %{$stuff{$gob_id}} )
+        {
+            for my $item_id ( sort keys %{$stuff{$gob_id}{$e}} )
+            {
+                my $min    = '';
+                my $desc   = Encode::decode_utf8('<b>Non identifié</b>');
+                my $equipe = $e;
+                my $type   = '';
+                my $nom    = $stuff{$gob_id}{$e}{$item_id}{'Nom'};
+
+                if ( $stuff{$gob_id}{$e}{$item_id}{'Poids'} )
+                {
+                    $min = ', '.$stuff{$gob_id}{$e}{$item_id}{'Poids'}/60 . ' min';
+                }
+                if ( $stuff{$gob_id}{$e}{$item_id}{'Identifie'} eq 'VRAI' )
+                {
+                    $desc = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Desc'});
+                }
+                if ( $stuff{$gob_id}{$e}{$item_id}{'Type'} )
+                {
+                    $type = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Type'});
+                }
+                if ( $type eq 'Composant' )
+                {
+                    $compos .= '<li class="equipement'.$equipe.'">['.$item_id.'] '.$type.' : '.$nom.' ('.$desc.')'.$min.'</li>'."\n";
+                }
+            }
+        }
+        if ( $compos ne '' )
+        {
+            print $fh '                    <tr class="expanded">'."\n";
+            print $fh '                        <th>Composant(s) de '.$gobs{$gob_id}{'Nom'}.' ('.$gob_id.') </th>'."\n";
+            print $fh '                    </tr>'."\n";
+            print $fh '                    <tr>'."\n";
+            print $fh '                        <td>'."\n";
+            print $fh '                            <ul class="membreEquipementList">'."\n";
+            print $fh $compos;
+            print $fh '                            </ul>'."\n";
+            print $fh '                        </td>'."\n";
+            print $fh '                    </tr>'."\n";
+        }
+    }
     print $fh '                </table>'."\n";
 
     my $t_elapsed = sprintf ("%0.3f", tv_interval($t_start));
