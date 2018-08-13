@@ -301,7 +301,8 @@ sub createProfil {
                     {
                         $type = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Type'});
                     }
-                    print $fh '<li class="equipement'.$equipe.'">['.$item_id.'] '.$type.' : '.$nom.' ('.$desc.')'.$min.'</li>'."\n";
+                    my $png = GLB::functions::GetStuffIcon($type,$nom);
+                    print $fh '<img src="/images/stuff/'.$png.'">['.$item_id.'] '.$nom.' ('.$desc.')'.$min.'<br>'."\n";
                 }
             }
         }
