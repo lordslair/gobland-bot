@@ -274,6 +274,39 @@ sub createProfil {
 
         print $fh '                        </ul>'."\n";
         print $fh '                    </fieldset>'."\n";
+
+        print $fh '                    <fieldset>'."\n";
+        print $fh '                        <legend>'.Encode::decode_utf8('Equipement Equipé').'</legend>'."\n";
+        foreach my $e ( sort keys %{$stuff{$gob_id}} )
+        {
+            if ( $e eq 'Equipe' )
+            {
+                for my $item_id ( sort keys %{$stuff{$gob_id}{$e}} )
+                {
+                    my $min    = '';
+                    my $desc   = Encode::decode_utf8('<b>Non identifié</b>');
+                    my $equipe = $e;
+                    my $type   = '';
+                    my $nom    = $stuff{$gob_id}{$e}{$item_id}{'Nom'};
+
+                    if ( $stuff{$gob_id}{$e}{$item_id}{'Poids'} )
+                    {
+                        $min = ', '.$stuff{$gob_id}{$e}{$item_id}{'Poids'}/60 . ' min';
+                    }
+                    if ( $stuff{$gob_id}{$e}{$item_id}{'Identifie'} eq 'VRAI' )
+                    {
+                        $desc = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Desc'});
+                    }
+                    if ( $stuff{$gob_id}{$e}{$item_id}{'Type'} )
+                    {
+                        $type = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Type'});
+                    }
+                    print $fh '<li class="equipement'.$equipe.'">['.$item_id.'] '.$type.' : '.$nom.' ('.$desc.')'.$min.'</li>'."\n";
+                }
+            }
+        }
+        print $fh '                    </fieldset>'."\n";
+
         print $fh '                </div>'."\n";
 
         my $t_elapsed = sprintf ("%0.3f", tv_interval($t_start));
