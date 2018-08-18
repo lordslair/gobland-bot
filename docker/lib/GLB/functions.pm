@@ -110,7 +110,7 @@ sub GetStuffIcon
 
     if    ( $type eq 'Armure' )                           { $png = 'icon_04.png' }
     elsif ( $type eq 'Casque' )                           { $png = 'icon_14.png' }
-    elsif ( $type eq 'Bottes' )                           { $png = 'icon_44.png' }
+    elsif ( $type eq 'Bottes' )                           { $png = 'icon_24.png' }
     elsif ( $type eq 'Arme 1 Main' and $nom =~ /Hache/ )  { $png = 'icon_52.png' }
     elsif ( $type eq 'Arme 1 Main' )                      { $png = 'icon_47.png' }
     elsif ( $type eq 'Arme 2 mains' and $nom =~ /Hache/ ) { $png = 'icon_56.png' }
