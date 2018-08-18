@@ -118,6 +118,7 @@ sub GetStuffIcon
     elsif ( $type eq 'Talisman' )                         { $png = 'icon_18.png' }
     elsif ( $type eq 'Anneau' )                           { $png = 'icon_29.png' }
     elsif ( $type eq 'Bouclier' )                         { $png = 'icon_09.png' }
+    elsif ( $type eq 'Bijou' )                            { $png = 'icon_108.png' }
     else  { $png = '' }
 
     return $png;
