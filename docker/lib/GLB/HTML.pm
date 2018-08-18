@@ -114,11 +114,11 @@ sub createEquipement {
         {
             for my $item_id ( sort keys %{$stuff{$gob_id}{$e}} )
             {
-                my $min = '';
-                my $desc = Encode::decode_utf8('<b>Non identifié</b>');
-                my $equipe = $e;
-                my $type = '';
-                my $nom = $stuff{$gob_id}{$e}{$item_id}{'Nom'};
+                my $min      = '';
+                my $desc     = Encode::decode_utf8('<b>Non identifié</b>');
+                my $equipe   = $e;
+                my $type     = '';
+                my $nom      = $stuff{$gob_id}{$e}{$item_id}{'Nom'};
                 my $template = '';
 
                 if ( $stuff{$gob_id}{$e}{$item_id}{'Poids'} )
