@@ -230,12 +230,12 @@ sub createProfil {
         print $fh '                        <strong>Date Limite d\'Action</strong> : '.$gobs{$gob_id}{'DLA'}.'<br/>'."\n";
         print $fh '                        <strong>Position</strong> : '.$position.'<br/>'."\n";
         print $fh '                        <br>'."\n";
-        print $fh '                        <strong>ATT</strong> : '.$gobs2{$gob_id}{'ATT'}.'D +'.$gobs2{$gob_id}{'BPATT'}.' +'.$gobs2{$gob_id}{'BMATT'}.'<br/>'."\n";
-        print $fh '                        <strong>ESQ</strong> : '.$gobs2{$gob_id}{'ESQ'}.'D +'.$gobs2{$gob_id}{'BPESQ'}.' +'.$gobs2{$gob_id}{'BMESQ'}.'<br/>'."\n";
-        print $fh '                        <strong>DEG</strong> : '.$gobs2{$gob_id}{'DEG'}.'D +'.$gobs2{$gob_id}{'BPDEG'}.' +'.$gobs2{$gob_id}{'BMDEG'}.'<br/>'."\n";
-        print $fh '                        <strong>REG</strong> : '.$gobs2{$gob_id}{'REG'}.'D +'.$gobs2{$gob_id}{'BPREG'}.' +'.$gobs2{$gob_id}{'BMREG'}.'<br/>'."\n";
-        print $fh '                        <strong>PER</strong> : '.$gobs2{$gob_id}{'PER'}.' +'. $gobs2{$gob_id}{'BPPER'}.' +'.$gobs2{$gob_id}{'BMPER'}.'<br/>'."\n";
-        print $fh '                        <strong>ARM</strong> : '.                             $gobs2{$gob_id}{'BPArm'}.' +'.$gobs2{$gob_id}{'BMArm'}.'<br/>'."\n";
+        print $fh '                        <strong>ATT</strong> : '.$gobs2{$gob_id}{'ATT'}.'D '.sprintf("%+d",$gobs2{$gob_id}{'BPATT'}).' '.sprintf("%+d",$gobs2{$gob_id}{'BMATT'}).'<br/>'."\n";
+        print $fh '                        <strong>ESQ</strong> : '.$gobs2{$gob_id}{'ESQ'}.'D '.sprintf("%+d",$gobs2{$gob_id}{'BPESQ'}).' '.sprintf("%+d",$gobs2{$gob_id}{'BMESQ'}).'<br/>'."\n";
+        print $fh '                        <strong>DEG</strong> : '.$gobs2{$gob_id}{'DEG'}.'D '.sprintf("%+d",$gobs2{$gob_id}{'BPDEG'}).' '.sprintf("%+d",$gobs2{$gob_id}{'BMDEG'}).'<br/>'."\n";
+        print $fh '                        <strong>REG</strong> : '.$gobs2{$gob_id}{'REG'}.'D '.sprintf("%+d",$gobs2{$gob_id}{'BPREG'}).' '.sprintf("%+d",$gobs2{$gob_id}{'BMREG'}).'<br/>'."\n";
+        print $fh '                        <strong>PER</strong> : '.$gobs2{$gob_id}{'PER'}.' '. sprintf("%+d",$gobs2{$gob_id}{'BPPER'}).' '.sprintf("%+d",$gobs2{$gob_id}{'BMPER'}).'<br/>'."\n";
+        print $fh '                        <strong>ARM</strong> : '.                             $gobs2{$gob_id}{'BPArm'}.' '.sprintf("%+d",$gobs2{$gob_id}{'BMArm'}).'<br/>'."\n";
         print $fh '                        <strong>PVs</strong> : '.$gobs{$gob_id}{'PV'}.' / '.$gobs2{$gob_id}{'PVMax'}.'<br/>'."\n";
         print $fh '                        <br>'."\n";
         print $fh '                        <strong>Faim</strong> : '.$gobs2{$gob_id}{'Faim'}.'<br/>'."\n";
