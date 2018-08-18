@@ -250,6 +250,17 @@ sub createProfil {
         print $fh '                        <strong>Canines de Trolls</strong> : '.$gobs{$gob_id}{'CT'}.' CT<br/>'."\n";
         print $fh '                    </fieldset>'."\n";
         print $fh '                    <fieldset>'."\n";
+        print $fh '                        <legend>'.Encode::decode_utf8('Affinités').'</legend>'."\n";
+        my @affinites = ('MM','RM','MT','RT','MR','RR','MS','RS','MC','RC','MP','RP');
+        foreach my $affinite (@affinites)
+        {
+            my $sum = $gobs2{$gob_id}{$affinite}{$affinite} + $gobs2{$gob_id}{$affinite}{'B'};
+            my $aff = $gobs2{$gob_id}{$affinite}{$affinite};
+            my $bon = sprintf("%+d",$gobs2{$gob_id}{$affinite}{'B'});
+            print $fh '                        <strong>'.$affinite.'</strong> : '.$aff.$bon.' = '.$sum.'<br/>'."\n";
+        }
+        print $fh '                    </fieldset>'."\n";
+        print $fh '                    <fieldset>'."\n";
         print $fh '                        <legend>Cafards</legend>'."\n";
         print $fh '                        Pas encore disponible dans les scripts Externes'."\n";
         print $fh '                    </fieldset>'."\n";

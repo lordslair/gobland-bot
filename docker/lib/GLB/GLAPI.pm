@@ -121,9 +121,12 @@ sub GetClanMembres2
             #"Id";"Nom";"DLA";"BPDLA";"BMDLA";"PVMax";"BPPVMax";"BMPVMax";"ATT";"BPATT";"BMATT";"ESQ";"BPESQ";"BMESQ";"DEG";"BPDEG";"BMDEG";
             #           "REG";"BPREG";"BMREG";"PER";"BPPER";"BMPER";"BPArm";"BMArm";"PITotal";
             #"Faim";
-            #"MM";"BMM";"BPMM";"BMMM";"RM";"BRM";"BPRM";"BMRM";"MT";"BMT";"BPMT";"BMMT";"RT";"BRT";"BPRT";"BMRT";
-            #"MR";"BMR";"BPMR";"BMMR";"RR";"BRR";"BPRR";"BMRR";"MS";"BMS";"BPMS";"BMMS";"RS";"BRS";"BPRS";"BMRS";
-            #"MC";"BMC";"BPMC";"BMMC";"RC";"BRC";"BPRC";"BMRC";"MP";"BMP";"BPMP";"BMMP";"RP";"BRP";"BPRP";"BMRP"
+            #"MM";"BMM";"BPMM";"BMMM";"RM";"BRM";"BPRM";"BMRM";
+            #"MT";"BMT";"BPMT";"BMMT";"RT";"BRT";"BPRT";"BMRT";
+            #"MR";"BMR";"BPMR";"BMMR";"RR";"BRR";"BPRR";"BMRR";
+            #"MS";"BMS";"BPMS";"BMMS";"RS";"BRS";"BPRS";"BMRS";
+            #"MC";"BMC";"BPMC";"BMMC";"RC";"BRC";"BPRC";"BMRC";
+            #"MP";"BMP";"BPMP";"BMMP";"RP";"BRP";"BPRP";"BMRP"
             $line =~ s/"//g;
             my @line = split /;/, $line;
             if ( $line !~ /^#/ )
@@ -151,6 +154,60 @@ sub GetClanMembres2
                 $MEMBRES{$line[0]}{'BMArm'}   = $line[24];
                 $MEMBRES{$line[0]}{'PITotal'} = Encode::decode_utf8($line[25]);
                 $MEMBRES{$line[0]}{'Faim'}    = $line[26];
+
+                $MEMBRES{$line[0]}{'MM'}{'MM'}= $line[27];
+                $MEMBRES{$line[0]}{'MM'}{'B'} = $line[28];
+                $MEMBRES{$line[0]}{'MM'}{'BP'}= $line[29];
+                $MEMBRES{$line[0]}{'MM'}{'BM'}= $line[30];
+                $MEMBRES{$line[0]}{'RM'}{'RM'}= $line[31];
+                $MEMBRES{$line[0]}{'RM'}{'B'} = $line[32];
+                $MEMBRES{$line[0]}{'RM'}{'BP'}= $line[33];
+                $MEMBRES{$line[0]}{'RM'}{'BM'}= $line[34];
+
+                $MEMBRES{$line[0]}{'MT'}{'MT'}= $line[35];
+                $MEMBRES{$line[0]}{'MT'}{'B'} = $line[36];
+                $MEMBRES{$line[0]}{'MT'}{'BP'}= $line[37];
+                $MEMBRES{$line[0]}{'MT'}{'BM'}= $line[38];
+                $MEMBRES{$line[0]}{'RT'}{'RT'}= $line[39];
+                $MEMBRES{$line[0]}{'RT'}{'B'} = $line[40];
+                $MEMBRES{$line[0]}{'RT'}{'BP'}= $line[41];
+                $MEMBRES{$line[0]}{'RT'}{'BM'}= $line[42];
+
+                $MEMBRES{$line[0]}{'MR'}{'MR'}= $line[43];
+                $MEMBRES{$line[0]}{'MR'}{'B'} = $line[44];
+                $MEMBRES{$line[0]}{'MR'}{'BP'}= $line[45];
+                $MEMBRES{$line[0]}{'MR'}{'BM'}= $line[46];
+                $MEMBRES{$line[0]}{'RR'}{'RR'}= $line[47];
+                $MEMBRES{$line[0]}{'RR'}{'B'} = $line[48];
+                $MEMBRES{$line[0]}{'RR'}{'BP'}= $line[49];
+                $MEMBRES{$line[0]}{'RR'}{'BM'}= $line[50];
+
+                $MEMBRES{$line[0]}{'MS'}{'MS'}= $line[51];
+                $MEMBRES{$line[0]}{'MS'}{'B'} = $line[52];
+                $MEMBRES{$line[0]}{'MS'}{'BP'}= $line[53];
+                $MEMBRES{$line[0]}{'MS'}{'BM'}= $line[54];
+                $MEMBRES{$line[0]}{'RS'}{'RS'}= $line[55];
+                $MEMBRES{$line[0]}{'RS'}{'B'} = $line[56];
+                $MEMBRES{$line[0]}{'RS'}{'BP'}= $line[57];
+                $MEMBRES{$line[0]}{'RS'}{'BM'}= $line[58];
+
+                $MEMBRES{$line[0]}{'MC'}{'MC'}= $line[59];
+                $MEMBRES{$line[0]}{'MC'}{'B'} = $line[60];
+                $MEMBRES{$line[0]}{'MC'}{'BP'}= $line[61];
+                $MEMBRES{$line[0]}{'MC'}{'BM'}= $line[62];
+                $MEMBRES{$line[0]}{'RC'}{'RC'}= $line[63];
+                $MEMBRES{$line[0]}{'RC'}{'B'} = $line[64];
+                $MEMBRES{$line[0]}{'RC'}{'BP'}= $line[65];
+                $MEMBRES{$line[0]}{'RC'}{'BM'}= $line[66];
+
+                $MEMBRES{$line[0]}{'MP'}{'MP'}= $line[67];
+                $MEMBRES{$line[0]}{'MP'}{'B'} = $line[68];
+                $MEMBRES{$line[0]}{'MP'}{'BP'}= $line[69];
+                $MEMBRES{$line[0]}{'MP'}{'BM'}= $line[70];
+                $MEMBRES{$line[0]}{'RP'}{'RP'}= $line[71];
+                $MEMBRES{$line[0]}{'RP'}{'B'} = $line[72];
+                $MEMBRES{$line[0]}{'RP'}{'BP'}= $line[73];
+                $MEMBRES{$line[0]}{'RP'}{'BM'}= $line[74];
             }
         }
         return \%MEMBRES;
