@@ -119,6 +119,7 @@ sub createEquipement {
                 my $equipe = $e;
                 my $type = '';
                 my $nom = $stuff{$gob_id}{$e}{$item_id}{'Nom'};
+                my $template = '';
 
                 if ( $stuff{$gob_id}{$e}{$item_id}{'Poids'} )
                 {
@@ -132,9 +133,14 @@ sub createEquipement {
                 {
                     $type = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Type'});
                 }
+                if ( $stuff{$gob_id}{$e}{$item_id}{'Magie'} )
+                {                                                                                                                                                                 $template = ' <b>'.Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Magie'}.'</b>');
+                }
                 if ( $type ne 'Composant' )
                 {
-                    print $fh ' ' x 32, '<li class="equipement'.$equipe.'">['.$item_id.'] '.$type.' : '.$nom.' ('.$desc.')'.$min.'</li>'."\n";
+                    print $fh ' ' x 32, '<li class="equipement'.$equipe.'">'."\n";
+                    print $fh ' ' x 34, '['.$item_id.'] '.$type.' : '.$nom.$template.' ('.$desc.')'.$min."\n";
+                    print $fh ' ' x 32, '</li>'."\n";
                 }
             }
             if ( $e eq 'Equipe' ) { print $fh '                                <br>'."\n" }
