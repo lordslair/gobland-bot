@@ -180,7 +180,7 @@ sub createEquipement {
                 }
                 if ( $type eq 'Composant' )
                 {
-                    $compos .= '<li class="equipement'.$equipe.'">['.$item_id.'] '.$type.' : '.$nom.' ('.$desc.')'.$min.'</li>'."\n";
+                    $compos .= '<li class="equipement'.$equipe.'">['.$item_id.'] '.$nom.' ('.$desc.')'.$min.'</li>'."\n";
                 }
             }
         }
