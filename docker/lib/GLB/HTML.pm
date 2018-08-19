@@ -89,6 +89,63 @@ sub createIndex {
     close $fh;
 }
 
+sub createMateriaux {
+
+    use POSIX qw(strftime);
+
+    my $t_start  = [gettimeofday()];
+    my $filename = '/var/www/localhost/htdocs/materiaux.html';
+    open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
+    binmode($fh, ":utf8");
+    print $fh $GLB::functions::begin;
+
+    print $fh '            <div id="content">'."\n";
+    print $fh '                <h1>Possessions</h1>'."\n";
+
+    print $fh '                <h2 class="expanded">Materiaux Gobelins</h2>'."\n";
+    print $fh '                <table cellspacing="0" id="profilInfos">'."\n";
+    for my $gob_id ( sort keys %stuff )
+    {
+        my $materiaux = '';
+        foreach my $e ( sort keys %{$stuff{$gob_id}} )
+        {
+            for my $item_id ( sort keys %{$stuff{$gob_id}{$e}} )
+            {
+                if ( $stuff{$gob_id}{$e}{$item_id}{'Type'} =~ /^Minerai$|Matériau/)
+                {
+                    my $min     = ', '.sprintf("%.1f", $stuff{$gob_id}{$e}{$item_id}{'Poids'}/60) . ' min';
+                    my $nom     = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Nom'});
+                    my $desc    = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Desc'});
+                    my $nbr     = $stuff{$gob_id}{$e}{$item_id}{'Taille'};
+                    $materiaux .= ' ' x 32 . '<li class="equipementNonEquipe">'."\n";
+                    $materiaux .= ' ' x 34 . '['.$item_id.'] '.$nom.' de taille '.$nbr.' ('.$desc.')'.$min."\n";
+                    $materiaux .= ' ' x 32 . '</li>'."\n";
+                }
+            }
+        }
+        if ( $materiaux ne '' )
+        {
+            print $fh '                    <tr class="expanded">'."\n";
+            print $fh '                        <th>Materiaux de '.$gobs{$gob_id}{'Nom'}.' ('.$gob_id.') </th>'."\n";
+            print $fh '                    </tr>'."\n";
+            print $fh '                    <tr>'."\n";
+            print $fh '                        <td>'."\n";
+            print $fh '                            <ul class="membreEquipementList">'."\n";
+            print $fh $materiaux;
+            print $fh '                            </ul>'."\n";
+            print $fh '                        </td>'."\n";
+            print $fh '                    </tr>'."\n";
+        }
+    }
+    print $fh '                </table>'."\n";
+
+    my $t_elapsed = sprintf ("%0.3f", tv_interval($t_start));
+    print $fh '                <div class="footer">[HTML generated in '.$t_elapsed.' sec.] - [Updated @'.localtime.']</div>'."\n";
+
+    print $fh $GLB::functions::end;
+    close $fh;
+}
+
 sub createEquipement {
 
     my $t_start  = [gettimeofday()];
@@ -136,7 +193,7 @@ sub createEquipement {
                 if ( $stuff{$gob_id}{$e}{$item_id}{'Magie'} )
                 {                                                                                                                                                                 $template = ' <b>'.Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Magie'}.'</b>');
                 }
-                if ( $type ne 'Composant' )
+                if ( $type !~ /^Minerai$|Matériau|Composant/ )
                 {
                     print $fh ' ' x 32, '<li class="equipement'.$equipe.'">'."\n";
                     print $fh ' ' x 34, '['.$item_id.'] '.$type.' : '.$nom.$template.' ('.$desc.')'.$min."\n";
