@@ -4,9 +4,10 @@ MAINTAINER @Lordslair
 RUN apk update \
     && apk add --no-cache perl-libwww perl apache2 apache2-utils \
     && apk add --no-cache --virtual .build-deps \
-                                    curl make perl-dev libc-dev librsvg-dev gcc bash \
+                                    curl make perl-dev libc-dev librsvg-dev gcc bash tzdata \
     && curl -L https://cpanmin.us | perl - App::cpanminus --no-wget \
     && cpanm --no-wget YAML::Tiny \
+    && cp /usr/share/zoneinfo/Europe/Paris /etc/localtime \
     && apk del .build-deps \
     && rm -rf /root/.cpanm \
     && mkdir /run/apache2 \
