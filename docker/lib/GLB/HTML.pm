@@ -56,6 +56,7 @@ sub createIndex {
         } else { $pad = ' ' }
 
         my $color   = GLB::functions::GetColor($gobs{$gob_id}{'PV'},$gobs2{$gob_id}{'PVMax'});
+        my $percent = ($gobs{$gob_id}{'PV'} / $gobs2{$gob_id}{'PVMax'}) * 100;
         my $lifebar = '<br><div class="vieContainer"><div style="background-color:'.$color.'; width: '.$percent.'%">&nbsp;</div></div>';
 
         $ct_total += $gobs{$gob_id}{'CT'};
