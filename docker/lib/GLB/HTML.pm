@@ -462,7 +462,7 @@ sub createVue {
                     my $n = $VUE{$type}{$id}{'N'};
                     if ( $ITEMS{$x}{$y}{'tt'} !~ /N = $n/ )
                     {
-                        $ITEMS{$x}{$y}{'tt'} .= "&nbsp;&nbsp;N = $n<br>";
+                        $ITEMS{$x}{$y}{'tt'} .= "&nbsp;&nbsp;<b>N = $n</b><br>";
                     }
 
                     my $tt_text_c = 'black';
