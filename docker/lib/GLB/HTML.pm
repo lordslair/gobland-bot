@@ -92,8 +92,6 @@ sub createIndex {
 
 sub createMateriaux {
 
-    use POSIX qw(strftime);
-
     my $t_start  = [gettimeofday()];
     my $filename = '/var/www/localhost/htdocs/materiaux.html';
     open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
@@ -105,6 +103,7 @@ sub createMateriaux {
 
     print $fh '                <h2 class="expanded">Materiaux Gobelins</h2>'."\n";
     print $fh '                <table cellspacing="0" id="profilInfos">'."\n";
+
     for my $gob_id ( sort keys %stuff )
     {
         my $materiaux = '';
