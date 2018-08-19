@@ -89,6 +89,9 @@ sub GetClanMembres
                 $MEMBRES{$line[0]}{'Etat'}   = $line[10];
                 $MEMBRES{$line[0]}{'PA'}     = $line[11];
                 $MEMBRES{$line[0]}{'PV'}     = $line[12];
+                $MEMBRES{$line[0]}{'PX'}     = $line[13];
+                $MEMBRES{$line[0]}{'PXPerso'}= $line[14];
+                $MEMBRES{$line[0]}{'PI'}     = $line[15];
                 $MEMBRES{$line[0]}{'CT'}     = $line[16];
             }
         }
