@@ -246,7 +246,8 @@ sub createEquipement {
                     $type = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Type'});
                 }
                 if ( $stuff{$gob_id}{$e}{$item_id}{'Magie'} )
-                {                                                                                                                                                                 $template = ' <b>'.Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Magie'}.'</b>');
+                {
+                    $template = ' <b>'.Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Magie'}.'</b>');
                 }
                 if ( $type !~ /^Minerai$|Matériau|Composant/ )
                 {
