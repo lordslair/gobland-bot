@@ -337,6 +337,8 @@ sub createProfil {
         my $duree_bm = GLB::functions::GetDureeDLA($gobs2{$gob_id}{'BMDLA'});
         my $duree_s  = $gobs2{$gob_id}{'DLA'} + $gobs2{$gob_id}{'BMDLA'} + $gobs2{$gob_id}{'BPDLA'};
         my $duree_t  = GLB::functions::GetDureeDLA($duree_s);
+        my $faim_png  = '<img src="/images/stuff/icon_74.png">';
+        my $ct_png    = '<img src="/images/stuff/icon_111.png">';
 
         print $fh '                <h1>Profil de '.$gobs{$gob_id}{'Nom'}.'</h1>'."\n";
         print $fh '                <div id="profilInfos">'."\n";
@@ -355,7 +357,7 @@ sub createProfil {
         print $fh '                        <strong>ARM</strong> : '.                             $gobs2{$gob_id}{'BPArm'}.' '.sprintf("%+d",$gobs2{$gob_id}{'BMArm'}).'<br/>'."\n";
         print $fh '                        <strong>PVs</strong> : '.$gobs{$gob_id}{'PV'}.' / '.$gobs2{$gob_id}{'PVMax'}.'<br/>'."\n";
         print $fh '                        <br>'."\n";
-        print $fh '                        <strong>Faim</strong> : '.$gobs2{$gob_id}{'Faim'}.'<br/>'."\n";
+        print $fh '                        <strong>'.$faim_png.'Faim</strong> : '.$gobs2{$gob_id}{'Faim'}.'<br/>'."\n";
         print $fh '                        <br>'."\n";
         print $fh '                        <strong>Duree normale du tour</strong> : '.$duree_b.'<br/>'."\n";
         print $fh '                        <strong>Bonus / Malus de duree</strong> : '.$duree_bm.'<br/>'."\n";
@@ -364,7 +366,7 @@ sub createProfil {
         print $fh '                        <strong>Duree totale du tour</strong> : '.$duree_t.'</span><br/>'."\n";
         print $fh '                        <strong>Prochaine DLA</strong> : [A CODER]</span><br/>'."\n";
         print $fh '                        <br>'."\n";
-        print $fh '                        <strong>Canines de Trolls</strong> : '.$gobs{$gob_id}{'CT'}.' CT<br/>'."\n";
+        print $fh '                        <strong>'.$ct_png.'Canines de Trolls</strong> : '.$gobs{$gob_id}{'CT'}.' CT<br/>'."\n";
         print $fh '                    </fieldset>'."\n";
         print $fh '                    <fieldset>'."\n";
         print $fh '                        <legend>'.Encode::decode_utf8('Affinités').'</legend>'."\n";
