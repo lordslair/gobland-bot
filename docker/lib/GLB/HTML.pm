@@ -392,7 +392,17 @@ sub createProfil {
         print $fh '                    </fieldset>'."\n";
         print $fh '                    <fieldset>'."\n";
         print $fh '                        <legend>Cafards</legend>'."\n";
-        print $fh '                        Pas encore disponible dans les scripts Externes'."\n";
+
+        foreach my $c_id ( sort keys %{$cafards{$gob_id}} )
+        {
+            my $nom     = $cafards{$gob_id}{$c_id}{'Nom'};
+            my $type    = $cafards{$gob_id}{$c_id}{'Type'};
+            my $effet   = $cafards{$gob_id}{$c_id}{'Effet'};
+            my $c_png   = $cafards{$gob_id}{$c_id}{'PNG'};
+
+            print $fh '                        <li>'.$c_png.' ['.$c_id.'] '.$type.' ('.$effet.')</li>'."\n";
+        }
+
         print $fh '                    </fieldset>'."\n";
         print $fh '                    <fieldset>'."\n";
         print $fh '                        <legend>Talents</legend>'."\n";

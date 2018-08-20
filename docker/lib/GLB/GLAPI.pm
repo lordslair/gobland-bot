@@ -326,4 +326,49 @@ sub getVue
     }
 }
 
+sub getClanCafards
+{
+    my $glfile = shift;
+    my $glyaml = YAML::Tiny->read( $glfile );
+    my %CAFARDS;
+
+    my $browser = new LWP::UserAgent;
+    my $request = new HTTP::Request( GET => "http://ie.gobland.fr/IE_ClanCafards?id=$glyaml->[0]{gl_user}&passwd=$glyaml->[0]{gl_api_key}" );
+    my $headers = $request->headers();
+       $headers->header( 'User-Agent','Mozilla/5.0 (compatible; Konqueror/3.4; Linux) KHTML/3.4.2 (like Gecko)');
+       $headers->header( 'Accept', 'text/html, image/jpeg, image/png, text/*, image/*, */*');
+       $headers->header( 'Accept-Encoding','x-gzip, x-deflate, gzip, deflate');
+       $headers->header( 'Accept-Charset', 'iso-8859-15, utf-8;q=0.5, *;q=0.5');
+       $headers->header( 'Accept-Language', 'fr, en');
+       $headers->header( 'Referer', 'http://ie.gobland.fr');
+    my $response = $browser->request($request);
+
+    if ($response->is_success)
+    {
+        foreach my $line (split(/\n/,$response->content))
+        {
+            chomp ($line);
+            #"IdGob";"IdCafard";"Nom";"Effet";"Type";"Apparition";"Etat"
+            $line =~ s/"//g;
+            my @line = split /;/, $line;
+            if ( $line !~ /^#/ )
+            {
+                $CAFARDS{$line[0]}{$line[1]}{'Nom'}        = Encode::decode_utf8($line[2]);
+                $CAFARDS{$line[0]}{$line[1]}{'Effet'}      = $line[3];
+                $CAFARDS{$line[0]}{$line[1]}{'Type'}       = Encode::decode_utf8($line[4]);
+                $CAFARDS{$line[0]}{$line[1]}{'Apparition'} = $line[5];
+                $CAFARDS{$line[0]}{$line[1]}{'Etat'}       = $line[6];
+                if ( $line[6] eq 'Actif' )
+                {
+                    $CAFARDS{$line[0]}{$line[1]}{'PNG'}    = '<img src="/images/bug/bug-icon.png">';
+                } else
+                {
+                    $CAFARDS{$line[0]}{$line[1]}{'PNG'}    = '<img src="/images/bug/bug-error-icon.png">';
+                }
+            }
+        }
+        return \%CAFARDS;
+    }
+}
+
 1;
