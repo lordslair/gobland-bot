@@ -146,6 +146,61 @@ sub createMateriaux {
     close $fh;
 }
 
+sub createComposants
+{
+    my $t_start  = [gettimeofday()];
+    my $filename = '/var/www/localhost/htdocs/composants.html';
+    open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
+    binmode($fh, ":utf8");
+    print $fh $GLB::functions::begin;
+
+    print $fh '            <div id="content">'."\n";
+    print $fh '                <h1>Possessions</h1>'."\n";
+
+    print $fh '                <h2 class="expanded">Composants Gobelins</h2>'."\n";
+    print $fh '                <table cellspacing="0" id="profilInfos">'."\n";
+    for my $gob_id ( sort keys %stuff )
+    {
+        my $compos = '';
+        foreach my $e ( sort keys %{$stuff{$gob_id}} )
+        {
+            for my $item_id ( sort keys %{$stuff{$gob_id}{$e}} )
+            {
+                if ( $stuff{$gob_id}{$e}{$item_id}{'Type'} eq 'Composant' )
+                {
+                    my $min     = ', '.sprintf("%.1f", $stuff{$gob_id}{$e}{$item_id}{'Poids'}/60) . ' min';
+                    my $nom     = $stuff{$gob_id}{$e}{$item_id}{'Nom'};
+                    my $desc    = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Desc'});
+                    my $nbr     = $stuff{$gob_id}{$e}{$item_id}{'Taille'};
+                    $compos    .= ' ' x 32 . '<li class="equipementNonEquipe">'."\n";
+                    $compos    .= ' ' x 34 .'['.$item_id.'] '.$nom.' ('.$desc.')'.$min."\n";
+                    $compos    .= ' ' x 32 . '</li>'."\n";
+                }
+            }
+        }
+        if ( $compos ne '' )
+        {
+            print $fh '                    <tr class="expanded">'."\n";
+            print $fh '                        <th>Composants de '.$gobs{$gob_id}{'Nom'}.' ('.$gob_id.') </th>'."\n";
+            print $fh '                    </tr>'."\n";
+            print $fh '                    <tr>'."\n";
+            print $fh '                        <td>'."\n";
+            print $fh '                            <ul class="membreEquipementList">'."\n";
+            print $fh $compos;
+            print $fh '                            </ul>'."\n";
+            print $fh '                        </td>'."\n";
+            print $fh '                    </tr>'."\n";
+        }
+    }
+    print $fh '                </table>'."\n";
+
+    my $t_elapsed = sprintf ("%0.3f", tv_interval($t_start));
+    print $fh '                <div class="footer">[HTML generated in '.$t_elapsed.' sec.] - [Updated @'.localtime.']</div>'."\n";
+
+    print $fh $GLB::functions::end;
+    close $fh;
+}
+
 sub createEquipement {
 
     my $t_start  = [gettimeofday()];

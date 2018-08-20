@@ -7,5 +7,6 @@ use GLB::HTML;
 
 GLB::HTML::createIndex();
 GLB::HTML::createEquipement();
+GLB::HTML::createComposants();
 GLB::HTML::createProfil();
 GLB::HTML::createVue();

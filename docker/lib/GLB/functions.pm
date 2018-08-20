@@ -26,6 +26,7 @@ our $begin = <<"START_LOOP";
                             <ul>
                                 <li><a href="http://rabatteurs.lordslair.net/equipement.html" title="Equipement des Gob' du Clan">Equipement du Clan</a></li>
                                 <li><a href="http://rabatteurs.lordslair.net/materiaux.html" title="Materiaux des Gob' du Clan">Materiaux du Clan</a></li>
+                                <li><a href="http://rabatteurs.lordslair.net/composants.html" title="Composants des Gob' du Clan">Composants du Clan</a></li>
                             </ul>
                        </li>
                         <li><a href="" title="">Outils</a>
