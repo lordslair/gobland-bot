@@ -368,14 +368,25 @@ sub createProfil {
         print $fh '                    </fieldset>'."\n";
         print $fh '                    <fieldset>'."\n";
         print $fh '                        <legend>'.Encode::decode_utf8('Affinités').'</legend>'."\n";
-        my @affinites = ('MM','RM','MT','RT','MR','RR','MS','RS','MC','RC','MP','RP');
-        foreach my $affinite (@affinites)
+        my @ecoles    = ('M','T','R','S','C','P');
+        my @rms       = ('M','R');
+        print $fh '                        <table style="border: 0px;float: left;margin: 0px;font-family: courier;font-size: 12px;">'."\n";
+        foreach my $ecole (@ecoles)
         {
-            my $sum = $gobs2{$gob_id}{$affinite}{$affinite} + $gobs2{$gob_id}{$affinite}{'B'};
-            my $aff = $gobs2{$gob_id}{$affinite}{$affinite};
-            my $bon = sprintf("%+d",$gobs2{$gob_id}{$affinite}{'B'});
-            print $fh '                        <strong>'.$affinite.'</strong> : '.$aff.$bon.' = '.$sum.'<br/>'."\n";
+            print $fh '                        <tr>'."\n";
+            foreach my $rm (@rms)
+            {
+                my $affinite = $rm.$ecole;
+                my $sum = $gobs2{$gob_id}{$affinite}{$affinite} + $gobs2{$gob_id}{$affinite}{'B'};
+                my $aff = $gobs2{$gob_id}{$affinite}{$affinite};
+                my $bon = sprintf("%+d",$gobs2{$gob_id}{$affinite}{'B'});
+                print $fh '                        <td style="border: 0px;text-align: left;padding: 1px;font-size: 12px;">'."\n";
+                print $fh '                            <strong>'.$affinite.'</strong> : '.$sum.' ('.$aff.$bon.')'."\n";
+                print $fh '                        </td>'."\n";
+            }
+            print $fh '                        </tr>'."\n";
         }
+        print $fh '                        </table>'."\n";
         print $fh '                    </fieldset>'."\n";
         print $fh '                    <fieldset>'."\n";
         print $fh '                        <legend>Cafards</legend>'."\n";
