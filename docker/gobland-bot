@@ -7,6 +7,8 @@ use GLB::HTML;
 
 GLB::HTML::createIndex();
 GLB::HTML::createEquipement();
+GLB::HTML::createMateriaux();
 GLB::HTML::createComposants();
 GLB::HTML::createProfil();
 GLB::HTML::createVue();
+GLB::HTML::createPXBank();
