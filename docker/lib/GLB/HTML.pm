@@ -263,55 +263,6 @@ sub createEquipement {
     }
     print $fh '                </table>'."\n";
 
-    print $fh '                <h2 class="expanded">Composants Gobelins</h2>'."\n";
-    print $fh '                <table cellspacing="0" id="profilInfos">'."\n";
-    for my $gob_id ( sort keys %stuff )
-    {
-        my $compos = '';
-        foreach my $e ( sort keys %{$stuff{$gob_id}} )
-        {
-            for my $item_id ( sort keys %{$stuff{$gob_id}{$e}} )
-            {
-                my $min    = '';
-                my $desc   = Encode::decode_utf8('<b>Non identifié</b>');
-                my $equipe = $e;
-                my $type   = '';
-                my $nom    = $stuff{$gob_id}{$e}{$item_id}{'Nom'};
-
-                if ( $stuff{$gob_id}{$e}{$item_id}{'Poids'} )
-                {
-                    $min = ', '.$stuff{$gob_id}{$e}{$item_id}{'Poids'}/60 . ' min';
-                }
-                if ( $stuff{$gob_id}{$e}{$item_id}{'Identifie'} eq 'VRAI' )
-                {
-                    $desc = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Desc'});
-                }
-                if ( $stuff{$gob_id}{$e}{$item_id}{'Type'} )
-                {
-                    $type = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Type'});
-                }
-                if ( $type eq 'Composant' )
-                {
-                    $compos .= '<li class="equipement'.$equipe.'">['.$item_id.'] '.$nom.' ('.$desc.')'.$min.'</li>'."\n";
-                }
-            }
-        }
-        if ( $compos ne '' )
-        {
-            print $fh '                    <tr class="expanded">'."\n";
-            print $fh '                        <th>Composant(s) de '.$gobs{$gob_id}{'Nom'}.' ('.$gob_id.') </th>'."\n";
-            print $fh '                    </tr>'."\n";
-            print $fh '                    <tr>'."\n";
-            print $fh '                        <td>'."\n";
-            print $fh '                            <ul class="membreEquipementList">'."\n";
-            print $fh $compos;
-            print $fh '                            </ul>'."\n";
-            print $fh '                        </td>'."\n";
-            print $fh '                    </tr>'."\n";
-        }
-    }
-    print $fh '                </table>'."\n";
-
     my $t_elapsed = sprintf ("%0.3f", tv_interval($t_start));
     print $fh '                <div class="footer">[HTML generated in '.$t_elapsed.' sec.] - [Updated @'.localtime.']</div>'."\n";
 
