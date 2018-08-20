@@ -332,6 +332,11 @@ sub createProfil {
         print $fh '            <div id="content">'."\n";
 
         my $position = $gobs{$gob_id}{'X'}.', '.$gobs{$gob_id}{'Y'}.', '.$gobs{$gob_id}{'N'};
+        my $duree_b  = GLB::functions::GetDureeDLA($gobs2{$gob_id}{'DLA'});
+        my $duree_p  = GLB::functions::GetDureeDLA($gobs2{$gob_id}{'BPDLA'});
+        my $duree_bm = GLB::functions::GetDureeDLA($gobs2{$gob_id}{'BMDLA'});
+        my $duree_s  = $gobs2{$gob_id}{'DLA'} + $gobs2{$gob_id}{'BMDLA'} + $gobs2{$gob_id}{'BPDLA'};
+        my $duree_t  = GLB::functions::GetDureeDLA($duree_s);
 
         print $fh '                <h1>Profil de '.$gobs{$gob_id}{'Nom'}.'</h1>'."\n";
         print $fh '                <div id="profilInfos">'."\n";
@@ -352,11 +357,11 @@ sub createProfil {
         print $fh '                        <br>'."\n";
         print $fh '                        <strong>Faim</strong> : '.$gobs2{$gob_id}{'Faim'}.'<br/>'."\n";
         print $fh '                        <br>'."\n";
-        print $fh '                        <strong>Duree normale du tour</strong> : '.$gobs2{$gob_id}{'DLA'}.'<br/>'."\n";
-        print $fh '                        <strong>Bonus / Malus de duree</strong> : '.($gobs2{$gob_id}{'BPDLA'}+$gobs2{$gob_id}{'BMDLA'}).'<br/>'."\n";
+        print $fh '                        <strong>Duree normale du tour</strong> : '.$duree_b.'<br/>'."\n";
+        print $fh '                        <strong>Bonus / Malus de duree</strong> : '.$duree_bm.'<br/>'."\n";
         print $fh '                        <strong>Augmentation due aux blessures</strong> : [A CODER]</span><br/>'."\n";
-        print $fh '                        <strong>Poids des possessions</strong> : [A CODER]</span><br/>'."\n";
-        print $fh '                        <strong>Duree totale du tour</strong> : [A CODER]</span><br/>'."\n";
+        print $fh '                        <strong>Poids des possessions</strong> : '.$duree_p.'</span><br/>'."\n";
+        print $fh '                        <strong>Duree totale du tour</strong> : '.$duree_t.'</span><br/>'."\n";
         print $fh '                        <strong>Prochaine DLA</strong> : [A CODER]</span><br/>'."\n";
         print $fh '                        <br>'."\n";
         print $fh '                        <strong>Canines de Trolls</strong> : '.$gobs{$gob_id}{'CT'}.' CT<br/>'."\n";

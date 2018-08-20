@@ -187,4 +187,21 @@ sub GetStuffIcon
     return $png;
 }
 
+sub GetDureeDLA
+{
+    my $sec = shift;
+    my @DLA = (($sec/(60*60))%24,($sec/60)%60,$sec%60);
+    my $DLA;
+
+    if ( $sec == abs($sec) )
+    {
+        $DLA = sprintf("%02d",$DLA[0]).'h'.sprintf("%02d",$DLA[1]);
+    }
+    else
+    {
+        $DLA = '-'.sprintf("%02d",$DLA[0]).'h'.sprintf("%02d",$DLA[1]);
+    }
+    return $DLA;
+}
+
 1;
