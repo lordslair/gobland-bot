@@ -321,6 +321,9 @@ sub createEquipement {
 
 sub createProfil {
 
+    my $cafards_ref  = GLB::GLAPI::getClanCafards($yaml);
+    my %cafards      = %{$cafards_ref};
+
     for my $gob_id ( sort keys %gobs )
     {
         my $t_start  = [gettimeofday()];
