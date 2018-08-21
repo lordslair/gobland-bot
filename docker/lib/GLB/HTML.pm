@@ -452,6 +452,7 @@ sub createVue {
             my $G_emoji = '<img src="/images/1f60e.png" width="16" height="16">'; #😎
             my $C_emoji = '<img src="/images/1f47f.png" width="16" height="16">'; #👿
             my $W_emoji = '<img src="/images/1f6a7.png" width="16" height="16">'; #🚧
+            my $A_emoji = '<img src="/images/1f333.png" width="16" height="16">'; #🌳
 
             my $T_count = 0;
             my $C_count = 0;
@@ -479,13 +480,17 @@ sub createVue {
                     {
                         $ITEMS{$x}{$y}{'td'} .= $T_emoji;
                     }
-                    elsif ( $type eq 'L' && $ITEMS{$x}{$y}{'td'} !~ /1f3e0/ && $VUE{$type}{$id}{'Nom'} ne 'Mur')
+                    elsif ( $type eq 'L' && $ITEMS{$x}{$y}{'td'} !~ /1f3e0/ && $VUE{$type}{$id}{'Nom'} !~ /Mur|Arbre/)
                     {
                         $ITEMS{$x}{$y}{'td'} .= $L_emoji;
                     }
                     elsif ( $type eq 'L' && $VUE{$type}{$id}{'Nom'} eq 'Mur')
                     {
                         $ITEMS{$x}{$y}{'td'} .= $W_emoji;
+                    }
+                    elsif ( $type eq 'L' && $VUE{$type}{$id}{'Nom'} eq 'Arbre')
+                    {
+                        $ITEMS{$x}{$y}{'td'} .= $A_emoji;
                     }
                     elsif ( $type eq 'C' && $ITEMS{$x}{$y}{'td'} !~ /1f47f/ )
                     {
