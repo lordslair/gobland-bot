@@ -523,32 +523,53 @@ sub createVue {
             print $fh '    <tbody>'."\n";
             print $fh '        <tr>'."\n";
             print $fh '            <td class="blank"></td>'."\n";
-            for (my $td = $X - $cases; $td <= $X + $cases; $td++) {print $fh '            <th>'.$td.'</th>'."\n" }
 
-            for (my $tr = $Y + $cases; $tr >= $Y - $cases; $tr--)
+            if ( $cases > 0 )
             {
-                print $fh '        <tr>'."\n";
-                print $fh '            <th>'.$tr.'</th>'."\n";
-                for (my $td = $X - $cases; $td <= $X + $cases; $td++)
+                for (my $td = $X - $cases; $td <= $X + $cases; $td++) {print $fh '            <th>'.$td.'</th>'."\n" }
+                print $fh '        </tr>'."\n";
+
+                for (my $tr = $Y + $cases; $tr >= $Y - $cases; $tr--)
                 {
-                    my $tdcolor;
-                    if ( $td == $X and $tr == $Y ) { $tdcolor = 'style="background-color: white"' } else { $tdcolor = '' }
-                    if ( defined $ITEMS{$td}{$tr}{'td'} )
+                    print $fh '        <tr>'."\n";
+                    print $fh '            <th>'.$tr.'</th>'."\n";
+                    for (my $td = $X - $cases; $td <= $X + $cases; $td++)
                     {
-                        print $fh '            <td '.$tdcolor.'>'."\n";
-                        print $fh '                <div class="tt">'."\n";
-                        print $fh '                    '.$ITEMS{$td}{$tr}{'td'}."\n";
-                        print $fh '                    <span class="tt_text">'.$ITEMS{$td}{$tr}{'tt'}.'</span>'."\n";
-                        print $fh '                </div>'."\n";
-                        print $fh '            </td>'."\n";
+                        my $tdcolor = '';
+                        if ( $td == $X and $tr == $Y ) { $tdcolor = 'style="background-color: white"' }
+                        if ( defined $ITEMS{$td}{$tr}{'td'} )
+                        {
+                            print $fh '            <td '.$tdcolor.'>'."\n";
+                            print $fh '                <div class="tt">'."\n";
+                            print $fh '                    '.$ITEMS{$td}{$tr}{'td'}."\n";
+                            print $fh '                    <span class="tt_text">'.$ITEMS{$td}{$tr}{'tt'}.'</span>'."\n";
+                            print $fh '                </div>'."\n";
+                            print $fh '            </td>'."\n";
+                        }
+                        else
+                        {
+                            print $fh '            <td '.$tdcolor.'></td>'."\n";
+                        }
                     }
-                    else
-                    {
-                        print $fh '            <td '.$tdcolor.'></td>'."\n";
-                    }
+                    print $fh '        </tr>'."\n";
                 }
+            }
+            else
+            {
+                my $tdcolor = 'style="background-color: white"';
+                print $fh '            <th>'.$X.'</th>'."\n";
+                print $fh '        </tr>'."\n";
+                print $fh '        <tr>'."\n";
+                print $fh '            <th>'.$Y.'</th>'."\n";
+                print $fh '            <td '.$tdcolor.'>'."\n";
+                print $fh '                <div class="tt">'."\n";
+                print $fh '                    '.$ITEMS{$X}{$Y}{'td'}."\n";
+                print $fh '                    <span class="tt_text">'.$ITEMS{$X}{$Y}{'tt'}.'</span>'."\n";
+                print $fh '                </div>'."\n";
+                print $fh '            </td>'."\n";
                 print $fh '        </tr>'."\n";
             }
+
             print $fh '    </tbody>'."\n";
             print $fh '</table>'."\n";
 
