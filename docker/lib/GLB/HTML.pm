@@ -62,7 +62,9 @@ sub createIndex {
         $ct_total += $gobs{$gob_id}{'CT'};
 
         print $fh '                <tr>'."\n";
-        print $fh '                  <td>'.$gobs{$gob_id}{'Nom'}.'</td>'."\n";
+        print $fh '                  <td>'."\n";
+        print $fh '                    <a href="http://games.gobland.fr/Profil.php?IdPJ='.$gob_id.'" target="_blank">'.$gobs{$gob_id}{'Nom'}."\n";                    print $fh '                    </a>'."\n";
+        print $fh '                  </td>'."\n";
         print $fh '                  <td>'.$gob_id.'</td>'."\n";
         print $fh '                  <td>'.$gobs{$gob_id}{'Tribu'}.'</td>'."\n";
         print $fh '                  <td>'.$gobs{$gob_id}{'Niveau'}.'</td>'."\n";
