@@ -251,7 +251,7 @@ sub createEquipement {
                 {
                     $template = ' <b>'.Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Magie'}.'</b>');
                 }
-                if ( $type !~ /^Minerai$|Matériau|Composant/ )
+                if ( $type !~ /^Minerai$|Mat.riau|Composant/ )
                 {
                     print $fh ' ' x 32, '<li class="equipement'.$equipe.'">'."\n";
                     print $fh ' ' x 34, '['.$item_id.'] '.$type.' : '.$nom.$template.' ('.$desc.')'.$min."\n";
