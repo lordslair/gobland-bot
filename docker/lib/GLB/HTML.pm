@@ -117,7 +117,7 @@ sub createMateriaux {
                 {
                     my $min     = ', '.sprintf("%.1f", $stuff{$gob_id}{$e}{$item_id}{'Poids'}/60) . ' min';
                     my $nom     = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Nom'});
-                    my $desc    = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Desc'});
+                    my $desc    = GLB::functions::GetQualite($stuff{$gob_id}{$e}{$item_id}{'Type'}, $stuff{$gob_id}{$e}{$item_id}{'Qualite'});
                     my $nbr     = $stuff{$gob_id}{$e}{$item_id}{'Taille'};
                     my $m_png   = '';
                     $materiaux .= ' ' x 32 . '<li class="equipementNonEquipe">'."\n";

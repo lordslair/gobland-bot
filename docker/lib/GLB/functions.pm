@@ -204,4 +204,25 @@ sub GetDureeDLA
     return $DLA;
 }
 
+sub GetQualite
+{
+    my $type      = shift;
+    my $quali_id  = shift;
+    my $quali_str = '';
+
+    my %M_QUALITY;
+    $M_QUALITY{'0'} = '';
+    $M_QUALITY{'1'} = Encode::decode_utf8('Médiocre');
+    $M_QUALITY{'2'} = 'Moyenne';
+    $M_QUALITY{'3'} = 'Normale';
+    $M_QUALITY{'4'} = 'Bonne';
+    $M_QUALITY{'5'} = '<b>Exceptionnelle</b>';
+
+    if ( $type eq 'Matériau' or $type eq 'Minerai' )
+    {
+        $quali_str = $M_QUALITY{$quali_id};
+    }
+    return $quali_str;
+}
+
 1;
