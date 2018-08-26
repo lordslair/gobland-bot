@@ -11,6 +11,7 @@ our $begin = <<"START_LOOP";
         <link rel="stylesheet" type="text/css" href="/style/common.css" />
         <link rel="stylesheet" type="text/css" href="/style/menu.css" />
         <link rel="stylesheet" type="text/css" href="/style/equipement.css" />
+        <link rel="stylesheet" type="text/css" href="/style/gps.css" />
         <script type="text/javascript" src="/js/common.js"></script>
         <script type="text/javascript" src="/js/domcollapse.js"></script>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -32,6 +33,7 @@ our $begin = <<"START_LOOP";
                         <li><a href="" title="">Outils</a>
                             <ul>
                                 <li><a href="http://rabatteurs.lordslair.net/pxbank.html" title="PX Bank du Clan">PX Bank</a></li>
+                                <li><a href="http://rabatteurs.lordslair.net/GPS.html" title="GPS">GPS</a></li>
                             </ul>
                         </li>
                         <li><a href="" title="">Liens</a></li>
@@ -224,5 +226,22 @@ sub GetQualite
     }
     return $quali_str;
 }
+
+our $vuescript = <<VUE_SCRIPT;
+<script>
+function showTooltip(evt, text) {
+          let tooltip = document.getElementById("tooltip");
+          tooltip.innerHTML = text;
+          tooltip.style.display = "block";
+          tooltip.style.left = evt.pageX + 10 + 'px';
+          tooltip.style.top = evt.pageY + 10 + 'px';
+}
+
+function hideTooltip() {
+          var tooltip = document.getElementById("tooltip");
+          tooltip.style.display = "none";
+}
+</script>
+VUE_SCRIPT
 
 1;

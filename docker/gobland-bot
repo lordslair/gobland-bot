@@ -12,3 +12,4 @@ GLB::HTML::createComposants();
 GLB::HTML::createProfil();
 GLB::HTML::createVue();
 GLB::HTML::createPXBank();
+GLB::HTML::createGPS();
