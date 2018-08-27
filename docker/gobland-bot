@@ -2,14 +2,76 @@
 use warnings;
 use strict;
 
+use File::Pid;
+
 use lib '/home/gobland-bot/lib/';
 use GLB::HTML;
 
-GLB::HTML::createIndex();
-GLB::HTML::createEquipement();
-GLB::HTML::createMateriaux();
-GLB::HTML::createComposants();
-GLB::HTML::createProfil();
-GLB::HTML::createVue();
-GLB::HTML::createPXBank();
-GLB::HTML::createGPS();
+my $daemonName    = "gobland-bot";
+my $dieNow        = 0;                                     # used for "infinte loop" construct - allows daemon mode to gracefully exit
+my $sleepMainLoop = 3600;                                  # number of seconds to wait between "do something" execution after queue is clear
+my $logging       = 1;                                     # 1= logging is on
+my $pidFilePath   = "/var/run/";                           # PID file path
+my $pidFile       = $pidFilePath . $daemonName . ".pid";
+
+# Funny stuff
+my $EMOJIko = "\e[31m".':o('."\e[0m";
+my $EMOJIok = "\e[32m".':o)'."\e[0m";
+
+# daemonize
+chdir '/';
+umask 0;
+
+# callback signal handler for signals.
+$SIG{INT} = $SIG{TERM} = $SIG{HUP} = \&signalHandler;
+$SIG{PIPE} = 'ignore';
+
+# create pid file in /var/run/
+my $pidfile = File::Pid->new( { file => $pidFile, } );
+   $pidfile->write or die "Can't write PID file, /dev/null: $!";
+
+logEntry("Starting daemon");
+
+my $loop;
+# "infinite" loop where some useful process happens
+until ($dieNow) {
+    sleep($sleepMainLoop);
+
+    $loop++;
+    logEntry("$EMOJIok Entering loop $loop");
+
+    GLB::HTML::createIndex();
+    GLB::HTML::createEquipement();
+    GLB::HTML::createMateriaux();
+    GLB::HTML::createComposants();
+    GLB::HTML::createProfil();
+    GLB::HTML::createVue();
+    GLB::HTML::createPXBank();
+    GLB::HTML::createGPS();
+}
+
+# add a line to the log file
+sub logEntry {
+    my ($logText) = @_;
+    my ( $sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst ) = localtime(time);
+    my $dateTime = sprintf "%4d-%02d-%02d %02d:%02d:%02d", $year + 1900, $mon + 1, $mday, $hour, $min, $sec;
+    if ($logging) {
+        binmode(STDERR, ":utf8");
+        print STDERR "$dateTime $logText\n";
+    }
+}
+
+# catch signals and end the program if one is caught.
+sub signalHandler {
+    logEntry("Stop signal caught");
+    $dieNow = 1;    # this will cause the "infinite loop" to exit
+}
+
+# do this stuff when exit() is called.
+END {
+    if ($logging)
+    {
+        logEntry("Stopping daemon");
+    }
+    $pidfile->remove if defined $pidfile;
+}
