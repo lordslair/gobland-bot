@@ -286,7 +286,9 @@ sub createProfil {
     for my $gob_id ( sort keys %gobs )
     {
         my $t_start  = [gettimeofday()];
-        my $filename = '/var/www/localhost/htdocs/gobelins/'.$gob_id.'.html';
+        my $dir      = '/var/www/localhost/htdocs/gobelins/';
+        my $filename = $dir.$gob_id.'.html';
+        unless ( -d $dir ) { mkdir $dir }
         open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
         binmode($fh, ":utf8");
         print $fh $GLB::functions::begin;
@@ -445,7 +447,9 @@ sub createVue {
         if ( $glyaml->[0]->{clan}{$gob_id} )
         {
             my $t_start  = [gettimeofday()];
-            my $filename = '/var/www/localhost/htdocs/vue/'.$gob_id.'.html';
+            my $dir      = '/var/www/localhost/htdocs/vue/';
+            my $filename = $dir.$gob_id.'.html';
+            unless ( -d $dir ) { mkdir $dir }
             open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
             binmode($fh, ":utf8");
             print $fh $GLB::functions::begin;
