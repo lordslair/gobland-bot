@@ -202,10 +202,11 @@ sub GetMateriauIcon
     my $nom  = shift;
     my $png  = '';
 
-    if    ( $nom eq 'Rondin'         ) { $png = '<img src="/images/stuff/icon_109.png">' }
-    elsif ( $nom eq 'Minerai de Fer' ) { $png = '<img src="/images/stuff/icon_104.png">' }
-    elsif ( $nom eq 'Cuir'           ) { $png = '<img src="/images/stuff/icon_98.png">'  }
-    elsif ( $nom eq 'Tissu'          ) { $png = '<img src="/images/stuff/icon_103.png">' }
+    if    ( $nom eq 'Rondin'         ) { $png = '<img src="/images/stuff/icon_109.png">'  }
+    elsif ( $nom eq 'Minerai de Fer' ) { $png = '<img src="/images/stuff/icon_104.png">'  }
+    elsif ( $nom eq 'Cuir'           ) { $png = '<img src="/images/stuff/icon_98.png">'   }
+    elsif ( $nom eq 'Tissu'          ) { $png = '<img src="/images/stuff/icon_103.png">'  }
+    elsif ( $nom eq 'Pierre'         ) { $png = '<img src="/images/stuff/icon_1142.png">' }
 
     return $png;
 }
