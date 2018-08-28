@@ -4,9 +4,9 @@ use warnings;
 use strict;
 
 use YAML::Tiny;
-my $yaml      = '/home/gobland-bot/gl-config.yaml';
-my $glyaml    = YAML::Tiny->read( $yaml );
-my $clan_name = $glyaml->[0]{gl_clan_name};
+my  $yaml      = '/home/gobland-bot/gl-config.yaml';
+my  $glyaml    = YAML::Tiny->read( $yaml );
+our $clan_name = $glyaml->[0]{gl_clan_name};
 
 our $begin = <<"START_LOOP";
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

@@ -20,6 +20,8 @@ my %stuff      = %{$stuff_ref};
 my $skill_ref  = GLB::GLAPI::getClanSkills($yaml);
 my %skill      = %{$skill_ref};
 
+my $clan_name  = $GLB::functions::clan_name;
+
 sub createIndex {
     my $t_start  = [gettimeofday()]; 
     my $filename = '/var/www/localhost/htdocs/index.html';
@@ -29,7 +31,7 @@ sub createIndex {
     print $fh $GLB::functions::begin;
 
     print $fh '            <div id="content">'."\n";
-    print $fh '              <br><h1>Bienvenue chez les Rabatteurs de Khaket</h1><br>'."\n";
+    print $fh '              <br><h1>'.$clan_name.'</h1><br>'."\n";
     print $fh '              <table cellspacing="0" id="trollsList">'."\n";
     print $fh '                <tr>'."\n";
     print $fh '                  <th>Pseudo</th>'."\n";
@@ -73,8 +75,8 @@ sub createIndex {
         print $fh '                  <td'.$pad.'>'.$gobs{$gob_id}{'PA'}.'</td>'."\n";
         print $fh '                  <td><span class="DLA"> DLA : '.$gobs{$gob_id}{'DLA'}.'</span><br><span class="pDLA">pDLA : [A CODER]</span></td>'."\n";
         print $fh '                  <td>'."\n";
-        print $fh '                      <a href="http://rabatteurs.lordslair.net/gobelins/'.$gob_id.'.html" title="Votre profil">PROFIL</a>'."\n";
-        print $fh '                      <a href="http://rabatteurs.lordslair.net/vue/'.$gob_id.'.html" title="Votre vue">VUE</a>'."\n";
+        print $fh '                      <a href="/gobelins/'.$gob_id.'.html" title="Votre profil">PROFIL</a>'."\n";
+        print $fh '                      <a href="/vue/'.$gob_id.'.html" title="Votre vue">VUE</a>'."\n";
         print $fh '                  </td>'."\n";
         print $fh '                </tr>'."\n";
     }
