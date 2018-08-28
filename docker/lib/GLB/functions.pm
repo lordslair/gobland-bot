@@ -197,6 +197,19 @@ sub GetStuffIcon
     return $png;
 }
 
+sub GetMateriauIcon
+{
+    my $nom  = shift;
+    my $png  = '';
+
+    if    ( $nom eq 'Rondin'         ) { $png = '<img src="/images/stuff/icon_109.png">' }
+    elsif ( $nom eq 'Minerai de Fer' ) { $png = '<img src="/images/stuff/icon_104.png">' }
+    elsif ( $nom eq 'Cuir'           ) { $png = '<img src="/images/stuff/icon_98.png">'  }
+    elsif ( $nom eq 'Tissu'          ) { $png = '<img src="/images/stuff/icon_103.png">' }
+
+    return $png;
+}
+
 sub GetDureeDLA
 {
     my $sec = shift;
