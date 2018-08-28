@@ -242,7 +242,7 @@ sub GetQualite
     $M_QUALITY{'4'} = 'Bonne';
     $M_QUALITY{'5'} = '<b>Exceptionnelle</b>';
 
-    if ( $type eq 'Matériau' or $type eq 'Minerai' )
+    if ( $type eq 'Mat..riau' or $type eq 'Minerai' or $type eq 'Roche' )
     {
         $quali_str = $M_QUALITY{$quali_id};
     }
