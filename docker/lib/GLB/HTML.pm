@@ -126,6 +126,7 @@ sub createMateriaux {
                     if ( $nom eq 'Rondin'         ) { $m_png = '<img src="/images/stuff/icon_109.png">' }
                     if ( $nom eq 'Minerai de Fer' ) { $m_png = '<img src="/images/stuff/icon_104.png">' }
                     if ( $nom eq 'Cuir'           ) { $m_png = '<img src="/images/stuff/icon_98.png">'  }
+                    if ( $nom eq 'Tissu'          ) { $m_png = '<img src="/images/stuff/icon_103.png">' }
                     $materiaux .= ' ' x 34 . $m_png;
                     $materiaux .= ' ' x 34 . '['.$item_id.'] '.$nom.' de taille '.$nbr.' ('.$desc.')'.$min."\n";
                     $materiaux .= ' ' x 32 . '</li>'."\n";
