@@ -232,33 +232,13 @@ sub createEquipement {
         {
             for my $item_id ( sort keys %{$stuff{$gob_id}{$e}} )
             {
-                my $min      = '';
-                my $desc     = Encode::decode_utf8('<b>Non identifié</b>');
-                my $equipe   = $e;
-                my $type     = '';
-                my $nom      = $stuff{$gob_id}{$e}{$item_id}{'Nom'};
-                my $template = '';
-
-                if ( $stuff{$gob_id}{$e}{$item_id}{'Poids'} )
-                {
-                    $min = ', '.$stuff{$gob_id}{$e}{$item_id}{'Poids'}/60 . ' min';
-                }
-                if ( $stuff{$gob_id}{$e}{$item_id}{'Identifie'} eq 'VRAI' )
-                {
-                    $desc = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Desc'});
-                }
-                if ( $stuff{$gob_id}{$e}{$item_id}{'Type'} )
-                {
-                    $type = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Type'});
-                }
-                if ( $stuff{$gob_id}{$e}{$item_id}{'Magie'} )
-                {
-                    $template = ' <b>'.Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Magie'}.'</b>');
-                }
+                my $type     = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Type'});
                 if ( $type !~ /^Minerai$|Mat.riau|Composant/ )
                 {
+                    my $item_txt = GLB::functions::GetStuff($stuff_ref,$gob_id,$e,$item_id,'full');
+
                     print $fh ' ' x 32, '<li class="equipement'.$equipe.'">'."\n";
-                    print $fh ' ' x 34, '['.$item_id.'] '.$type.' : '.$nom.$template.' ('.$desc.')'.$min."\n";
+                    print $fh ' ' x 34, $item_txt."\n";
                     print $fh ' ' x 32, '</li>'."\n";
                 }
             }
@@ -403,30 +383,13 @@ sub createProfil {
             {
                 for my $item_id ( sort keys %{$stuff{$gob_id}{$e}} )
                 {
-                    my $min    = '';
-                    my $desc   = Encode::decode_utf8('<b>Non identifié</b>');
-                    my $equipe = $e;
-                    my $type   = '';
-                    my $template = '';
+                    my $type     = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Type'});
+                    my $nom      = $stuff{$gob_id}{$e}{$item_id}{'Nom'};
 
-                    if ( $stuff{$gob_id}{$e}{$item_id}{'Poids'} )
-                    {
-                        $min = ', '.$stuff{$gob_id}{$e}{$item_id}{'Poids'}/60 . ' min';
-                    }
-                    if ( $stuff{$gob_id}{$e}{$item_id}{'Identifie'} eq 'VRAI' )
-                    {
-                        $desc = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Desc'});
-                    }
-                    if ( $stuff{$gob_id}{$e}{$item_id}{'Magie'} )
-                    {
-                        $template = ' <b>'.Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Magie'}.'</b>');
-                    }
-                    if ( $stuff{$gob_id}{$e}{$item_id}{'Type'} )
-                    {
-                        $type = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Type'});
-                    }
-                    my $png = GLB::functions::GetStuffIcon($type,$nom);
-                    print $fh '<img src="/images/stuff/'.$png.'">['.$item_id.'] '.$nom.$template.' ('.$desc.')'.$min.'<br>'."\n";
+                    my $item_txt = GLB::functions::GetStuff($stuff_ref,$gob_id,$e,$item_id,'short');
+                    my $png      = GLB::functions::GetStuffIcon($type,$nom);
+
+                    print $fh '<img src="/images/stuff/'.$png.'">'.$item_txt."\n";
                 }
             }
         }

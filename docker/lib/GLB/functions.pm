@@ -249,6 +249,40 @@ sub GetQualite
     return $quali_str;
 }
 
+sub GetStuff
+{
+    my $stuff_ref = shift;
+    my %stuff     = %{$stuff_ref};
+    my $gob_id    = shift;
+    my $equipe    = shift;
+    my $item_id   = shift;
+    my $style     = shift;
+
+    my $min       = ', '.$stuff{$gob_id}{$equipe}{$item_id}{'Poids'}/60 . ' min';
+    my $desc      = Encode::decode_utf8('<b>Non identifi..</b>');
+    my $type      = Encode::decode_utf8($stuff{$gob_id}{$equipe}{$item_id}{'Type'});
+    my $nom       = $stuff{$gob_id}{$equipe}{$item_id}{'Nom'};
+    my $template  = '';
+
+    if ( $stuff{$gob_id}{$equipe}{$item_id}{'Identifie'} eq 'VRAI' )
+    {
+        $desc = Encode::decode_utf8($stuff{$gob_id}{$equipe}{$item_id}{'Desc'});
+    }
+    if ( $stuff{$gob_id}{$equipe}{$item_id}{'Magie'} )
+    {
+        $template = ' <b>'.Encode::decode_utf8($stuff{$gob_id}{$equipe}{$item_id}{'Magie'}.'</b>');
+    }
+
+    if ( $style eq 'full' )
+    {
+        return my $item_txt = '['.$item_id.'] '.$type.' : '.$nom.$template.' ('.$desc.')'.$min.'<br>';
+    }
+    else
+    {
+        return my $item_txt = '['.$item_id.'] '.$nom.$template.' ('.$desc.')'.$min.'<br>';
+    }
+}
+
 our $vuescript = <<VUE_SCRIPT;
 <script>
 function showTooltip(evt, text) {
