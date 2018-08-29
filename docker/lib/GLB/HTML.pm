@@ -407,7 +407,7 @@ sub createProfil {
                     my $desc   = Encode::decode_utf8('<b>Non identifié</b>');
                     my $equipe = $e;
                     my $type   = '';
-                    my $nom    = $stuff{$gob_id}{$e}{$item_id}{'Nom'};
+                    my $template = '';
 
                     if ( $stuff{$gob_id}{$e}{$item_id}{'Poids'} )
                     {
@@ -417,12 +417,16 @@ sub createProfil {
                     {
                         $desc = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Desc'});
                     }
+                    if ( $stuff{$gob_id}{$e}{$item_id}{'Magie'} )
+                    {
+                        $template = ' <b>'.Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Magie'}.'</b>');
+                    }
                     if ( $stuff{$gob_id}{$e}{$item_id}{'Type'} )
                     {
                         $type = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Type'});
                     }
                     my $png = GLB::functions::GetStuffIcon($type,$nom);
-                    print $fh '<img src="/images/stuff/'.$png.'">['.$item_id.'] '.$nom.' ('.$desc.')'.$min.'<br>'."\n";
+                    print $fh '<img src="/images/stuff/'.$png.'">['.$item_id.'] '.$nom.$template.' ('.$desc.')'.$min.'<br>'."\n";
                 }
             }
         }
