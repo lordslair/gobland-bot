@@ -176,9 +176,15 @@ sub GetColor
 
 sub GetStuffIcon
 {
-    my $type = shift;
-    my $nom  = shift;
-    my $png;
+    my $stuff_ref = shift;
+    my %stuff     = %{$stuff_ref};
+    my $gob_id    = shift;
+    my $equipe    = shift;
+    my $item_id   = shift;
+
+    my $png       = '';
+    my $type      = Encode::decode_utf8($stuff{$gob_id}{$equipe}{$item_id}{'Type'});
+    my $nom       = $stuff{$gob_id}{$equipe}{$item_id}{'Nom'};
 
     if    ( $type eq 'Armure' )                           { $png = 'icon_04.png' }
     elsif ( $type eq 'Casque' )                           { $png = 'icon_14.png' }
@@ -194,7 +200,7 @@ sub GetStuffIcon
     elsif ( $type eq 'Bijou' )                            { $png = 'icon_108.png' }
     else  { $png = '' }
 
-    return $png;
+    return '<img src="/images/stuff/'.$png.'">';
 }
 
 sub GetMateriauIcon
