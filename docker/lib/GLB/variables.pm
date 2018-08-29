@@ -1,4 +1,4 @@
-package GLB::functions;
+package GLB::variables;
 
 use warnings;
 use strict;
