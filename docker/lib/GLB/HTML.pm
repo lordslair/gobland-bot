@@ -237,7 +237,7 @@ sub createEquipement {
                 {
                     my $item_txt = GLB::functions::GetStuff($stuff_ref,$gob_id,$e,$item_id,'full');
 
-                    print $fh ' ' x 32, '<li class="equipement'.$equipe.'">'."\n";
+                    print $fh ' ' x 32, '<li class="equipement'.$e.'">'."\n";
                     print $fh ' ' x 34, $item_txt."\n";
                     print $fh ' ' x 32, '</li>'."\n";
                 }
