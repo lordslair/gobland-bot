@@ -8,6 +8,7 @@ use YAML::Tiny;
 use lib '/home/gobland-bot/lib/';
 use GLB::GLAPI;
 use GLB::functions;
+use GLB::variables;
 
 my $yaml       = '/home/gobland-bot/gl-config.yaml';
 
@@ -20,7 +21,7 @@ my %stuff      = %{$stuff_ref};
 my $skill_ref  = GLB::GLAPI::getClanSkills($yaml);
 my %skill      = %{$skill_ref};
 
-my $clan_name  = $GLB::functions::clan_name;
+my $clan_name  = $GLB::variables::clan_name;
 
 sub createIndex {
     my $t_start  = [gettimeofday()]; 
@@ -28,7 +29,7 @@ sub createIndex {
     open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
     binmode($fh, ":utf8");
 
-    print $fh $GLB::functions::begin;
+    print $fh $GLB::variables::begin;
 
     print $fh '            <div id="content">'."\n";
     print $fh '              <br><h1>'.$clan_name.'</h1><br>'."\n";
@@ -90,7 +91,7 @@ sub createIndex {
     my $t_elapsed = sprintf ("%0.3f", tv_interval($t_start));
     print $fh '                <div class="footer">[HTML generated in '.$t_elapsed.' sec.] - [Updated @'.localtime.']</div>'."\n";
 
-    print $fh $GLB::functions::end;
+    print $fh $GLB::variables::end;
     close $fh;
 }
 
@@ -100,7 +101,7 @@ sub createMateriaux {
     my $filename = '/var/www/localhost/htdocs/materiaux.html';
     open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
     binmode($fh, ":utf8");
-    print $fh $GLB::functions::begin;
+    print $fh $GLB::variables::begin;
 
     print $fh '            <div id="content">'."\n";
     print $fh '                <h1>Possessions</h1>'."\n";
@@ -148,7 +149,7 @@ sub createMateriaux {
     my $t_elapsed = sprintf ("%0.3f", tv_interval($t_start));
     print $fh '                <div class="footer">[HTML generated in '.$t_elapsed.' sec.] - [Updated @'.localtime.']</div>'."\n";
 
-    print $fh $GLB::functions::end;
+    print $fh $GLB::variables::end;
     close $fh;
 }
 
@@ -158,7 +159,7 @@ sub createComposants
     my $filename = '/var/www/localhost/htdocs/composants.html';
     open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
     binmode($fh, ":utf8");
-    print $fh $GLB::functions::begin;
+    print $fh $GLB::variables::begin;
 
     print $fh '            <div id="content">'."\n";
     print $fh '                <h1>Possessions</h1>'."\n";
@@ -203,7 +204,7 @@ sub createComposants
     my $t_elapsed = sprintf ("%0.3f", tv_interval($t_start));
     print $fh '                <div class="footer">[HTML generated in '.$t_elapsed.' sec.] - [Updated @'.localtime.']</div>'."\n";
 
-    print $fh $GLB::functions::end;
+    print $fh $GLB::variables::end;
     close $fh;
 }
 
@@ -213,7 +214,7 @@ sub createEquipement {
     my $filename = '/var/www/localhost/htdocs/equipement.html';
     open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
     binmode($fh, ":utf8");
-    print $fh $GLB::functions::begin;
+    print $fh $GLB::variables::begin;
 
     print $fh '            <div id="content">'."\n";
     print $fh '                <h1>Possessions</h1>'."\n";
@@ -253,7 +254,7 @@ sub createEquipement {
     my $t_elapsed = sprintf ("%0.3f", tv_interval($t_start));
     print $fh '                <div class="footer">[HTML generated in '.$t_elapsed.' sec.] - [Updated @'.localtime.']</div>'."\n";
 
-    print $fh $GLB::functions::end;
+    print $fh $GLB::variables::end;
     close $fh;
 }
 
@@ -270,7 +271,7 @@ sub createProfil {
         unless ( -d $dir ) { mkdir $dir }
         open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
         binmode($fh, ":utf8");
-        print $fh $GLB::functions::begin;
+        print $fh $GLB::variables::begin;
 
         print $fh '            <div id="content">'."\n";
 
@@ -397,7 +398,7 @@ sub createProfil {
         my $t_elapsed = sprintf ("%0.3f", tv_interval($t_start));
         print $fh '                <div class="footer">[HTML generated in '.$t_elapsed.' sec.] - [Updated @'.localtime.']</div>'."\n";
 
-        print $fh $GLB::functions::end;
+        print $fh $GLB::variables::end;
         close $fh;
     }
 }
@@ -415,7 +416,7 @@ sub createVue {
             unless ( -d $dir ) { mkdir $dir }
             open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
             binmode($fh, ":utf8");
-            print $fh $GLB::functions::begin;
+            print $fh $GLB::variables::begin;
 
             my $VUE_ref    = GLB::GLAPI::getVue($yaml, $gob_id);
             my %VUE        = %{$VUE_ref};
@@ -555,7 +556,7 @@ sub createVue {
             my $t_elapsed = sprintf ("%0.3f", tv_interval($t_start));
             print $fh '                <div class="footer">[HTML generated in '.$t_elapsed.' sec.] - [Updated @'.localtime.']</div>'."\n";
 
-            print $fh $GLB::functions::end;
+            print $fh $GLB::variables::end;
             close $fh;
         }
     }
@@ -567,7 +568,7 @@ sub createPXBank {
     my $filename = '/var/www/localhost/htdocs/pxbank.html';
     open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
     binmode($fh, ":utf8");
-    print $fh $GLB::functions::begin;
+    print $fh $GLB::variables::begin;
 
     print $fh '            <div id="content">'."\n";
     print $fh '                <h1>Banque PI/PX</h1>'."\n";
@@ -607,8 +608,8 @@ sub createPXBank {
     my $t_elapsed = sprintf ("%0.3f", tv_interval($t_start));
     print $fh '                <div class="footer">[HTML generated in '.$t_elapsed.' sec.] - [Updated @'.localtime.']</div>'."\n";
 
-    print $fh $GLB::functions::sortscript;
-    print $fh $GLB::functions::end;
+    print $fh $GLB::variables::sortscript;
+    print $fh $GLB::variables::end;
     close $fh;
 }
 
@@ -619,7 +620,7 @@ sub createGPS {
     my $filename = '/var/www/localhost/htdocs/GPS.html';
     open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
     binmode($fh, ":utf8");
-    print $fh $GLB::functions::begin;
+    print $fh $GLB::variables::begin;
 
     my $lieux_yaml = '/home/gobland-bot/data/Lieux.yaml';
     my $yaml       = YAML::Tiny->read( $lieux_yaml );
@@ -685,8 +686,8 @@ sub createGPS {
     my $t_elapsed = sprintf ("%0.3f", tv_interval($t_start));
     print $fh ' ' x16, '<div class="footer">[HTML generated in '.$t_elapsed.' sec.] - [Updated @'.localtime.']</div>'."\n";
 
-    print $fh $GLB::functions::vuescript;
-    print $fh $GLB::functions::end;
+    print $fh $GLB::variables::vuescript;
+    print $fh $GLB::variables::end;
     close $fh;
 }
 
