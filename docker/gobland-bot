@@ -35,9 +35,8 @@ logEntry("Starting daemon");
 my $loop;
 $| = 1; # Makes the current fh hot and forces a flush of the buffer immediately
 # "infinite" loop where some useful process happens
-until ($dieNow) {
-    sleep($sleepMainLoop);
-
+until ($dieNow)
+{
     $loop++;
     logEntry("$EMOJIok Entering loop $loop");
 
@@ -49,6 +48,8 @@ until ($dieNow) {
     GLB::HTML::createVue();
     GLB::HTML::createPXBank();
     GLB::HTML::createGPS();
+
+    sleep($sleepMainLoop);
 }
 
 # add a line to the log file
