@@ -160,11 +160,11 @@ sub createComposants
     binmode($fh, ":utf8");
     print $fh $GLB::variables::begin;
 
-    print $fh '            <div id="content">'."\n";
-    print $fh '                <h1>Possessions</h1>'."\n";
+    print $fh ' ' x 6, '<div id="content">'."\n";
+    print $fh ' ' x 8, '<h1>Possessions</h1>'."\n";
 
-    print $fh '                <h2 class="expanded">Composants Gobelins</h2>'."\n";
-    print $fh '                <table cellspacing="0" id="profilInfos">'."\n";
+    print $fh ' ' x 8, '<h2 class="expanded">Composants Gobelins</h2>'."\n";
+    print $fh ' ' x 8, '<table cellspacing="0" id="profilInfos">'."\n";
     for my $gob_id ( sort keys %stuff )
     {
         my $compos = '';
@@ -178,30 +178,30 @@ sub createComposants
                     my $nom     = $stuff{$gob_id}{$e}{$item_id}{'Nom'};
                     my $desc    = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Desc'});
                     my $nbr     = $stuff{$gob_id}{$e}{$item_id}{'Taille'};
-                    $compos    .= ' ' x 32 . '<li class="equipementNonEquipe">'."\n";
-                    $compos    .= ' ' x 34 .'['.$item_id.'] '.$nom.' ('.$desc.')'.$min."\n";
-                    $compos    .= ' ' x 32 . '</li>'."\n";
+                    $compos    .= ' ' x 16 . '<li class="equipementNonEquipe">'."\n";
+                    $compos    .= ' ' x 18 .'['.$item_id.'] '.$nom.' ('.$desc.')'.$min."\n";
+                    $compos    .= ' ' x 16 . '</li>'."\n";
                 }
             }
         }
         if ( $compos ne '' )
         {
-            print $fh '                    <tr class="expanded">'."\n";
-            print $fh '                        <th>Composants de '.$gobs{$gob_id}{'Nom'}.' ('.$gob_id.') </th>'."\n";
-            print $fh '                    </tr>'."\n";
-            print $fh '                    <tr>'."\n";
-            print $fh '                        <td>'."\n";
-            print $fh '                            <ul class="membreEquipementList">'."\n";
+            print $fh ' ' x10, '<tr class="expanded">'."\n";
+            print $fh ' ' x12, '<th>Composants de '.$gobs{$gob_id}{'Nom'}.' ('.$gob_id.')</th>'."\n";
+            print $fh ' ' x10, '</tr>'."\n";
+            print $fh ' ' x10, '<tr>'."\n";
+            print $fh ' ' x12, '<td>'."\n";
+            print $fh ' ' x14, '<ul class="membreEquipementList">'."\n";
             print $fh $compos;
-            print $fh '                            </ul>'."\n";
-            print $fh '                        </td>'."\n";
-            print $fh '                    </tr>'."\n";
+            print $fh ' ' x14, '</ul>'."\n";
+            print $fh ' ' x12, '</td>'."\n";
+            print $fh ' ' x10, '</tr>'."\n";
         }
     }
-    print $fh '                </table>'."\n";
+    print $fh ' ' x 8, '</table>'."\n";
 
     my $t_elapsed = sprintf ("%0.3f", tv_interval($t_start));
-    print $fh '                <div class="footer">[HTML generated in '.$t_elapsed.' sec.] - [Updated @'.localtime.']</div>'."\n";
+    print $fh ' ' x 8, '<div class="footer">[HTML generated in '.$t_elapsed.' sec.] - [Updated @'.localtime.']</div>'."\n";
 
     print $fh $GLB::variables::end;
     close $fh;
