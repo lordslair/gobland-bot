@@ -103,11 +103,11 @@ sub createMateriaux {
     binmode($fh, ":utf8");
     print $fh $GLB::variables::begin;
 
-    print $fh '            <div id="content">'."\n";
-    print $fh '                <h1>Possessions</h1>'."\n";
+    print $fh ' ' x 6, '<div id="content">'."\n";
+    print $fh ' ' x 8, '<h1>Possessions</h1>'."\n";
 
-    print $fh '                <h2 class="expanded">Materiaux Gobelins</h2>'."\n";
-    print $fh '                <table cellspacing="0" id="profilInfos">'."\n";
+    print $fh ' ' x 8, '<h2 class="expanded">Materiaux Gobelins</h2>'."\n";
+    print $fh ' ' x 8, '<table cellspacing="0" id="profilInfos">'."\n";
 
     for my $gob_id ( sort keys %stuff )
     {
@@ -123,31 +123,30 @@ sub createMateriaux {
                     my $desc    = GLB::functions::GetQualite($stuff{$gob_id}{$e}{$item_id}{'Type'}, $stuff{$gob_id}{$e}{$item_id}{'Qualite'});
                     my $nbr     = $stuff{$gob_id}{$e}{$item_id}{'Taille'};
                     my $m_png   = GLB::functions::GetMateriauIcon($nom);
-                    $materiaux .= ' ' x 32 . '<li class="equipementNonEquipe">'."\n";
-                    $materiaux .= ' ' x 34 . $m_png;
-                    $materiaux .= ' ' x 34 . '['.$item_id.'] '.$nom.' de taille '.$nbr.' ('.$desc.')'.$min."\n";
-                    $materiaux .= ' ' x 32 . '</li>'."\n";
+                    $materiaux .= ' ' x 16 . '<li class="equipementNonEquipe">'."\n";
+                    $materiaux .= ' ' x 18 . $m_png . '['.$item_id.'] '.$nom.' de taille '.$nbr.' ('.$desc.')'.$min."\n";
+                    $materiaux .= ' ' x 16 . '</li>'."\n";
                 }
             }
         }
         if ( $materiaux ne '' )
         {
-            print $fh '                    <tr class="expanded">'."\n";
-            print $fh '                        <th>Materiaux de '.$gobs{$gob_id}{'Nom'}.' ('.$gob_id.') </th>'."\n";
-            print $fh '                    </tr>'."\n";
-            print $fh '                    <tr>'."\n";
-            print $fh '                        <td>'."\n";
-            print $fh '                            <ul class="membreEquipementList">'."\n";
+            print $fh ' ' x10, '<tr class="expanded">'."\n";
+            print $fh ' ' x12, '<th>Materiaux de '.$gobs{$gob_id}{'Nom'}.' ('.$gob_id.') </th>'."\n";
+            print $fh ' ' x10, '</tr>'."\n";
+            print $fh ' ' x10, '<tr>'."\n";
+            print $fh ' ' x12, '<td>'."\n";
+            print $fh ' ' x14, '<ul class="membreEquipementList">'."\n";
             print $fh $materiaux;
-            print $fh '                            </ul>'."\n";
-            print $fh '                        </td>'."\n";
-            print $fh '                    </tr>'."\n";
+            print $fh ' ' x14, '</ul>'."\n";
+            print $fh ' ' x12, '</td>'."\n";
+            print $fh ' ' x10, '</tr>'."\n";
         }
     }
-    print $fh '                </table>'."\n";
+    print $fh ' ' x 8, '</table>'."\n";
 
     my $t_elapsed = sprintf ("%0.3f", tv_interval($t_start));
-    print $fh '                <div class="footer">[HTML generated in '.$t_elapsed.' sec.] - [Updated @'.localtime.']</div>'."\n";
+    print $fh ' ' x 8, '<div class="footer">[HTML generated in '.$t_elapsed.' sec.] - [Updated @'.localtime.']</div>'."\n";
 
     print $fh $GLB::variables::end;
     close $fh;
@@ -603,7 +602,6 @@ sub createPXBank
     }
 
     print $fh ' ' x 8, '</table>'."\n";
-    print $fh ' ' x 6, '</div>'."\n";
 
     my $t_elapsed = sprintf ("%0.3f", tv_interval($t_start));
     print $fh ' ' x 6, '<div class="footer">[HTML generated in '.$t_elapsed.' sec.] - [Updated @'.localtime.']</div>'."\n";
