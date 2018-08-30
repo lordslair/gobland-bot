@@ -33,6 +33,7 @@ my $pidfile = File::Pid->new( { file => $pidFile, } );
 logEntry("Starting daemon");
 
 my $loop;
+$| = 1; # Makes the current fh hot and forces a flush of the buffer immediately
 # "infinite" loop where some useful process happens
 until ($dieNow) {
     sleep($sleepMainLoop);
