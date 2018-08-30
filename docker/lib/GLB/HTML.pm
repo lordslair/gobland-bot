@@ -95,8 +95,8 @@ sub createIndex {
     close $fh;
 }
 
-sub createMateriaux {
-
+sub createMateriaux
+{
     my $t_start  = [gettimeofday()];
     my $filename = '/var/www/localhost/htdocs/materiaux.html';
     open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
@@ -124,7 +124,7 @@ sub createMateriaux {
                     my $nbr     = $stuff{$gob_id}{$e}{$item_id}{'Taille'};
                     my $m_png   = GLB::functions::GetMateriauIcon($nom);
                     $materiaux .= ' ' x 16 . '<li class="equipementNonEquipe">'."\n";
-                    $materiaux .= ' ' x 18 . $m_png . '['.$item_id.'] '.$nom.' de taille '.$nbr.' ('.$desc.')'.$min."\n";
+                    $materiaux .= ' ' x 18 . $m_png . ' ['.$item_id.'] '.$nom.' de taille '.$nbr.' ('.$desc.')'.$min."\n";
                     $materiaux .= ' ' x 16 . '</li>'."\n";
                 }
             }
