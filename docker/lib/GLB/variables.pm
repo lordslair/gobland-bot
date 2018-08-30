@@ -50,8 +50,8 @@ START_LOOP
 $begin =~ s/#CLAN_NAME#/$clan_name/;
 
 our $end   = <<"END_LOOP";
-      </div>
-    </div>
+      </div> /* content */
+    </div> /* page */
   </body>
 </html>
 END_LOOP
