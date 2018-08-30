@@ -132,7 +132,7 @@ sub createMateriaux
         if ( $materiaux ne '' )
         {
             print $fh ' ' x10, '<tr class="expanded">'."\n";
-            print $fh ' ' x12, '<th>Materiaux de '.$gobs{$gob_id}{'Nom'}.' ('.$gob_id.') </th>'."\n";
+            print $fh ' ' x12, '<th>Materiaux de '.$gobs{$gob_id}{'Nom'}.' ('.$gob_id.')</th>'."\n";
             print $fh ' ' x10, '</tr>'."\n";
             print $fh ' ' x10, '<tr>'."\n";
             print $fh ' ' x12, '<td>'."\n";
