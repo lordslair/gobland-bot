@@ -5,7 +5,14 @@ use strict;
 use File::Pid;
 
 use lib '/home/gobland-bot/lib/';
-use GLB::HTML;
+use GLB::HTML::createIndex;
+use GLB::HTML::createEquipement;
+use GLB::HTML::createMateriaux;
+use GLB::HTML::createComposants;
+use GLB::HTML::createProfil;
+use GLB::HTML::createVue;
+use GLB::HTML::createPXBank;
+use GLB::HTML::createGPS;
 
 my $daemonName    = "gobland-bot";
 my $dieNow        = 0;                                     # used for "infinte loop" construct - allows daemon mode to gracefully exit
@@ -40,14 +47,14 @@ until ($dieNow)
     $loop++;
     logEntry("$EMOJIok Entering loop $loop");
 
-    GLB::HTML::createIndex();
-    GLB::HTML::createEquipement();
-    GLB::HTML::createMateriaux();
-    GLB::HTML::createComposants();
-    GLB::HTML::createProfil();
-    GLB::HTML::createVue();
-    GLB::HTML::createPXBank();
-    GLB::HTML::createGPS();
+    GLB::HTML::createIndex::main();
+    GLB::HTML::createEquipement::main();
+    GLB::HTML::createMateriaux::main();
+    GLB::HTML::createComposants::main();
+    GLB::HTML::createProfil::main();
+    GLB::HTML::createVue::main();
+    GLB::HTML::createPXBank::main();
+    GLB::HTML::createGPS::main();
 
     sleep($sleepMainLoop);
 }

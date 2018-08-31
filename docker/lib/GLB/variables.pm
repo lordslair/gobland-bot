@@ -6,7 +6,16 @@ use strict;
 use YAML::Tiny;
 my  $yaml      = '/home/gobland-bot/gl-config.yaml';
 my  $glyaml    = YAML::Tiny->read( $yaml );
+
+use lib '/home/gobland-bot/lib/';
+use GLB::GLAPI;
+
 our $clan_name = $glyaml->[0]{gl_clan_name};
+our $gobs      = GLB::GLAPI::GetClanMembres($yaml);
+our $gobs2     = GLB::GLAPI::GetClanMembres2($yaml);
+our $stuff     = GLB::GLAPI::GetClanEquipement($yaml);
+our $skill     = GLB::GLAPI::getClanSkills($yaml);
+our $cafards   = GLB::GLAPI::getClanCafards($yaml);
 
 our $begin = <<"START_LOOP";
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -50,8 +59,8 @@ START_LOOP
 $begin =~ s/#CLAN_NAME#/$clan_name/;
 
 our $end   = <<"END_LOOP";
-      </div> /* content */
-    </div> /* page */
+      </div> <!-- content -->
+    </div> <!-- page -->
   </body>
 </html>
 END_LOOP
