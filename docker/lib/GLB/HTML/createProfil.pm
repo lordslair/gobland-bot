@@ -19,6 +19,8 @@ my %skill       = %{$skill_ref};
 my $cafards_ref = $GLB::variables::cafards;
 my %cafards     = %{$cafards_ref};
 
+my $yaml       = '/home/gobland-bot/gl-config.yaml';
+
 sub main
 {
     for my $gob_id ( sort keys %gobs )
@@ -103,6 +105,29 @@ sub main
             my $c_png   = $cafards{$gob_id}{$c_id}{'PNG'};
 
             print $fh ' ' x12, '<li>'.$c_png.' ['.$c_id.'] '.$type.' ('.$effet.')</li>'."\n";
+        }
+
+        print $fh ' ' x10, '</fieldset>'."\n";
+        print $fh ' ' x10, '<fieldset>'."\n";
+        print $fh ' ' x12, '<legend>Meute</legend>'."\n";
+
+        my $meute_ref   = GLB::GLAPI::getMeuteMembres($yaml,$gob_id);
+        my %meute       = %{$meute_ref};
+
+        if ( %meute )
+        {
+            foreach my $m_id ( sort keys %{$meute{$gob_id}} )
+            {
+                my $nom     = $meute{$gob_id}{$m_id}{'Nom'};
+                my $tribu   = $meute{$gob_id}{$m_id}{'Tribu'};
+                my $niveau  = $meute{$gob_id}{$m_id}{'Niveau'};
+
+                print $fh ' ' x12, '<li>'.$nom.' ('.$m_id.') ['.$tribu.'] (lvl '.$niveau.')'."\n";
+            }
+        }
+        else
+        {
+            print $fh ' ' x12, '<li>No DATA available'."\n";
         }
 
         print $fh ' ' x10, '</fieldset>'."\n";

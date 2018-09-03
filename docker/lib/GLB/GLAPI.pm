@@ -371,4 +371,44 @@ sub getClanCafards
     }
 }
 
+sub getMeuteMembres
+{
+    my $glfile = shift;
+    my $gob_id = shift;
+    my $glyaml = YAML::Tiny->read( $glfile );
+    my %MEUTE;
+
+    if ( $glyaml->[0]->{meute}{$gob_id} )
+    {
+        my $browser = new LWP::UserAgent;
+        my $request = new HTTP::Request( GET => "http://ie.gobland.fr/IE_MeuteMembres.php?id=$gob_id&passwd=$glyaml->[0]->{meute}{$gob_id}" );
+        my $headers = $request->headers();
+           $headers->header( 'User-Agent','Mozilla/5.0 (compatible; Konqueror/3.4; Linux) KHTML/3.4.2 (like Gecko)');
+           $headers->header( 'Accept', 'text/html, image/jpeg, image/png, text/*, image/*, */*');
+           $headers->header( 'Accept-Encoding','x-gzip, x-deflate, gzip, deflate');
+           $headers->header( 'Accept-Charset', 'iso-8859-15, utf-8;q=0.5, *;q=0.5');
+           $headers->header( 'Accept-Language', 'fr, en');
+           $headers->header( 'Referer', 'http://ie.gobland.fr');
+        my $response = $browser->request($request);
+
+        if ($response->is_success)
+        {
+            foreach my $line (split(/\n/,$response->content))
+            {
+                chomp ($line);
+                #"Id";"Nom";"Race";"Tribu";"Niveau";"X";"Y";"N";"Z";"DLA";"Etat";"PA";"PV";"PX";"PXPerso";"PI";"CT";"CARAC"
+                $line =~ s/"//g;
+                my @line = split /;/, $line;
+                if ( $line !~ /^#/)
+                {
+                    $MEUTE{$gob_id}{$line[0]}{'Nom'}        = Encode::decode_utf8($line[1]);
+                    $MEUTE{$gob_id}{$line[0]}{'Tribu'}      = $line[3];
+                    $MEUTE{$gob_id}{$line[0]}{'Niveau'}     = $line[4];
+                }
+            }
+        }
+    }
+    return \%MEUTE;
+}
+
 1;
