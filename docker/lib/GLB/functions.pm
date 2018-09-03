@@ -110,8 +110,16 @@ sub GetMateriauIcon
 sub GetDureeDLA
 {
     my $sec = shift;
-    my @DLA = (($sec/(60*60))%24,($sec/60)%60,$sec%60);
+    my @DLA;
     my $DLA;
+    if ( $sec <= 60 )
+    {
+        @DLA = (($sec/(60*60))%24,$sec/60,$sec%60);
+    }
+    else
+    {
+        @DLA = (($sec/(60*60))%24,($sec/60)%60,$sec%60);
+    }
 
     if ( $sec == abs($sec) )
     {
@@ -119,7 +127,7 @@ sub GetDureeDLA
     }
     else
     {
-        $DLA = '-'.sprintf("%02d",$DLA[0]).'h'.sprintf("%02d",$DLA[1]);
+        $DLA = '-'.sprintf("%02d",$DLA[0]).'h'.sprintf("%02d",abs($DLA[1]));
     }
     return $DLA;
 }
