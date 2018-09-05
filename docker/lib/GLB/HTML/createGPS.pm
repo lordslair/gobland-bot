@@ -21,6 +21,7 @@ sub main
     my %LIEUX_YAML = %{$yaml->[0]};
 
     print $fh ' ' x 6, '<div id="content" style="text-align:center;">'."\n";
+    print $fh ' ' x 6, '<link href="/style/gps.css"  rel="stylesheet" type="text/css"  />'."\n";
     print $fh ' ' x 8, '<h1>GPS des Lieux</h1>'."\n";
     print $fh ' ' x 8, '<h3>Passez la souris sur un point pour afficher l\'infobulle</h3>'."\n";
 
