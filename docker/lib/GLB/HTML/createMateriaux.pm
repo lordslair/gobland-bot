@@ -21,7 +21,8 @@ sub main
     print $fh $GLB::variables::begin;
 
     print $fh ' ' x 6, '<div id="content">'."\n";
-    print $fh ' ' x 6, '<link href="/style/tt_r.css"  rel="stylesheet" type="text/css"  />'."\n";
+    print $fh ' ' x 6, '<link href="/style/tt_r.css"       rel="stylesheet" type="text/css" />'."\n";
+    print $fh ' ' x 6, '<link href="/style/equipement.css" rel="stylesheet" type="text/css" />'."\n";
     print $fh ' ' x 8, '<h1>Possessions</h1>'."\n";
 
     print $fh ' ' x 8, '<h2 class="expanded">Materiaux Gobelins</h2>'."\n";
