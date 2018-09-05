@@ -21,6 +21,7 @@ sub main
     print $fh $GLB::variables::begin;
 
     print $fh ' ' x 6, '<div id="content">'."\n";
+    print $fh ' ' x 6, '<link href="/style/tt_r.css"  rel="stylesheet" type="text/css"  />'."\n";
     print $fh ' ' x 8, '<h1>Possessions</h1>'."\n";
 
     print $fh ' ' x 8, '<h2 class="expanded">Materiaux Gobelins</h2>'."\n";
@@ -40,8 +41,12 @@ sub main
                     my $desc    = GLB::functions::GetQualite($stuff{$gob_id}{$e}{$item_id}{'Type'}, $stuff{$gob_id}{$e}{$item_id}{'Qualite'});
                     my $nbr     = $stuff{$gob_id}{$e}{$item_id}{'Taille'};
                     my $m_png   = GLB::functions::GetMateriauIcon($nom);
+                    my $carats  = $nbr * $stuff{$gob_id}{$e}{$item_id}{'Qualite'};
                     $materiaux .= ' ' x 16 . '<li class="equipementNonEquipe">'."\n";
-                    $materiaux .= ' ' x 18 . $m_png . ' ['.$item_id.'] '.$nom.' de taille '.$nbr.' ('.$desc.')'.$min."\n";
+                    $materiaux .= ' ' x 18 . '<div class="tt_r">'."\n";
+                    $materiaux .= ' ' x 20 . $m_png . ' ['.$item_id.'] '.$nom.' de taille '.$nbr.' ('.$desc.')'.$min."\n";
+                    $materiaux .= ' ' x 20 . '<span class="tt_r_text">'.$carats.' Carats</span>'."\n";
+                    $materiaux .= ' ' x 18 . '</div>'."\n";
                     $materiaux .= ' ' x 16 . '</li>'."\n";
                 }
             }

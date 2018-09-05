@@ -1,0 +1,25 @@
+.tt_r {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.tt_r .tt_r_text {
+    visibility: hidden;
+    width: 7em;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 3px;
+    padding: 2px 0;
+    
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: 2px;
+    left: 105%;
+}
+
+.tt_r:hover .tt_r_text {
+    visibility: visible;
+}
