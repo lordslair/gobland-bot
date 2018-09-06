@@ -30,10 +30,36 @@ sub GetCompsTT
 
     foreach my $t_id ( sort keys %{$skills{$gob_id}{'Talents'}{'C'}} )
     {
+        # Connaissance des Monstres
         if ( $t_id == 1 )
         {
             my $vue = $gobs2{$gob_id}{'PER'} + $gobs2{$gob_id}{'BPPER'} + $gobs2{$gob_id}{'BMPER'};
             $SKILLS_TT{$gob_id}{'C'}{$t_id}{'tt'} = Encode::decode_utf8('Portée').' : '.$vue.' Case(s)';
+        }
+        # Mouvement Rapide
+        if ( $t_id == 2 )
+        {
+            my $niveau  = $skills{$gob_id}{'Talents'}{'C'}{$t_id}{'Niveau'};
+            my $proba;
+            if    ( $niveau == 1 ) { $proba = 10 }
+            elsif ( $niveau == 2 ) { $proba = 12 }
+            elsif ( $niveau == 2 ) { $proba = 14 }
+            elsif ( $niveau == 2 ) { $proba = 16 }
+            $SKILLS_TT{$gob_id}{'C'}{$t_id}{'tt'} = 'Proba. : '.$proba.'%';
+        }
+        # Flairer le gibier
+        # Herboriser
+        elsif ( $t_id == 18 or $t_id == 21 )
+        {
+            my $vue    = $gobs2{$gob_id}{'PER'} + $gobs2{$gob_id}{'BPPER'} + $gobs2{$gob_id}{'BMPER'};
+            my $niveau  = $skills{$gob_id}{'Talents'}{'C'}{$t_id}{'Niveau'};
+            my $coeff;
+            if    ( $niveau == 1 ) { $coeff = 1.5 }
+            elsif ( $niveau == 2 ) { $coeff = 2   }
+            elsif ( $niveau == 3 ) { $coeff = 2.5 }
+            elsif ( $niveau == 4 ) { $coeff = 3   }
+            my $portee = $coeff * $vue;
+            $SKILLS_TT{$gob_id}{'C'}{$t_id}{'tt'} = Encode::decode_utf8('Port..e').' : '.$portee.' Case(s)';
         }
     }
     return \%SKILLS_TT;
