@@ -18,6 +18,27 @@ sub GetComps
     return \%SKILLS;
 }
 
+sub GetCompsTT
+{
+    my $gob_id     = shift;
+    my $skills_ref = shift;
+    my %skills     = %{$skills_ref};
+    my $gobs2_ref  = shift;
+    my %gobs2      = %{$gobs2_ref};
+
+    my %SKILLS_TT;
+
+    foreach my $t_id ( sort keys %{$skills{$gob_id}{'Talents'}{'C'}} )
+    {
+        if ( $t_id == 1 )
+        {
+            my $vue = $gobs2{$gob_id}{'PER'} + $gobs2{$gob_id}{'BPPER'} + $gobs2{$gob_id}{'BMPER'};
+            $SKILLS_TT{$gob_id}{'C'}{$t_id}{'tt'} = Encode::decode_utf8('Portée').' : '.$vue.' Case(s)';
+        }
+    }
+    return \%SKILLS_TT;
+}
+
 sub GetTechs
 {
     my %TECHS;
