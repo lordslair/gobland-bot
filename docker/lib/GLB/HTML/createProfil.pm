@@ -108,29 +108,29 @@ sub main
         }
 
         print $fh ' ' x10, '</fieldset>'."\n";
-        print $fh ' ' x10, '<fieldset>'."\n";
-        print $fh ' ' x12, '<legend>Meute</legend>'."\n";
 
+        # Meute <fieldset>
         my $meute_ref   = GLB::GLAPI::getMeuteMembres($yaml,$gob_id);
         my %meute       = %{$meute_ref};
 
         if ( %meute )
         {
-            foreach my $m_id ( sort keys %{$meute{$gob_id}} )
+            my $nom_meute = $meute{$gob_id}{'NomMeute'};
+            my $id_meute  = $meute{$gob_id}{'IdMeute'};
+
+            print $fh ' ' x10, '<fieldset>'."\n";
+            print $fh ' ' x12, '<legend>Meute : '.$nom_meute.' ('.$id_meute.')</legend>'."\n";
+            foreach my $member_id ( sort keys %{$meute{$gob_id}{'MembersMeute'}} )
             {
-                my $nom     = $meute{$gob_id}{$m_id}{'Nom'};
-                my $tribu   = $meute{$gob_id}{$m_id}{'Tribu'};
-                my $niveau  = $meute{$gob_id}{$m_id}{'Niveau'};
+                my $nom     = $meute{$gob_id}{'MembersMeute'}{$member_id}{'Nom'};
+                my $tribu   = $meute{$gob_id}{'MembersMeute'}{$member_id}{'Tribu'};
+                my $niveau  = $meute{$gob_id}{'MembersMeute'}{$member_id}{'Niveau'};
 
-                print $fh ' ' x12, '<li>'.$nom.' ('.$m_id.') ['.$tribu.'] (lvl '.$niveau.')'."\n";
+                print $fh ' ' x12, '<li>'.$nom.' ('.$member_id.') ['.$tribu.'] (lvl '.$niveau.')'."\n";
             }
-        }
-        else
-        {
-            print $fh ' ' x12, '<li>No DATA available'."\n";
+            print $fh ' ' x10, '</fieldset>'."\n";
         }
 
-        print $fh ' ' x10, '</fieldset>'."\n";
         print $fh ' ' x10, '<fieldset>'."\n";
         print $fh ' ' x12, '<legend>Talents</legend>'."\n";
         print $fh ' ' x12, '<strong>Techniques</strong> :<br/>'."\n";

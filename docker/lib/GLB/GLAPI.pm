@@ -396,14 +396,16 @@ sub getMeuteMembres
             foreach my $line (split(/\n/,$response->content))
             {
                 chomp ($line);
-                #"Id";"Nom";"Race";"Tribu";"Niveau";"X";"Y";"N";"Z";"DLA";"Etat";"PA";"PV";"PX";"PXPerso";"PI";"CT";"CARAC"
+                #"IdMeute";"NomMeute";"Id";"Nom";"Race";"Tribu";"Niveau";"X";"Y";"N";"Z";"DLA";"Etat";"PA";"PV";"PX";"PXPerso";"PI";"CT";"CARAC"
                 $line =~ s/"//g;
                 my @line = split /;/, $line;
                 if ( $line !~ /^#/)
                 {
-                    $MEUTE{$gob_id}{$line[0]}{'Nom'}        = Encode::decode_utf8($line[1]);
-                    $MEUTE{$gob_id}{$line[0]}{'Tribu'}      = $line[3];
-                    $MEUTE{$gob_id}{$line[0]}{'Niveau'}     = $line[4];
+                    $MEUTE{$gob_id}{'IdMeute'}                              = $line[0];
+                    $MEUTE{$gob_id}{'NomMeute'}                             = $line[1];
+                    $MEUTE{$gob_id}{'MembersMeute'}{$line[2]}{'Nom'}        = Encode::decode_utf8($line[3]);
+                    $MEUTE{$gob_id}{'MembersMeute'}{$line[2]}{'Tribu'}      = $line[5];
+                    $MEUTE{$gob_id}{'MembersMeute'}{$line[2]}{'Niveau'}     = $line[6];
                 }
             }
         }
