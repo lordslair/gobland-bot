@@ -51,14 +51,14 @@ sub GetCompsTT
         # Herboriser
         elsif ( $t_id == 18 or $t_id == 21 )
         {
-            my $vue    = $gobs2{$gob_id}{'PER'} + $gobs2{$gob_id}{'BPPER'} + $gobs2{$gob_id}{'BMPER'};
+            my $vue     = $gobs2{$gob_id}{'PER'} + $gobs2{$gob_id}{'BPPER'} + $gobs2{$gob_id}{'BMPER'};
             my $niveau  = $skills{$gob_id}{'Talents'}{'C'}{$t_id}{'Niveau'};
             my $coeff;
             if    ( $niveau == 1 ) { $coeff = 1.5 }
             elsif ( $niveau == 2 ) { $coeff = 2   }
             elsif ( $niveau == 3 ) { $coeff = 2.5 }
             elsif ( $niveau == 4 ) { $coeff = 3   }
-            my $portee = $coeff * $vue;
+            my $portee  = sprintf("%d",$coeff * $vue);
             $SKILLS_TT{$gob_id}{'C'}{$t_id}{'tt'} = Encode::decode_utf8('Port..e').' : '.$portee.' Case(s)';
         }
     }
