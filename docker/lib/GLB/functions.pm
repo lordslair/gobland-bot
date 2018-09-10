@@ -140,7 +140,7 @@ sub GetCompsTT
             my $po_att     = (($per+$att)/2);
             my $po_att_bmm = ( $att_bmm + $per_bmm ) /2;
 
-            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'}  = Encode::decode_utf8('Port..e').' : '.$portee.' Case(s)'.'<br>';
+            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'}  = Encode::decode_utf8('Portée').' : '.$portee.' Case(s)'.'<br>';
             $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= '<br>';
             $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= 'Si cible < '.$coeff.' Cases'.'<br>';
             $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= 'ATT : '.$po_att.' D6 + '.$po_att_bmm.'<br>';
