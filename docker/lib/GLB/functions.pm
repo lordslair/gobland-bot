@@ -70,6 +70,81 @@ sub GetCompsTT
             $SKILLS_TT{$gob_id}{'C'}{$t_id}{'tt'} = Encode::decode_utf8('Port..e').' : '.$portee.' Case(s)';
         }
     }
+    foreach my $t_id ( sort keys %{$skills{$gob_id}{'Talents'}{'T'}} )
+    {
+        # Attaque a double tranchant
+        if ( $t_id == 7 )
+        {
+            my $niveau  = $skills{$gob_id}{'Talents'}{'T'}{$t_id}{'Niveau'};
+            my $coeff;
+            if    ( $niveau == 1 ) { $coeff = 5 }
+            elsif ( $niveau == 2 ) { $coeff = 4 }
+            elsif ( $niveau == 3 ) { $coeff = 3 }
+            elsif ( $niveau == 4 ) { $coeff = 2 }
+            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} = 'Bonus : +1 / '.$coeff.'PVs';
+        }
+        # Projectile d'Ombre
+        elsif ( $t_id == 9 )
+        {
+            my $niveau  = $skills{$gob_id}{'Talents'}{'T'}{$t_id}{'Niveau'};
+            my $coeff;
+            my $mod;
+            if    ( $niveau == 1 ) { $coeff = 4; $mod = 0 }
+            elsif ( $niveau == 2 ) { $coeff = 4; $mod = 1 }
+            elsif ( $niveau == 3 ) { $coeff = 5; $mod = 0 }
+            elsif ( $niveau == 4 ) { $coeff = 5; $mod = 1 }
+
+            my $per     = $gobs2{$gob_id}{'PER'};
+            my $per_bmm = $gobs2{$gob_id}{'BMPER'};
+            my $att     = $gobs2{$gob_id}{'ATT'};
+            my $att_bmm = $gobs2{$gob_id}{'BMATT'};
+
+            my $vue     = $gobs2{$gob_id}{'PER'} + $gobs2{$gob_id}{'BPPER'} + $gobs2{$gob_id}{'BMPER'};
+            my $portee;
+            if    ( $vue <=  4 ) { $portee = 1 }
+            elsif ( $vue <=  9 ) { $portee = 2 }
+            elsif ( $vue <= 15 ) { $portee = 3 }
+            elsif ( $vue <= 22 ) { $portee = 4 }
+            elsif ( $vue <= 30 ) { $portee = 5 }
+            elsif ( $vue <= 39 ) { $portee = 6 }
+            my $po_deg     = ( $att + $per ) /2;
+            my $po_deg_bmm = ( $att_bmm + $per_bmm ) /2;
+            my $po_att     = (($per+$att)/2);
+            my $po_att_bmm = ( $att_bmm + $per_bmm ) /2;
+
+            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'}  = Encode::decode_utf8('Port..e').' : '.$portee.' Case(s)'.'<br>';
+            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= '<br>';
+            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= 'Si cible < '.$coeff.' Cases'.'<br>';
+            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= 'ATT : '.$po_att.' D6 + '.$po_att_bmm.'<br>';
+            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= 'DEG : '.$po_deg.' D3 + '.$po_deg_bmm;
+        }
+        # Bombe a retardement
+        elsif ( $t_id == 10 )
+        {
+            my $niveau  = $skills{$gob_id}{'Talents'}{'T'}{$t_id}{'Niveau'};
+            my $coeff;
+            my $coeff_r;
+            if    ( $niveau == 1 ) { $coeff = 4; $coeff_r = 8 }
+            elsif ( $niveau == 2 ) { $coeff = 4; $coeff_r = 6 }
+            elsif ( $niveau == 3 ) { $coeff = 3; $coeff_r = 5 }
+            elsif ( $niveau == 4 ) { $coeff = 3; $coeff_r = 4 }
+            my $deg     = ( $gobs2{$gob_id}{'PER'} + $gobs2{$gob_id}{'DEG'} ) / $coeff;
+               $deg     = sprintf("%d",$deg);
+            my $deg_r   = ( $gobs2{$gob_id}{'PER'} + $gobs2{$gob_id}{'DEG'} ) / $coeff_r;
+               $deg_r   = sprintf("%d",$deg_r);
+            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} = 'Full : '.$deg.'D3'."<br>".'Res. : '.$deg_r.'D3';
+        }
+        # Soin
+        elsif ( $t_id == 12 )
+        {
+            my $niveau  = $skills{$gob_id}{'Talents'}{'T'}{$t_id}{'Niveau'};
+            my $coeff   = $niveau;
+            my $reg     = $gobs2{$gob_id}{'REG'};
+            my $reg_bm  = $gobs2{$gob_id}{'BPREG'} + $gobs2{$gob_id}{'BMREG'};
+            my $soin    = $coeff * $reg + $reg_bm;
+            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} = 'Soin : '.$soin.' PV(s)';
+        }
+    }
     return \%SKILLS_TT;
 }
 
