@@ -72,8 +72,36 @@ sub GetCompsTT
     }
     foreach my $t_id ( sort keys %{$skills{$gob_id}{'Talents'}{'T'}} )
     {
+        # Rafale Psychique
+        if ( $t_id == 2 )
+        {
+            my $niveau  = $skills{$gob_id}{'Talents'}{'T'}{$t_id}{'Niveau'};
+            my $coeff;
+            my $coeff_b;
+            my $coeff_r;
+            my $malus;
+            my $malus_r;
+            if    ( $niveau == 1 ) { $coeff = 1; $coeff_b = 1; $coeff_r = 0.3; $malus = 0  ; $malus_r = 0   }
+            elsif ( $niveau == 2 ) { $coeff = 1; $coeff_b = 1; $coeff_r = 0.4; $malus = 0.5; $malus_r = 0   }
+            elsif ( $niveau == 3 ) { $coeff = 1; $coeff_b = 1; $coeff_r = 0.5; $malus = 1  ; $malus_r = 0.5 }
+            elsif ( $niveau == 4 ) { $coeff = 1; $coeff_b = 1; $coeff_r = 0.6; $malus = 2  ; $malus_r = 1   }
+            my $reg      = $gobs2{$gob_id}{'REG'};
+            my $deg      = $gobs2{$gob_id}{'DEG'};
+            my $deg_bmm  = $gobs2{$gob_id}{'BMDEG'};
+            my $deg_full = $coeff*$deg + $coeff_b*$deg_bmm;
+            my $deg_r    = sprintf("%d",$coeff_r*$deg);
+            my $reg_full = sprintf("%d",$malus*$reg);
+            my $reg_r    = sprintf("%d",$malus_r*$reg);
+            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'}  = 'Si full'.'<br>';
+            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= 'DEG : '.$deg_full.'<br>';
+            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= 'Malus : REG -'.$reg_full.'<br>';
+            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= '<br>';
+            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= Encode::decode_utf8('Si resisté').'<br>';
+            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= 'DEG : '.$deg_r.'<br>';
+            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= 'Malus : REG -'.$reg_r.'<br>';
+        }
         # Attaque a double tranchant
-        if ( $t_id == 7 )
+        elsif ( $t_id == 7 )
         {
             my $niveau  = $skills{$gob_id}{'Talents'}{'T'}{$t_id}{'Niveau'};
             my $coeff;
