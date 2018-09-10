@@ -50,14 +50,9 @@ sub GetCompsTT
         # Jet de Pierres
         if ( $t_id == 9 )
         {
-            my $vue    = $gobs2{$gob_id}{'PER'} + $gobs2{$gob_id}{'BPPER'} + $gobs2{$gob_id}{'BMPER'};
+            my $vue     = $gobs2{$gob_id}{'PER'} + $gobs2{$gob_id}{'BPPER'} + $gobs2{$gob_id}{'BMPER'};
             my $niveau  = $skills{$gob_id}{'Talents'}{'C'}{$t_id}{'Niveau'};
-            my $coeff;
-            if    ( $niveau == 1 ) { $coeff = 1   }
-            elsif ( $niveau == 2 ) { $coeff = 1   }
-            elsif ( $niveau == 3 ) { $coeff = 1   }
-            elsif ( $niveau == 4 ) { $coeff = 1   }
-            my $portee = sprintf("%d",$coeff * $vue);
+            my $portee  = ($vue, $niveau)[$vue > $niveau];
             $SKILLS_TT{$gob_id}{'C'}{$t_id}{'tt'} = Encode::decode_utf8('Port..e').' : '.$portee.' Case(s)';
         }
         # Flairer le gibier
