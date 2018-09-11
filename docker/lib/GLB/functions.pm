@@ -162,6 +162,31 @@ sub GetCompsTT
                $deg_r   = sprintf("%d",$deg_r);
             $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} = 'Full : '.$deg.'D3'."<br>".'Res. : '.$deg_r.'D3';
         }
+        # Batatin
+        elsif ( $t_id == 11 )
+        {
+            my $niveau   = $skills{$gob_id}{'Talents'}{'T'}{$t_id}{'Niveau'};
+            my $coeff    =  6 - $niveau;
+            my $coeff_r  = 12 - $niveau * 2;
+            my $malus    = (1 + $niveau) * 10;
+            my $malus_r  = $malus / 2;
+            my $portee   = $niveau;
+            my $per      = $gobs2{$gob_id}{'PER'};
+            my $reg      = $gobs2{$gob_id}{'REG'};
+            my $esq      = 1 + ( $per + $reg )/$coeff;
+               $esq      = sprintf("%d",$esq);
+            my $esq_r    = 1 + ( $per + $reg )/$coeff_r;
+               $esq_r    = sprintf("%d",$esq_r);
+            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'}  = Encode::decode_utf8('Portée').' : '.$portee.' Case(s)'.'<br>';
+            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= '<br>';
+            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= 'Si full'.'<br>';
+            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= 'ESQ -'.$esq.'D'.'<br>';
+            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= 'RS -'.$malus.'%'.'<br>';
+            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= '<br>';
+            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= Encode::decode_utf8('Si resisté').'<br>';
+            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= 'ESQ -'.$esq_r.'D'.'<br>';
+            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= 'RS -'.$malus_r.'%'.'<br>';
+        }
         # Soin
         elsif ( $t_id == 12 )
         {
