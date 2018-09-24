@@ -45,9 +45,9 @@ sub main
             my $L_count = 0;
             my $G_count = 0;
 
-            foreach my $type ( keys %VUE )
+            foreach my $type ( sort keys %VUE )
             {
-                foreach my $id ( keys %{$VUE{$type}} )
+                foreach my $id ( sort keys %{$VUE{$type}} )
                 {
                     if ( $type eq 'T' ) { $T_count++ }
                     elsif ( $type eq 'C' ) { $C_count++ }
