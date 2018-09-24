@@ -181,8 +181,11 @@ sub main
             {
                 for my $item_id ( sort keys %{$stuff{$gob_id}{$e}} )
                 {
+                    my $type     = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Type'});
+                    my $nom      = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Nom'});
+                    my $item_png = GLB::functions::GetStuffIcon($type, $nom);
+
                     my $item_txt = GLB::functions::GetStuff($stuff_ref,$gob_id,$e,$item_id,'short');
-                    my $item_png = GLB::functions::GetStuffIcon($stuff_ref,$gob_id,$e,$item_id);
 
                     print $fh ' ' x14, $item_png.$item_txt."\n";
                 }
