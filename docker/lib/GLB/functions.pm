@@ -53,7 +53,7 @@ sub GetCompsTT
             my $vue     = $gobs2{$gob_id}{'PER'} + $gobs2{$gob_id}{'BPPER'} + $gobs2{$gob_id}{'BMPER'};
             my $niveau  = $skills{$gob_id}{'Talents'}{'C'}{$t_id}{'Niveau'};
             my $portee  = ($vue, $niveau)[$vue > $niveau];
-            $SKILLS_TT{$gob_id}{'C'}{$t_id}{'tt'} = Encode::decode_utf8('Port..e').' : '.$portee.' Case(s)';
+            $SKILLS_TT{$gob_id}{'C'}{$t_id}{'tt'} = Encode::decode_utf8('Portée').' : '.$portee.' Case(s)';
         }
         # Flairer le gibier
         # Herboriser
@@ -67,7 +67,7 @@ sub GetCompsTT
             elsif ( $niveau == 3 ) { $coeff = 2.5 }
             elsif ( $niveau == 4 ) { $coeff = 3   }
             my $portee  = sprintf("%d",$coeff * $vue);
-            $SKILLS_TT{$gob_id}{'C'}{$t_id}{'tt'} = Encode::decode_utf8('Port..e').' : '.$portee.' Case(s)';
+            $SKILLS_TT{$gob_id}{'C'}{$t_id}{'tt'} = Encode::decode_utf8('Portée').' : '.$portee.' Case(s)';
         }
     }
     foreach my $t_id ( sort keys %{$skills{$gob_id}{'Talents'}{'T'}} )
@@ -333,7 +333,7 @@ sub GetQualite
     $M_QUALITY{'Composant'}{'4'} = 'Bonne';
     $M_QUALITY{'Composant'}{'5'} = '<b>'.Encode::decode_utf8('Très Bonne').'</b>';
 
-    if ( $type eq 'Mat..riau' or $type eq 'Minerai' or $type eq 'Roche' )
+    if ( $type eq 'Matériau' or $type eq 'Minerai' or $type eq 'Roche' )
     {
         $quali_str = $M_QUALITY{'Materiau'}{$quali_id};
     }
