@@ -265,6 +265,10 @@ sub GetStuffIcon
     elsif ( $type eq 'Bouclier' )                         { $png = 'icon_09.png' }
     elsif ( $type eq 'Baguette' )                         { $png = 'icon_61.png' }
     elsif ( $type eq 'Bijou' )                            { $png = 'icon_108.png' }
+    elsif ( $type eq 'Nourriture' )                       { $png = 'icon_74.png' }
+    elsif ( $type eq 'Potion' )                           { $png = 'icon_86.png' }
+    elsif ( $type eq 'Composant' )                        { $png = 'icon_102.png' }
+    elsif ( $type eq 'Outil' )                            { $png = 'icon_1083.png' }
     else  { $png = '' }
 
     return '<img src="/images/stuff/'.$png.'">';
