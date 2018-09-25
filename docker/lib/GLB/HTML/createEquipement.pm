@@ -39,9 +39,14 @@ sub main
             for my $item_id ( sort keys %{$stuff{$gob_id}{$e}} )
             {
                 my $type     = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Type'});
+                my $min      = ', '.sprintf("%.1f", $stuff{$gob_id}{$e}{$item_id}{'Poids'}/60) . ' min';
+                my $nom      = $stuff{$gob_id}{$e}{$item_id}{'Nom'};
+                my $desc     = $stuff{$gob_id}{$e}{$item_id}{'Desc'};
+                my $template = $stuff{$gob_id}{$e}{$item_id}{'Magie'};
+
                 if ( $type !~ /^Minerai$|Mat.riau|Composant/ )
                 {
-                    my $item_txt = GLB::functions::GetStuff($stuff_ref,$gob_id,$e,$item_id,'full');
+                    my $item_txt = '['.$item_id.'] '.$type.' : '.$nom.$template.' ('.$desc.')'.$min.'<br>';
 
                     print $fh ' ' x 16, '<li class="equipement'.$e.'">'."\n";
                     print $fh ' ' x 18, $item_txt."\n";
