@@ -316,16 +316,26 @@ sub GetQualite
     my $quali_str = '';
 
     my %M_QUALITY;
-    $M_QUALITY{'0'} = '';
-    $M_QUALITY{'1'} = Encode::decode_utf8('Médiocre');
-    $M_QUALITY{'2'} = 'Moyenne';
-    $M_QUALITY{'3'} = 'Normale';
-    $M_QUALITY{'4'} = 'Bonne';
-    $M_QUALITY{'5'} = '<b>Exceptionnelle</b>';
+
+    $M_QUALITY{'Materiau'}{'1'} = Encode::decode_utf8('Médiocre');
+    $M_QUALITY{'Materiau'}{'2'} = 'Moyenne';
+    $M_QUALITY{'Materiau'}{'3'} = 'Normale';
+    $M_QUALITY{'Materiau'}{'4'} = 'Bonne';
+    $M_QUALITY{'Materiau'}{'5'} = '<b>Exceptionnelle</b>';
+
+    $M_QUALITY{'Composant'}{'1'} = Encode::decode_utf8('Très Mauvaise');
+    $M_QUALITY{'Composant'}{'2'} = 'Mauvaise';
+    $M_QUALITY{'Composant'}{'3'} = 'Moyenne';
+    $M_QUALITY{'Composant'}{'4'} = 'Bonne';
+    $M_QUALITY{'Composant'}{'5'} = '<b>'.Encode::decode_utf8('Très Bonne').'</b>';
 
     if ( $type eq 'Mat..riau' or $type eq 'Minerai' or $type eq 'Roche' )
     {
-        $quali_str = $M_QUALITY{$quali_id};
+        $quali_str = $M_QUALITY{'Materiau'}{$quali_id};
+    }
+    elsif ( $type eq 'Composant' )
+    {
+        $quali_str = $M_QUALITY{'Composant'}{$quali_id};
     }
     return $quali_str;
 }
