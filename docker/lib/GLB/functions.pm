@@ -321,6 +321,7 @@ sub GetQualite
 
     my %M_QUALITY;
 
+    $M_QUALITY{'Materiau'}{'0'} = '';
     $M_QUALITY{'Materiau'}{'1'} = Encode::decode_utf8('Médiocre');
     $M_QUALITY{'Materiau'}{'2'} = 'Moyenne';
     $M_QUALITY{'Materiau'}{'3'} = 'Normale';
