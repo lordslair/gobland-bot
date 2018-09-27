@@ -16,6 +16,7 @@ our $gobs2     = GLB::GLAPI::GetClanMembres2($yaml);
 our $stuff     = GLB::GLAPI::GetClanEquipement($yaml);
 our $skill     = GLB::GLAPI::getClanSkills($yaml);
 our $cafards   = GLB::GLAPI::getClanCafards($yaml);
+our $cavernes  = GLB::GLAPI::getClanCavernes($yaml);
 
 our $begin = <<"START_LOOP";
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
