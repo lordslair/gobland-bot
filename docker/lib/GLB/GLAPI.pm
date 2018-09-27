@@ -413,4 +413,55 @@ sub getMeuteMembres
     return \%MEUTE;
 }
 
+sub getClanCavernes
+{
+    my $glfile = shift;
+    my $glyaml = YAML::Tiny->read( $glfile );
+    my %INVENTAIRE;
+
+    my $browser = new LWP::UserAgent;
+    my $request = new HTTP::Request( GET => "http://ie.gobland.fr/IE_ClanCavernes?id=$glyaml->[0]{gl_user}&passwd=$glyaml->[0]{gl_api_key}" );
+    my $headers = $request->headers();
+       $headers->header( 'User-Agent','Mozilla/5.0 (compatible; Konqueror/3.4; Linux) KHTML/3.4.2 (like Gecko)');
+       $headers->header( 'Accept', 'text/html, image/jpeg, image/png, text/*, image/*, */*');
+       $headers->header( 'Accept-Encoding','x-gzip, x-deflate, gzip, deflate');
+       $headers->header( 'Accept-Charset', 'iso-8859-15, utf-8;q=0.5, *;q=0.5');
+       $headers->header( 'Accept-Language', 'fr, en');
+       $headers->header( 'Referer', 'http://ie.gobland.fr');
+    my $response = $browser->request($request);
+
+    if ($response->is_success)
+    {
+        foreach my $line (split(/\n/,$response->content))
+        {
+            chomp ($line);
+            #"Id";"Type";"Identifie";"Nom";"Magie";"Desc";"Poids";"Taille";"Qualite";"Localisation";"Prix";"Reservation";"Matiere"
+            $line =~ s/"//g;
+            my @line = split /;/, $line;
+            if ( $line !~ /^#/ )
+            {
+                my $equipe = 'NonEquipe';
+                my $caverne = Encode::decode_utf8($line[9]);
+                my $desc   = Encode::decode_utf8('<b>Non identifi..</b>');
+                if ( $line[2] eq 'VRAI' )  { $desc = Encode::decode_utf8($line[5]) }
+                $INVENTAIRE{$caverne}{$equipe}{$line[1]}{$line[0]}{'Id'}           = $line[0];
+                $INVENTAIRE{$caverne}{$equipe}{$line[1]}{$line[0]}{'Type'}         = Encode::decode_utf8($line[1]);
+                $INVENTAIRE{$caverne}{$equipe}{$line[1]}{$line[0]}{'Identifie'}    = $line[2];
+                $INVENTAIRE{$caverne}{$equipe}{$line[1]}{$line[0]}{'Nom'}          = Encode::decode_utf8($line[3]);
+                $INVENTAIRE{$caverne}{$equipe}{$line[1]}{$line[0]}{'Magie'}        = $line[4];
+                $INVENTAIRE{$caverne}{$equipe}{$line[1]}{$line[0]}{'Desc'}         = $desc;
+                $INVENTAIRE{$caverne}{$equipe}{$line[1]}{$line[0]}{'Poids'}        = $line[6];
+                $INVENTAIRE{$caverne}{$equipe}{$line[1]}{$line[0]}{'Taille'}       = $line[7];
+                $INVENTAIRE{$caverne}{$equipe}{$line[1]}{$line[0]}{'Qualite'}      = $line[8];
+                $INVENTAIRE{$caverne}{$equipe}{$line[1]}{$line[0]}{'Localisation'} = $caverne;
+                $INVENTAIRE{$caverne}{$equipe}{$line[1]}{$line[0]}{'Utilise'}      = 'FAUX';
+                $INVENTAIRE{$caverne}{$equipe}{$line[1]}{$line[0]}{'Prix'}         = $line[10];
+                $INVENTAIRE{$caverne}{$equipe}{$line[1]}{$line[0]}{'Reservation'}  = $line[11];
+                $INVENTAIRE{$caverne}{$equipe}{$line[1]}{$line[0]}{'Matiere'}      = $line[12];
+            }
+        }
+        return \%INVENTAIRE;
+    }
+}
+
 1;
