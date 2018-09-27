@@ -344,4 +344,26 @@ sub GetQualite
     return $quali_str;
 }
 
+sub GetLuxe
+{
+    my $type      = shift;
+    my $nom       = shift;
+    my $desc      = shift;
+    my $ok        = ' <img height="10px" width="10px" src="/images/stuff/OK.png">';
+
+    if ( $type eq 'Talisman' )
+    {
+        if ( $nom eq 'Collier' )           { if ( $desc eq 'MM:+10 | RM:+10' )          { return $ok } }
+    }
+    elsif ( $type eq 'Bouclier' )
+    {
+        if ( $nom eq 'Rondache en bois' )  { if ( $desc eq 'Arm:+1 | ESQ:+1 | RP:+10' ) { return $ok } }
+    }
+    elsif ( $type eq 'Casque' )
+    {
+        if    ( $nom eq 'Cagoule' )        { if ( $desc eq 'ESQ:+1 | MS:+10 | PER:-1' ) { return $ok } }
+        elsif ( $nom eq 'Casque en cuir' ) { if ( $desc eq 'Arm:+1 | RS:+10' )          { return $ok } }
+    }
+}
+
 1;
