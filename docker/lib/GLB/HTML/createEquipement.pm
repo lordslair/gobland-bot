@@ -42,12 +42,12 @@ sub main
                 my $min      = ', '.sprintf("%.1f", $stuff{$gob_id}{$e}{$item_id}{'Poids'}/60) . ' min';
                 my $nom      = $stuff{$gob_id}{$e}{$item_id}{'Nom'};
                 my $desc     = $stuff{$gob_id}{$e}{$item_id}{'Desc'};
-                my $template = $stuff{$gob_id}{$e}{$item_id}{'Magie'};
+                my $template = '<b>'.Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Magie'}).'</b>';
                 my $luxe     = GLB::functions::GetLuxe($type,$nom,$desc);
 
                 if ( $type !~ /^Minerai$|Mat.riau|Composant/ )
                 {
-                    my $item_txt = '['.$item_id.'] '.$type.' : '.$nom.$template.' ('.$desc.')'.$min.$luxe.'<br>';
+                    my $item_txt = '['.$item_id.'] '.$type.' : '.$nom.' '.$template.' ('.$desc.')'.$min.$luxe.'<br>';
 
                     print $fh ' ' x 16, '<li class="equipement'.$e.'">'."\n";
                     print $fh ' ' x 18, $item_txt."\n";
