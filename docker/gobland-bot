@@ -13,6 +13,7 @@ use GLB::HTML::createProfil;
 use GLB::HTML::createVue;
 use GLB::HTML::createPXBank;
 use GLB::HTML::createGPS;
+use GLB::HTML::createCavernes;
 
 my $daemonName    = "gobland-bot";
 my $dieNow        = 0;                                     # used for "infinte loop" construct - allows daemon mode to gracefully exit
@@ -55,6 +56,7 @@ until ($dieNow)
     GLB::HTML::createVue::main();
     GLB::HTML::createPXBank::main();
     GLB::HTML::createGPS::main();
+    GLB::HTML::createCavernes::main();
 
     sleep($sleepMainLoop);
 }
