@@ -182,14 +182,13 @@ sub main
                 for my $item_id ( sort keys %{$stuff{$gob_id}{$e}} )
                 {
                     my $type     = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Type'});
-                    my $nom      = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Nom'});
+                    my $nom      = $stuff{$gob_id}{$e}{$item_id}{'Nom'};
                     my $item_png = GLB::functions::GetStuffIcon($type, $nom);
                     my $desc     = $stuff{$gob_id}{$e}{$item_id}{'Desc'};
                     my $template = $stuff{$gob_id}{$e}{$item_id}{'Magie'};
+                    my $luxe     = GLB::functions::GetLuxe($type,$nom,$desc);
 
-                    my $item_txt = '['.$item_id.'] '.$type.' : '.$nom.$template.' ('.$desc.')<br>';
-
-                    print $fh ' ' x14, $item_png.$item_txt."\n";
+                    my $item_txt = '['.$item_id.'] '.$type.' : '.$nom.$template.' ('.$desc.')'.$luxe.'<br>';
                 }
             }
         }
