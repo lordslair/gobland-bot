@@ -204,10 +204,12 @@ sub main
                     my $nom      = $stuff{$gob_id}{$e}{$item_id}{'Nom'};
                     my $item_png = GLB::functions::GetStuffIcon($type, $nom);
                     my $desc     = $stuff{$gob_id}{$e}{$item_id}{'Desc'};
-                    my $template = $stuff{$gob_id}{$e}{$item_id}{'Magie'};
+                    my $template = '<b>'.Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Magie'}).'</b>';
                     my $luxe     = GLB::functions::GetLuxe($type,$nom,$desc);
 
-                    my $item_txt = '['.$item_id.'] '.$type.' : '.$nom.$template.' ('.$desc.')'.$luxe.'<br>';
+                    my $item_txt = '['.$item_id.'] '.$type.' : '.$nom.' '.$template.' ('.$desc.')'.$luxe.'<br>';
+
+                    print $fh ' ' x14, $item_png.$item_txt."\n";
                 }
             }
         }
