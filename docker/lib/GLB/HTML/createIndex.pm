@@ -68,8 +68,8 @@ sub main
         print $fh ' ' x12, '<td'.$pad.'>'.$gobs{$gob_id}{'PA'}.'</td>'."\n";
         print $fh ' ' x12, '<td><span class="DLA"> DLA : '.$gobs{$gob_id}{'DLA'}.'</span><br><span class="pDLA">pDLA : [A CODER]</span></td>'."\n";
         print $fh ' ' x12, '<td>'."\n";
-        print $fh ' ' x14, '<a href="http://rabatteurs.lordslair.net/gobelins/'.$gob_id.'.html" title="Votre profil">PROFIL</a>'."\n";
-        print $fh ' ' x14, '<a href="http://rabatteurs.lordslair.net/vue/'.$gob_id.'.html" title="Votre vue">VUE</a>'."\n";
+        print $fh ' ' x14, '/gobelins/'.$gob_id.'.html" title="Votre profil">PROFIL</a>'."\n";
+        print $fh ' ' x14, '/vue/'.$gob_id.'.html" title="Votre vue">VUE</a>'."\n";
         print $fh ' ' x12, '</td>'."\n";
         print $fh ' ' x10, '</tr>'."\n";
     }
