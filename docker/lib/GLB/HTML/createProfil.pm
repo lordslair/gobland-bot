@@ -34,6 +34,7 @@ sub main
         print $fh $GLB::variables::begin;
 
         print $fh ' ' x 6, '<div id="content">'."\n";
+        print $fh ' ' x 6, '<link href="/style/tt_r.css"       rel="stylesheet" type="text/css" />'."\n";
 
         my $position = $gobs{$gob_id}{'X'}.', '.$gobs{$gob_id}{'Y'}.', '.$gobs{$gob_id}{'N'};
         my $duree_b  = GLB::functions::GetDureeDLA($gobs2{$gob_id}{'DLA'});
