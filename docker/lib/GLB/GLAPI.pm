@@ -34,11 +34,13 @@ sub GetClanEquipement
             {
                 my $equipe = 'Equipe';
                 if ( $line[10] eq 'FAUX' ) { $equipe = 'NonEquipe' }
+                my $desc   = Encode::decode_utf8('<b>Non identifié</b>');
+                if ( $line[3] eq 'VRAI' )  { $desc = Encode::decode_utf8($line[6]) }
                 $INVENTAIRE{$line[0]}{$equipe}{$line[1]}{'Type'}      = $line[2];
                 $INVENTAIRE{$line[0]}{$equipe}{$line[1]}{'Identifie'} = $line[3];
                 $INVENTAIRE{$line[0]}{$equipe}{$line[1]}{'Nom'}       = Encode::decode_utf8($line[4]);
                 $INVENTAIRE{$line[0]}{$equipe}{$line[1]}{'Magie'}     = $line[5];
-                $INVENTAIRE{$line[0]}{$equipe}{$line[1]}{'Desc'}      = $line[6];
+                $INVENTAIRE{$line[0]}{$equipe}{$line[1]}{'Desc'}      = $desc;
                 $INVENTAIRE{$line[0]}{$equipe}{$line[1]}{'Poids'}     = $line[7];
                 $INVENTAIRE{$line[0]}{$equipe}{$line[1]}{'Taille'}    = $line[8];
                 $INVENTAIRE{$line[0]}{$equipe}{$line[1]}{'Qualite'}   = $line[9];
@@ -442,7 +444,7 @@ sub getClanCavernes
             {
                 my $equipe = 'NonEquipe';
                 my $caverne = Encode::decode_utf8($line[9]);
-                my $desc   = Encode::decode_utf8('<b>Non identifi..</b>');
+                my $desc   = Encode::decode_utf8('<b>Non identifié</b>');
                 if ( $line[2] eq 'VRAI' )  { $desc = Encode::decode_utf8($line[5]) }
                 $INVENTAIRE{$caverne}{$equipe}{$line[1]}{$line[0]}{'Id'}           = $line[0];
                 $INVENTAIRE{$caverne}{$equipe}{$line[1]}{$line[0]}{'Type'}         = Encode::decode_utf8($line[1]);
