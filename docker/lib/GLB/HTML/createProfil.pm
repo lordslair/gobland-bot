@@ -136,12 +136,30 @@ sub main
         print $fh ' ' x12, '<strong>Techniques</strong> :<br/>'."\n";
         print $fh ' ' x12, '<ul>'."\n";
 
+        my $skill_tt_ref = GLB::functions::GetCompsTT($gob_id,$skill_ref,$gobs2_ref);
+        my %skill_tt     = %{$skill_tt_ref};
+
         foreach my $t_id ( sort keys %{$skill{$gob_id}{'Talents'}{'T'}} )
         {
             my $nom     = Encode::decode_utf8($skill{$gob_id}{'Talents'}{'T'}{$t_id}{'Nom'});
             my $percent = $skill{$gob_id}{'Talents'}{'T'}{$t_id}{'Connaissance'};
             my $niveau  = $skill{$gob_id}{'Talents'}{'T'}{$t_id}{'Niveau'};
-            print $fh ' ' x14, '<li>'.$nom.' ('.$percent.' %) [Niv. '.$niveau.']</li>'."\n";
+
+
+            if ( $skill_tt{$gob_id}{'T'}{$t_id}{'tt'} )
+            {
+                my $tt = $skill_tt{$gob_id}{'T'}{$t_id}{'tt'};
+                print $fh ' ' x14, '<li>'."\n";
+                print $fh ' ' x16, '<div class="tt_r">'."\n";
+                print $fh ' ' x18, $nom.' ('.$percent.' %) [Niv. '.$niveau.']'."\n";
+                print $fh ' ' x18, '<span class="tt_r_text">'.$tt.'</span>'."\n";
+                print $fh ' ' x16, '</div>'."\n";
+                print $fh ' ' x14, '</li>'."\n";
+            }
+            else
+            {
+                print $fh ' ' x14, '<li>'.$nom.' ('.$percent.' %) [Niv. '.$niveau.']</li>'."\n";
+            }
         }
 
         print $fh ' ' x12, '</ul>'."\n";
