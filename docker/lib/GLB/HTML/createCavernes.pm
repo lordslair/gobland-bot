@@ -41,7 +41,6 @@ sub main
         {
             for my $type ( sort keys %{$stuff{$c_id}{$e}} )
             {
-                $type = Encode::decode_utf8($type);
                 my $png_done = 'DOING';
                 for my $item_id ( sort keys %{$stuff{$c_id}{$e}{$type}} )
                 {
@@ -60,6 +59,8 @@ sub main
                             print $fh ' ' x 18, '<br>'.$item_png.'<br>'."\n";
                             print $fh ' ' x 16,'</div>'."\n";
                         }
+
+                           $type     = Encode::decode_utf8($type);
                         my $item_txt = '['.$item_id.'] '.$type.' : '.$nom.' '.$template.' ('.$desc.')'.$min.$luxe.'<br>';
 
                         print $fh ' ' x 16, '<li class="equipement'.$e.'">'."\n";
@@ -89,7 +90,6 @@ sub main
         {
             for my $type ( sort keys %{$stuff{$c_id}{$e}} )
             {
-                $type = Encode::decode_utf8($type);
                 my $png_done = 'DOING';
                 for my $item_id ( sort keys %{$stuff{$c_id}{$e}{$type}} )
                 {
@@ -139,7 +139,7 @@ sub main
                 my $png_done = 'DOING';
                 for my $item_id ( sort keys %{$stuff{$c_id}{$e}{$type}} )
                 {
-                    if ( $stuff{$c_id}{$e}{$type}{$item_id}{'Type'} =~ /^Minerai$|Matériau|Roche/ )
+                    if ( $stuff{$c_id}{$e}{$type}{$item_id}{'Type'} =~ /^Minerai$|Mat.riau|Roche/ )
                     {
                         my $nom     = Encode::decode_utf8($stuff{$c_id}{$e}{$type}{$item_id}{'Nom'});
                         my $min     = ', '.sprintf("%.1f", $stuff{$c_id}{$e}{$type}{$item_id}{'Poids'}/60) . ' min';
