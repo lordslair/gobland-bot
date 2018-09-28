@@ -270,6 +270,7 @@ sub GetStuffIcon
     elsif ( $type eq 'Composant' )                        { $png = 'icon_102.png' }
     elsif ( $type eq 'Outil' )                            { $png = 'icon_1083.png' }
     elsif ( $type eq 'Fleur' )                            { $png = 'icon_1173.png' }
+    elsif ( $type eq 'Corps' )                            { $png = 'icon_1130.png' }
     else  { $png = '' }
 
     return '<img src="/images/stuff/'.$png.'">';
