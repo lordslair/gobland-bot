@@ -310,7 +310,16 @@ sub GetDureeDLA
     }
     else
     {
-        $DLA = '-'.sprintf("%02d",$DLA[0]).'h'.sprintf("%02d",abs($DLA[1]));
+        if ( abs($DLA[1]) >= 60 )
+        {
+            my $hour = abs($DLA[1]/60)%24;
+            my $min  = abs($DLA[1])%60;
+            $DLA     = '-'.sprintf("%02d",$hour).'h'.sprintf("%02d",$min);
+        }
+        else
+        {
+            $DLA = '-'.sprintf("%02d",$DLA[0]).'h'.sprintf("%02d",abs($DLA[1]));
+        }
     }
     return $DLA;
 }
