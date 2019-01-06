@@ -370,6 +370,7 @@ sub GetLuxe
     elsif ( $type eq 'Bouclier' )
     {
         if ( $nom eq 'Rondache en bois' )    { if ( $desc =~ /RP:[+]10/ )          { return $ok } }
+        if ( $nom eq 'Clipeus' )             { if ( $desc =~ /RS:[+]10/ )          { return $ok } }
     }
     elsif ( $type eq 'Casque' )
     {
@@ -385,6 +386,16 @@ sub GetLuxe
         elsif ( $nom eq 'Masque d\'Alowin' ) { if ( $desc =~ /RR:[+]10/ )          { return $ok } }
         elsif ( $nom eq 'Scalp' )            { if ( $desc =~ /MT:[+]10/ )          { return $ok } }
         elsif ( $nom eq 'Turban' )           { if ( $desc =~ /RM:[+]10/ )          { return $ok } }
+    }
+    elsif ( $type eq 'Bottes' )
+    {
+        if    ( $nom =~ /en os/ )            { if ( $desc =~ /RT:[+]10/ )          { return $ok } }
+        elsif ( $nom =~ /en m.tal/ )         { if ( $desc =~ /RC:[+]10/ )          { return $ok } }
+    }
+    elsif ( $type eq 'Arme 1 Main' )
+    {
+        if    ( $nom =~ /'os/ )              { if ( $desc =~ /RT:[+]20/ )          { return $ok } }
+        elsif ( $nom eq 'Coutelas' )         { if ( $desc =~ /RM:[+]10/ )          { return $ok } }
     }
 }
 
