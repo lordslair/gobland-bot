@@ -2,7 +2,7 @@ FROM alpine:3.7
 MAINTAINER @Lordslair
 
 RUN apk update \
-    && apk add --no-cache perl perl-libwww perl-dbi\
+    && apk add --no-cache perl perl-libwww perl-dbi perl-dbd-sqlite \
     && apk add --no-cache --virtual .build-deps \
                                     curl make perl-dev libc-dev gcc bash tzdata \
     && curl -L https://cpanmin.us | perl - App::cpanminus --no-wget \
@@ -19,5 +19,6 @@ COPY data/          /home/gobland-bot/data/
 COPY gl-config.yaml /home/gobland-bot/
 
 RUN perl /home/gobland-bot/data/csv2yaml.pl
+RUN perl /home/gobland-bot/data/initDB.pl
 
 ENTRYPOINT ["/home/gobland-bot/gobland-bot"]

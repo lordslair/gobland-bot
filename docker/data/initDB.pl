@@ -4,7 +4,7 @@ use warnings;
 
 use DBI;
 
-if ( -f "/home/gobland-bot/gobland.db" )
+if ( ! -f "/home/gobland-bot/gobland.db" )
 {
     my $dbh = DBI->connect(
         "dbi:SQLite:dbname=/home/gobland-bot/gobland.db",
