@@ -4,10 +4,12 @@ use warnings;
 
 use DBI;
 
-if ( ! -f "/home/gobland-bot/gobland.db" )
+my $sqlite_db  = '/home/gobland-bot/gobland.db';
+
+if ( ! -f $sqlite_db )
 {
     my $dbh = DBI->connect(
-        "dbi:SQLite:dbname=/home/gobland-bot/gobland.db",
+        "dbi:SQLite:dbname=$sqlite_db",
         "",
         "",
         { RaiseError => 1 },
@@ -104,6 +106,13 @@ if ( ! -f "/home/gobland-bot/gobland.db" )
                                  NiveauSkill INT,
                                  Type        TEXT,
                                  Affinite    TEXT)");
+
+    $dbh->do("CREATE TABLE FP_Lieu (IdLieu         INT PRIMARY KEY,
+                                    Nom            TEXT,
+                                    Type           TEXT,
+                                    IdProprietaire TEXT,
+                                    architecture   TEXT,
+                                    mobile         TEXT)");
 
     $dbh->do("CREATE TABLE Vue  (Id        INT PRIMARY KEY,
                                  Categorie TEXT,

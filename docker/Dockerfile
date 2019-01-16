@@ -14,11 +14,13 @@ RUN apk update \
     && mkdir /home/gobland-bot/
 
 COPY gobland-bot    /home/gobland-bot/gobland-bot
+COPY oneshot        /home/gobland-bot/oneshot
 COPY lib/           /home/gobland-bot/lib/
 COPY data/          /home/gobland-bot/data/
+COPY test/          /home/gobland-bot/test/
 COPY gl-config.yaml /home/gobland-bot/
 
-RUN perl /home/gobland-bot/data/csv2yaml.pl
 RUN perl /home/gobland-bot/data/initDB.pl
+RUN perl /home/gobland-bot/data/initFP.pl
 
 ENTRYPOINT ["/home/gobland-bot/gobland-bot"]
