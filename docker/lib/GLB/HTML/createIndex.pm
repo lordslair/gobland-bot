@@ -19,8 +19,6 @@ my $dbh = DBI->connect(
        { RaiseError => 1 },
     ) or die $DBI::errstr;
 
-my $yaml       = '/home/gobland-bot/gl-config.yaml';
-
 sub main
 {
 
