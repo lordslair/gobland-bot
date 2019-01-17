@@ -98,7 +98,7 @@ if ( -f $sqlite_db )
                                                                                    '$row[4]', \
                                                                                    '$row[5]', \
                                                                                    '$row[6]'  ) ");
-                   #$sth->execute();
+                    $sth->execute();
                     $sth->finish();
                 }
             }
