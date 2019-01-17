@@ -4,19 +4,54 @@ use warnings;
 use strict;
 
 use YAML::Tiny;
-my  $yaml      = '/home/gobland-bot/gl-config.yaml';
-my  $glyaml    = YAML::Tiny->read( $yaml );
+our $yaml      = '/home/gobland-bot/gl-config.yaml';
+our $glyaml    = YAML::Tiny->read( $yaml );
+our $clan_name = $glyaml->[0]{gl_clan_name};
 
 use lib '/home/gobland-bot/lib/';
-use GLB::GLAPI;
+use GLB::functions;
 
-our $clan_name = $glyaml->[0]{gl_clan_name};
-our $gobs      = GLB::GLAPI::GetClanMembres($yaml);
-our $gobs2     = GLB::GLAPI::GetClanMembres2($yaml);
-our $stuff     = GLB::GLAPI::GetClanEquipement($yaml);
-our $skill     = GLB::GLAPI::getClanSkills($yaml);
-our $cafards   = GLB::GLAPI::getClanCafards($yaml);
-our $cavernes  = GLB::GLAPI::getClanCavernes($yaml);
+use DBI;
+my $dbh = DBI->connect(
+    "dbi:SQLite:dbname=/home/gobland-bot/gobland.db",
+    "",
+    "",
+    { RaiseError => 1 },
+) or die $DBI::errstr;
+
+our @gob_ids;
+my $req_gobelin_id = $dbh->prepare( "SELECT Id FROM Gobelins;" );
+   $req_gobelin_id->execute();
+   while (my $lastline = $req_gobelin_id->fetchrow_array) { push @gob_ids, $lastline }
+   $req_gobelin_id->finish();
+
+our %id2gob;
+my $req_id2gob = $dbh->prepare( "SELECT Id,Gobelin FROM 'Gobelins' ORDER BY Id" );
+   $req_id2gob->execute();
+   while (my @row = $req_id2gob->fetchrow_array) { $id2gob{$row[0]} = $row[1] }
+   $req_id2gob->finish();
+
+our %meute;
+my $req_meute = $dbh->prepare( "SELECT Id,IdMeute,NomMeute FROM 'Meutes' ORDER BY Id" );
+   $req_meute->execute();
+   while (my @row = $req_meute->fetchrow_array)
+   {
+       $meute{$row[0]}{'Id'}  = $row[1];
+       $meute{$row[0]}{'Nom'} = $row[2];
+   }
+   $req_meute->finish();
+
+#GLB::GLAPI::GetClanMembres($yaml);
+#GLB::GLAPI::GetClanMembres2($yaml);
+#GLB::GLAPI::getClanSkills($yaml);
+#GLB::GLAPI::GetClanEquipement($yaml);
+#GLB::GLAPI::getClanCavernes($yaml);
+#GLB::GLAPI::getClanCafards($yaml);
+#GLB::GLAPI::getMeuteMembres($yaml);
+#GLB::GLAPI::getMPBot($yaml);
+#GLB::GLAPI::getVue($yaml);
+
+#GLB::functions::GetCompsTT();
 
 our $begin = <<"START_LOOP";
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -48,6 +83,7 @@ our $begin = <<"START_LOOP";
               <ul>
                 <li><a href="/pxbank.html" title="PX Bank du Clan">PX Bank</a></li>
                 <li><a href="/GPS.html" title="GPS">GPS</a></li>
+                <li><a href="/CdM.html" title="CdM">CdM Collector</a></li>
               </ul>
             </li>
             <li><a href="" title="">Liens</a></li>

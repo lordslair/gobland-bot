@@ -3,217 +3,233 @@ package GLB::functions;
 use warnings;
 use strict;
 
-sub GetComps
-{
-    my %SKILLS;
-    my $skills_csv = '/home/gobland-bot/data/FP_Skill.csv';
-    open (my $fh, '<:encoding(Latin1)', $skills_csv) or die "Could not open file '$skills_csv' $!";
-        while (my $row = <$fh>)
-        {
-            $row =~ s/"//g;
-            my @row = split /;/, $row;
-            $SKILLS{$row[0]}{'Nom'} = Encode::encode_utf8($row[1]);
-        }
-    close($fh);
-    return \%SKILLS;
-}
+use DBI;
+
+my $dbh = DBI->connect(
+       "dbi:SQLite:dbname=/home/gobland-bot/gobland.db",
+       "",
+       "",
+       { RaiseError => 1 },
+    ) or die $DBI::errstr;
 
 sub GetCompsTT
 {
-    my $gob_id     = shift;
-    my $skills_ref = shift;
-    my %skills     = %{$skills_ref};
-    my $gobs2_ref  = shift;
-    my %gobs2      = %{$gobs2_ref};
+    my @gob_ids = @GLB::variables::gob_ids;
 
-    my %SKILLS_TT;
-
-    foreach my $t_id ( sort keys %{$skills{$gob_id}{'Talents'}{'C'}} )
+    for my $gob_id ( @gob_ids )
     {
-        # Connaissance des Monstres
-        if ( $t_id == 1 )
+        # Request for IdSkill info
+        my $req_id_skill_c = $dbh->prepare( "SELECT IdSkill,Niveau FROM Skills \
+                                             WHERE Type = 'C' AND IdGob = '$gob_id' \
+                                             ORDER BY IdSkill" );
+        $req_id_skill_c->execute();
+
+        while (my @row = $req_id_skill_c->fetchrow_array)
         {
-            my $vue = $gobs2{$gob_id}{'PER'} + $gobs2{$gob_id}{'BPPER'} + $gobs2{$gob_id}{'BMPER'};
-            $SKILLS_TT{$gob_id}{'C'}{$t_id}{'tt'} = Encode::decode_utf8('Portée').' : '.$vue.' Case(s)';
+            my $c_id   = $row[0];
+            my $niveau = $row[1];
+            my $tt     = '';
+
+            my $sth  = $dbh->prepare( "SELECT PER,BMPER,BPPER FROM Gobelins2 WHERE Id = '$gob_id'" );
+            $sth->execute();
+            my @per = $sth->fetchrow_array;
+            $sth->finish;
+            my $vue = $per[0] + $per[1] + $per[2];
+
+            if ( $c_id == 1 )
+            {
+                $tt = Encode::decode_utf8('Portée').' : '.$vue.' Case(s)';
+            }
+            elsif ( $c_id == 2 )
+            {
+                my $proba;
+                if    ( $niveau == 1 ) { $proba = 10 }
+                elsif ( $niveau == 2 ) { $proba = 12 }
+                elsif ( $niveau == 2 ) { $proba = 14 }
+                elsif ( $niveau == 2 ) { $proba = 16 }
+                $tt = 'Proba. : '.$proba.'%';
+            }
+            elsif ( $c_id == 9 )
+            {
+                my $portee  = ($vue, $niveau)[$vue > $niveau];
+                $tt = Encode::decode_utf8('Portée').' : '.$portee.' Case(s)';
+            }
+            elsif ( $c_id == 18 or $c_id == 21 )
+            {
+                my $coeff;
+                if    ( $niveau == 1 ) { $coeff = 1.5 }
+                elsif ( $niveau == 2 ) { $coeff = 2   }
+                elsif ( $niveau == 3 ) { $coeff = 2.5 }
+                elsif ( $niveau == 4 ) { $coeff = 3   }
+                my $portee  = sprintf("%d",$coeff * $vue);
+                $tt = Encode::decode_utf8('Portée').' : '.$portee.' Case(s)';
+            }
+
+            if ( $tt ne '' )
+            {
+                my $sth  = $dbh->prepare( "UPDATE Skills \
+                                           SET Tooltip = '$tt' \
+                                           WHERE IdGob = '$gob_id' AND Type = 'C' AND IdSkill = '$c_id'" );
+                $sth->execute();
+                $sth->finish();
+            }
         }
-        # Mouvement Rapide
-        if ( $t_id == 2 )
+        $req_id_skill_c->finish();
+
+        # Request for IdSkill info
+        my $req_id_skill_t = $dbh->prepare( "SELECT IdSkill,Niveau FROM Skills \
+                                             WHERE Type = 'T' AND IdGob = '$gob_id' \
+                                             ORDER BY IdSkill" );
+        $req_id_skill_t->execute();
+
+        while (my @row = $req_id_skill_t->fetchrow_array)
         {
-            my $niveau  = $skills{$gob_id}{'Talents'}{'C'}{$t_id}{'Niveau'};
-            my $proba;
-            if    ( $niveau == 1 ) { $proba = 10 }
-            elsif ( $niveau == 2 ) { $proba = 12 }
-            elsif ( $niveau == 2 ) { $proba = 14 }
-            elsif ( $niveau == 2 ) { $proba = 16 }
-            $SKILLS_TT{$gob_id}{'C'}{$t_id}{'tt'} = 'Proba. : '.$proba.'%';
+            my $t_id   = $row[0];
+            my $niveau = $row[1];
+            my $tt     = '';
+
+            my $sth = $dbh->prepare( "SELECT DEG,BMDEG,BPDEG,REG,BMREG,BPREG,PER,BMPER,BPPER,ATT,BMATT,BPATT \
+                                      FROM Gobelins2 WHERE Id = '$gob_id'" );
+            $sth->execute();
+            my @attr = $sth->fetchrow_array;
+            $sth->finish;
+
+            if ( $t_id == 2 )
+            {
+                my $coeff;
+                my $coeff_b;
+                my $coeff_r;
+                my $malus;
+                my $malus_r;
+                if    ( $niveau == 1 ) { $coeff = 1; $coeff_b = 1; $coeff_r = 0.3; $malus = 0  ; $malus_r = 0   }
+                elsif ( $niveau == 2 ) { $coeff = 1; $coeff_b = 1; $coeff_r = 0.4; $malus = 0.5; $malus_r = 0   }
+                elsif ( $niveau == 3 ) { $coeff = 1; $coeff_b = 1; $coeff_r = 0.5; $malus = 1  ; $malus_r = 0.5 }
+                elsif ( $niveau == 4 ) { $coeff = 1; $coeff_b = 1; $coeff_r = 0.6; $malus = 2  ; $malus_r = 1   }
+
+                my $reg      = $attr[3];
+                my $deg      = $attr[0];
+                my $deg_bmm  = $attr[1];
+
+                my $deg_full = $coeff*$deg + $coeff_b*$deg_bmm;
+                my $deg_r    = sprintf("%d",$coeff_r*$deg);
+                my $reg_full = sprintf("%d",$malus*$reg);
+                my $reg_r    = sprintf("%d",$malus_r*$reg);
+
+                $tt  = 'Si full'.'<br>';
+                $tt .= 'DEG : '.$deg_full.'<br>';
+                $tt .= 'Malus : REG -'.$reg_full.'<br>';
+                $tt .= '<br>';
+                $tt .= Encode::decode_utf8('Si resisté').'<br>';
+                $tt .= 'DEG : '.$deg_r.'<br>';
+                $tt .= 'Malus : REG -'.$reg_r.'<br>';
+            }
+            elsif ( $t_id == 7 )
+            {
+                my $coeff;
+                if    ( $niveau == 1 ) { $coeff = 5 }
+                elsif ( $niveau == 2 ) { $coeff = 4 }
+                elsif ( $niveau == 3 ) { $coeff = 3 }
+                elsif ( $niveau == 4 ) { $coeff = 2 }
+
+                $tt = 'Bonus : +1 / '.$coeff.'PVs';
+            }
+            elsif ( $t_id == 9 )
+            {
+                my $coeff;
+                my $mod;
+                if    ( $niveau == 1 ) { $coeff = 4; $mod = 0 }
+                elsif ( $niveau == 2 ) { $coeff = 4; $mod = 1 }
+                elsif ( $niveau == 3 ) { $coeff = 5; $mod = 0 }
+                elsif ( $niveau == 4 ) { $coeff = 5; $mod = 1 }
+
+                my $per        = $attr[6];
+                my $per_bmm    = $attr[7];
+                my $att        = $attr[9];
+                my $att_bmm    = $attr[10];
+
+                my $vue    = $attr[6] + $attr[7] + $attr[8];
+                my $portee;
+                if    ( $vue <=  4 ) { $portee = 1 }
+                elsif ( $vue <=  9 ) { $portee = 2 }
+                elsif ( $vue <= 15 ) { $portee = 3 }
+                elsif ( $vue <= 22 ) { $portee = 4 }
+                elsif ( $vue <= 30 ) { $portee = 5 }
+                elsif ( $vue <= 39 ) { $portee = 6 }
+                my $po_deg     = ( $att + $per ) /2;
+                my $po_deg_bmm = ( $att_bmm + $per_bmm ) /2;
+                my $po_att     = (($per+$att)/2);
+                my $po_att_bmm = ( $att_bmm + $per_bmm ) /2;
+
+                $tt  = Encode::decode_utf8('Portée').' : '.$portee.' Case(s)'.'<br>';
+                $tt .= '<br>';
+                $tt .= 'Si cible < '.$coeff.' Cases'.'<br>';
+                $tt .= 'ATT : '.$po_att.' D6 + '.$po_att_bmm.'<br>';
+                $tt .= 'DEG : '.$po_deg.' D3 + '.$po_deg_bmm;
+                $tt .= '<br>';
+                $tt .= 'Si cible > '.$coeff.' Cases'.'<br>';
+                $tt .= 'ATT : '.($po_att -1).' D6 + '.$po_att_bmm.'<br>';
+                $tt .= 'DEG : '.($po_deg -1).' D3 + '.$po_deg_bmm;
+            }
+            elsif ( $t_id == 10 )
+            {
+                my $coeff;
+                my $coeff_r;
+                if    ( $niveau == 1 ) { $coeff = 4; $coeff_r = 8 }
+                elsif ( $niveau == 2 ) { $coeff = 4; $coeff_r = 6 }
+                elsif ( $niveau == 3 ) { $coeff = 3; $coeff_r = 5 }
+                elsif ( $niveau == 4 ) { $coeff = 3; $coeff_r = 4 }
+                my $deg   = ( $attr[6] + $attr[0] ) / $coeff;
+                   $deg   = sprintf("%d",$deg);
+                my $deg_r = ( $attr[6] + $attr[0] ) / $coeff_r;
+                   $deg_r = sprintf("%d",$deg_r);
+
+                $tt = 'Full : '.$deg.'D3'."<br>".'Res. : '.$deg_r.'D3';
+            }
+            elsif ( $t_id == 11 )
+            {
+                my $coeff    =  6 - $niveau;
+                my $coeff_r  = 12 - $niveau * 2;
+                my $malus    = (1 + $niveau) * 10;
+                my $malus_r  = $malus / 2;
+                my $portee   = $niveau;
+                my $per      = $attr[6];
+                my $reg      = $attr[3];
+                my $esq      = 1 + ( $per + $reg )/$coeff;
+                   $esq      = sprintf("%d",$esq);
+                my $esq_r    = 1 + ( $per + $reg )/$coeff_r;
+                   $esq_r    = sprintf("%d",$esq_r);
+
+                $tt  = Encode::decode_utf8('Portée').' : '.$portee.' Case(s)'.'<br>';
+                $tt .= '<br>';
+                $tt .= 'Si full'.'<br>';
+                $tt .= 'ESQ -'.$esq.'D'.'<br>';
+                $tt .= 'RS -'.$malus.'%'.'<br>';
+                $tt .= '<br>';
+                $tt .= Encode::decode_utf8('Si resisté').'<br>';
+                $tt .= 'ESQ -'.$esq_r.'D'.'<br>';
+                $tt .= 'RS -'.$malus_r.'%'.'<br>';
+            }
+            elsif ( $t_id == 12 )
+            {
+                my $coeff  = $niveau;
+                my $reg    = $attr[3];
+                my $reg_bm = $attr[4] + $attr[5];
+                my $soin   = $coeff * $reg + $reg_bm;
+
+                $tt = 'Soin : '.$soin.' PV(s)';
+            }
+
+            if ( $tt ne '' )
+            {
+                my $sth  = $dbh->prepare( "UPDATE Skills \
+                                           SET Tooltip = '$tt' \
+                                           WHERE IdGob = '$gob_id' AND Type = 'T' AND IdSkill = '$t_id'" );
+                $sth->execute();
+                $sth->finish();
+            }
         }
-        # Jet de Pierres
-        if ( $t_id == 9 )
-        {
-            my $vue     = $gobs2{$gob_id}{'PER'} + $gobs2{$gob_id}{'BPPER'} + $gobs2{$gob_id}{'BMPER'};
-            my $niveau  = $skills{$gob_id}{'Talents'}{'C'}{$t_id}{'Niveau'};
-            my $portee  = ($vue, $niveau)[$vue > $niveau];
-            $SKILLS_TT{$gob_id}{'C'}{$t_id}{'tt'} = Encode::decode_utf8('Portée').' : '.$portee.' Case(s)';
-        }
-        # Flairer le gibier
-        # Herboriser
-        elsif ( $t_id == 18 or $t_id == 21 )
-        {
-            my $vue     = $gobs2{$gob_id}{'PER'} + $gobs2{$gob_id}{'BPPER'} + $gobs2{$gob_id}{'BMPER'};
-            my $niveau  = $skills{$gob_id}{'Talents'}{'C'}{$t_id}{'Niveau'};
-            my $coeff;
-            if    ( $niveau == 1 ) { $coeff = 1.5 }
-            elsif ( $niveau == 2 ) { $coeff = 2   }
-            elsif ( $niveau == 3 ) { $coeff = 2.5 }
-            elsif ( $niveau == 4 ) { $coeff = 3   }
-            my $portee  = sprintf("%d",$coeff * $vue);
-            $SKILLS_TT{$gob_id}{'C'}{$t_id}{'tt'} = Encode::decode_utf8('Portée').' : '.$portee.' Case(s)';
-        }
+        $req_id_skill_t->finish();
     }
-    foreach my $t_id ( sort keys %{$skills{$gob_id}{'Talents'}{'T'}} )
-    {
-        # Rafale Psychique
-        if ( $t_id == 2 )
-        {
-            my $niveau  = $skills{$gob_id}{'Talents'}{'T'}{$t_id}{'Niveau'};
-            my $coeff;
-            my $coeff_b;
-            my $coeff_r;
-            my $malus;
-            my $malus_r;
-            if    ( $niveau == 1 ) { $coeff = 1; $coeff_b = 1; $coeff_r = 0.3; $malus = 0  ; $malus_r = 0   }
-            elsif ( $niveau == 2 ) { $coeff = 1; $coeff_b = 1; $coeff_r = 0.4; $malus = 0.5; $malus_r = 0   }
-            elsif ( $niveau == 3 ) { $coeff = 1; $coeff_b = 1; $coeff_r = 0.5; $malus = 1  ; $malus_r = 0.5 }
-            elsif ( $niveau == 4 ) { $coeff = 1; $coeff_b = 1; $coeff_r = 0.6; $malus = 2  ; $malus_r = 1   }
-            my $reg      = $gobs2{$gob_id}{'REG'};
-            my $deg      = $gobs2{$gob_id}{'DEG'};
-            my $deg_bmm  = $gobs2{$gob_id}{'BMDEG'};
-            my $deg_full = $coeff*$deg + $coeff_b*$deg_bmm;
-            my $deg_r    = sprintf("%d",$coeff_r*$deg);
-            my $reg_full = sprintf("%d",$malus*$reg);
-            my $reg_r    = sprintf("%d",$malus_r*$reg);
-            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'}  = 'Si full'.'<br>';
-            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= 'DEG : '.$deg_full.'<br>';
-            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= 'Malus : REG -'.$reg_full.'<br>';
-            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= '<br>';
-            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= Encode::decode_utf8('Si resisté').'<br>';
-            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= 'DEG : '.$deg_r.'<br>';
-            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= 'Malus : REG -'.$reg_r.'<br>';
-        }
-        # Attaque a double tranchant
-        elsif ( $t_id == 7 )
-        {
-            my $niveau  = $skills{$gob_id}{'Talents'}{'T'}{$t_id}{'Niveau'};
-            my $coeff;
-            if    ( $niveau == 1 ) { $coeff = 5 }
-            elsif ( $niveau == 2 ) { $coeff = 4 }
-            elsif ( $niveau == 3 ) { $coeff = 3 }
-            elsif ( $niveau == 4 ) { $coeff = 2 }
-            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} = 'Bonus : +1 / '.$coeff.'PVs';
-        }
-        # Projectile d'Ombre
-        elsif ( $t_id == 9 )
-        {
-            my $niveau  = $skills{$gob_id}{'Talents'}{'T'}{$t_id}{'Niveau'};
-            my $coeff;
-            my $mod;
-            if    ( $niveau == 1 ) { $coeff = 4; $mod = 0 }
-            elsif ( $niveau == 2 ) { $coeff = 4; $mod = 1 }
-            elsif ( $niveau == 3 ) { $coeff = 5; $mod = 0 }
-            elsif ( $niveau == 4 ) { $coeff = 5; $mod = 1 }
-
-            my $per     = $gobs2{$gob_id}{'PER'};
-            my $per_bmm = $gobs2{$gob_id}{'BMPER'};
-            my $att     = $gobs2{$gob_id}{'ATT'};
-            my $att_bmm = $gobs2{$gob_id}{'BMATT'};
-
-            my $vue     = $gobs2{$gob_id}{'PER'} + $gobs2{$gob_id}{'BPPER'} + $gobs2{$gob_id}{'BMPER'};
-            my $portee;
-            if    ( $vue <=  4 ) { $portee = 1 }
-            elsif ( $vue <=  9 ) { $portee = 2 }
-            elsif ( $vue <= 15 ) { $portee = 3 }
-            elsif ( $vue <= 22 ) { $portee = 4 }
-            elsif ( $vue <= 30 ) { $portee = 5 }
-            elsif ( $vue <= 39 ) { $portee = 6 }
-            my $po_deg     = ( $att + $per ) /2;
-            my $po_deg_bmm = ( $att_bmm + $per_bmm ) /2;
-            my $po_att     = (($per+$att)/2);
-            my $po_att_bmm = ( $att_bmm + $per_bmm ) /2;
-
-            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'}  = Encode::decode_utf8('Portée').' : '.$portee.' Case(s)'.'<br>';
-            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= '<br>';
-            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= 'Si cible < '.$coeff.' Cases'.'<br>';
-            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= 'ATT : '.$po_att.' D6 + '.$po_att_bmm.'<br>';
-            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= 'DEG : '.$po_deg.' D3 + '.$po_deg_bmm;
-        }
-        # Bombe a retardement
-        elsif ( $t_id == 10 )
-        {
-            my $niveau  = $skills{$gob_id}{'Talents'}{'T'}{$t_id}{'Niveau'};
-            my $coeff;
-            my $coeff_r;
-            if    ( $niveau == 1 ) { $coeff = 4; $coeff_r = 8 }
-            elsif ( $niveau == 2 ) { $coeff = 4; $coeff_r = 6 }
-            elsif ( $niveau == 3 ) { $coeff = 3; $coeff_r = 5 }
-            elsif ( $niveau == 4 ) { $coeff = 3; $coeff_r = 4 }
-            my $deg     = ( $gobs2{$gob_id}{'PER'} + $gobs2{$gob_id}{'DEG'} ) / $coeff;
-               $deg     = sprintf("%d",$deg);
-            my $deg_r   = ( $gobs2{$gob_id}{'PER'} + $gobs2{$gob_id}{'DEG'} ) / $coeff_r;
-               $deg_r   = sprintf("%d",$deg_r);
-            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} = 'Full : '.$deg.'D3'."<br>".'Res. : '.$deg_r.'D3';
-        }
-        # Batatin
-        elsif ( $t_id == 11 )
-        {
-            my $niveau   = $skills{$gob_id}{'Talents'}{'T'}{$t_id}{'Niveau'};
-            my $coeff    =  6 - $niveau;
-            my $coeff_r  = 12 - $niveau * 2;
-            my $malus    = (1 + $niveau) * 10;
-            my $malus_r  = $malus / 2;
-            my $portee   = $niveau;
-            my $per      = $gobs2{$gob_id}{'PER'};
-            my $reg      = $gobs2{$gob_id}{'REG'};
-            my $esq      = 1 + ( $per + $reg )/$coeff;
-               $esq      = sprintf("%d",$esq);
-            my $esq_r    = 1 + ( $per + $reg )/$coeff_r;
-               $esq_r    = sprintf("%d",$esq_r);
-            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'}  = Encode::decode_utf8('Portée').' : '.$portee.' Case(s)'.'<br>';
-            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= '<br>';
-            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= 'Si full'.'<br>';
-            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= 'ESQ -'.$esq.'D'.'<br>';
-            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= 'RS -'.$malus.'%'.'<br>';
-            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= '<br>';
-            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= Encode::decode_utf8('Si resisté').'<br>';
-            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= 'ESQ -'.$esq_r.'D'.'<br>';
-            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} .= 'RS -'.$malus_r.'%'.'<br>';
-        }
-        # Soin
-        elsif ( $t_id == 12 )
-        {
-            my $niveau  = $skills{$gob_id}{'Talents'}{'T'}{$t_id}{'Niveau'};
-            my $coeff   = $niveau;
-            my $reg     = $gobs2{$gob_id}{'REG'};
-            my $reg_bm  = $gobs2{$gob_id}{'BPREG'} + $gobs2{$gob_id}{'BMREG'};
-            my $soin    = $coeff * $reg + $reg_bm;
-            $SKILLS_TT{$gob_id}{'T'}{$t_id}{'tt'} = 'Soin : '.$soin.' PV(s)';
-        }
-    }
-    return \%SKILLS_TT;
-}
-
-sub GetTechs
-{
-    my %TECHS;
-    my $techs_csv = '/home/gobland-bot/data/FP_Tech.csv';
-    open (my $hf, '<:encoding(UTF-8)', $techs_csv) or die "Could not open file '$techs_csv' $!";
-        while (my $row = <$hf>)
-        {
-            $row =~ s/"//g;
-            my @row = split /;/, $row;
-            $TECHS{$row[0]}{'Nom'} = Encode::encode_utf8($row[1]);
-        }
-    close($hf);
-    return \%TECHS;
 }
 
 sub GetColor
@@ -249,9 +265,9 @@ sub GetColor
 
 sub GetStuffIcon
 {
+    my $png       = '';
     my $type      = shift;
     my $nom       = shift;
-    my $png       = '';
 
     if    ( $type eq 'Armure' )                           { $png = 'icon_04.png' }
     elsif ( $type eq 'Casque' )                           { $png = 'icon_14.png' }
@@ -269,8 +285,6 @@ sub GetStuffIcon
     elsif ( $type eq 'Potion' )                           { $png = 'icon_86.png' }
     elsif ( $type eq 'Composant' )                        { $png = 'icon_102.png' }
     elsif ( $type eq 'Outil' )                            { $png = 'icon_1083.png' }
-    elsif ( $type eq 'Fleur' )                            { $png = 'icon_1173.png' }
-    elsif ( $type eq 'Corps' )                            { $png = 'icon_1130.png' }
     else  { $png = '' }
 
     return '<img src="/images/stuff/'.$png.'">';
@@ -365,38 +379,68 @@ sub GetLuxe
 
     if ( $type eq 'Talisman' )
     {
-        if ( $nom eq 'Collier' )             { if ( $desc =~ /MM:[+]10 | RM:[+]10/ ) { return $ok } }
+        if    ( $nom eq 'Collier' )              { if ( $desc =~ /MM:[+]10 . RM:[+]10/ ) { return $ok } }
+        elsif ( $nom =~ /^Phylact.re$/ )         { if ( $desc =~ /MP:[+]10 . RP:[+]10/ ) { return $ok } }
     }
     elsif ( $type eq 'Bouclier' )
     {
-        if ( $nom eq 'Rondache en bois' )    { if ( $desc =~ /RP:[+]10/ )          { return $ok } }
-        if ( $nom eq 'Clipeus' )             { if ( $desc =~ /RS:[+]10/ )          { return $ok } }
+        if    ( $nom eq 'Rondache en bois' )     { if ( $desc =~ /RP:[+]10/ )            { return $ok } }
+        elsif ( $nom eq 'Egide' )                { if ( $desc =~ /RC:[+]10/ )            { return $ok } }
+        elsif ( $nom eq 'Clipeus' )              { if ( $desc =~ /RS:[+]10/ )            { return $ok } }
     }
     elsif ( $type eq 'Casque' )
     {
-        if    ( $nom eq 'Bacinet' )          { if ( $desc =~ /MC:[+]10/ )          { return $ok } }
-        elsif ( $nom eq 'Barbute' )          { if ( $desc =~ /RP:[+]10/ )          { return $ok } }
-        elsif ( $nom eq 'Cagoule' )          { if ( $desc =~ /MS:[+]10/ )          { return $ok } }
-        elsif ( $nom eq 'Casque en cuir' )   { if ( $desc =~ /RS:[+]10/ )          { return $ok } }
-        elsif ( $nom =~ /Casque en m.tal/ )  { if ( $desc =~ /RC:[+]10/ )          { return $ok } }
-        elsif ( $nom eq 'Casque en os' )     { if ( $desc =~ /RT:[+]10/ )          { return $ok } }
-        elsif ( $nom eq 'Cerebro' )          { if ( $desc =~ /MP:[+]10/ )          { return $ok } }
-        elsif ( $nom eq 'Chapeau pointu' )   { if ( $desc =~ /MM:[+]10/ )          { return $ok } }
-        elsif ( $nom eq 'Lorgnons' )         { if ( $desc =~ /MR:[+]10/ )          { return $ok } }
-        elsif ( $nom eq 'Masque d\'Alowin' ) { if ( $desc =~ /RR:[+]10/ )          { return $ok } }
-        elsif ( $nom eq 'Scalp' )            { if ( $desc =~ /MT:[+]10/ )          { return $ok } }
-        elsif ( $nom eq 'Turban' )           { if ( $desc =~ /RM:[+]10/ )          { return $ok } }
+        if    ( $nom eq 'Bacinet' )              { if ( $desc =~ /MC:[+]10/ )            { return $ok } }
+        elsif ( $nom eq 'Barbute' )              { if ( $desc =~ /RP:[+]10/ )            { return $ok } }
+        elsif ( $nom eq 'Cagoule' )              { if ( $desc =~ /MS:[+]10/ )            { return $ok } }
+        elsif ( $nom eq 'Casque en cuir' )       { if ( $desc =~ /RS:[+]10/ )            { return $ok } }
+        elsif ( $nom =~ /Casque en m.tal/ )      { if ( $desc =~ /RC:[+]10/ )            { return $ok } }
+        elsif ( $nom eq 'Casque en os' )         { if ( $desc =~ /RT:[+]10/ )            { return $ok } }
+        elsif ( $nom eq 'Cerebro' )              { if ( $desc =~ /MP:[+]10/ )            { return $ok } }
+        elsif ( $nom eq 'Chapeau pointu' )       { if ( $desc =~ /MM:[+]10/ )            { return $ok } }
+        elsif ( $nom eq 'Lorgnons' )             { if ( $desc =~ /MR:[+]10/ )            { return $ok } }
+        elsif ( $nom eq 'Masque d\'Alowin' )     { if ( $desc =~ /RR:[+]10/ )            { return $ok } }
+        elsif ( $nom eq 'Scalp' )                { if ( $desc =~ /MT:[+]10/ )            { return $ok } }
+        elsif ( $nom eq 'Turban' )               { if ( $desc =~ /RM:[+]10/ )            { return $ok } }
+
     }
     elsif ( $type eq 'Bottes' )
     {
-        if    ( $nom =~ /en os/ )            { if ( $desc =~ /RT:[+]10/ )          { return $ok } }
-        elsif ( $nom =~ /en m.tal/ )         { if ( $desc =~ /RC:[+]10/ )          { return $ok } }
+        if    ( $nom =~ /en os/ )                { if ( $desc =~ /RT:[+]10/ )            { return $ok } }
+        elsif ( $nom =~ /en m.tal/ )             { if ( $desc =~ /RC:[+]10/ )            { return $ok } }
     }
     elsif ( $type eq 'Arme 1 Main' )
     {
-        if    ( $nom =~ /'os/ )              { if ( $desc =~ /RT:[+]20/ )          { return $ok } }
-        elsif ( $nom eq 'Coutelas' )         { if ( $desc =~ /RM:[+]10/ )          { return $ok } }
+        if    ( $nom =~ /'os/ )                  { if ( $desc =~ /RT:[+]20/ )            { return $ok } }
+        elsif ( $nom eq 'Coutelas' )             { if ( $desc =~ /RM:[+]10/ )            { return $ok } }
+        elsif ( $nom eq 'Dague' )                { if ( $desc =~ /RC:[+]10/ )            { return $ok } }
+        elsif ( $nom eq 'Machette' )             { if ( $desc =~ /RR:[+]20/ )            { return $ok } }
     }
+    elsif ( $type eq 'Bijou' )
+    {
+        if    ( $nom eq 'Breloques Familiales' ) { if ( $desc =~ /RR:[+]20/ )            { return $ok } }
+        elsif ( $nom =~ /^Phal.re Epineuse$/ )   { if ( $desc =~ /RC:[+]20/ )            { return $ok } }
+    }
+    elsif ( $type eq 'Anneau' )
+    {
+        if    ( $nom eq 'Anneau Barbare' )       { if ( $desc =~ /MS:[-]5/  )            { return $ok } }
+    }
+}
+
+sub GetCarats
+{
+    my $quali_id  = shift;
+    my $quantite  = shift;
+    my $carats;
+
+    if    ( $quali_id == 1 ) { $carats = $quantite * 2    }
+    elsif ( $quali_id == 2 ) { $carats = $quantite * 2.75 }
+    elsif ( $quali_id == 3 ) { $carats = $quantite * 3.5  }
+    elsif ( $quali_id == 4 ) { $carats = $quantite * 4.25 }
+    elsif ( $quali_id == 5 ) { $carats = $quantite * 5    }
+    else  { $carats = 0 }
+
+    return  sprintf("%d", $carats);
 }
 
 1;
