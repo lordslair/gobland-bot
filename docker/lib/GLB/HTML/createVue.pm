@@ -3,11 +3,10 @@ use strict;
 use warnings;
 
 use Time::HiRes qw[gettimeofday tv_interval];
+use DBI;
 
 use lib '/home/gobland-bot/lib/';
 use GLB::variables;
-
-use DBI;
 
 my $dbh = DBI->connect(
        "dbi:SQLite:dbname=/home/gobland-bot/gobland.db",
@@ -16,7 +15,8 @@ my $dbh = DBI->connect(
        { RaiseError => 1 },
     ) or die $DBI::errstr;
 
-my $yaml       = '/home/gobland-bot/gl-config.yaml';
+my $yaml   = $GLB::variables::glyaml;
+my $glyaml = YAML::Tiny->read( $yaml );
 
 sub main
 {
@@ -26,7 +26,6 @@ sub main
     for my $gob_id ( sort @gob_ids )
     {
         print '.';
-        my $glyaml = YAML::Tiny->read( $yaml );
         if ( $glyaml->[0]->{clan}{$gob_id} )
         {
             my $t_start  = [gettimeofday()];
