@@ -4,20 +4,9 @@ use strict;
 
 use File::Pid;
 
-use lib '/home/gobland-bot/lib/';
-use GLB::HTML::createIndex;
-use GLB::HTML::createEquipement;
-use GLB::HTML::createMateriaux;
-use GLB::HTML::createComposants;
-use GLB::HTML::createProfil;
-use GLB::HTML::createVue;
-use GLB::HTML::createPXBank;
-use GLB::HTML::createGPS;
-use GLB::HTML::createCavernes;
-
 my $daemonName    = "gobland-bot";
 my $dieNow        = 0;                                     # used for "infinte loop" construct - allows daemon mode to gracefully exit
-my $sleepMainLoop = 3600;                                  # number of seconds to wait between "do something" execution after queue is clear
+my $sleepMainLoop = 300;                                   # number of seconds to wait between "do something" execution after queue is clear
 my $logging       = 1;                                     # 1= logging is on
 my $pidFilePath   = "/var/run/";                           # PID file path
 my $pidFile       = $pidFilePath . $daemonName . ".pid";
@@ -48,15 +37,7 @@ until ($dieNow)
     $loop++;
     logEntry("$EMOJIok Entering loop $loop");
 
-    GLB::HTML::createIndex::main();
-    GLB::HTML::createEquipement::main();
-    GLB::HTML::createMateriaux::main();
-    GLB::HTML::createComposants::main();
-    GLB::HTML::createProfil::main();
-    GLB::HTML::createVue::main();
-    GLB::HTML::createPXBank::main();
-    GLB::HTML::createGPS::main();
-    GLB::HTML::createCavernes::main();
+    `perl /home/gobland-bot/oneshot`;
 
     sleep($sleepMainLoop);
 }

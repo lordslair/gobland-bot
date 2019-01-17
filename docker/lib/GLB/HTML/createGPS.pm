@@ -7,18 +7,25 @@ use Time::HiRes qw[gettimeofday tv_interval];
 use lib '/home/gobland-bot/lib/';
 use GLB::variables;
 
+my $sqlite_db  = '/home/gobland-bot/gobland.db';
+
+my $dbh = DBI->connect(
+    "dbi:SQLite:dbname=$sqlite_db",
+    "",
+    "",
+    { RaiseError => 1 },
+) or die $DBI::errstr;
+
 sub main
 {
+    print "GLB::HTML::createGPS[";
+
     use YAML::Tiny;
     my $t_start  = [gettimeofday()];
     my $filename = '/var/www/localhost/htdocs/GPS.html';
     open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
     binmode($fh, ":utf8");
     print $fh $GLB::variables::begin;
-
-    my $lieux_yaml = '/home/gobland-bot/data/Lieux.yaml';
-    my $yaml       = YAML::Tiny->read( $lieux_yaml );
-    my %LIEUX_YAML = %{$yaml->[0]};
 
     print $fh ' ' x 6, '<div id="content" style="text-align:center;">'."\n";
     print $fh ' ' x 6, '<link href="/style/gps.css"  rel="stylesheet" type="text/css"  />'."\n";
@@ -35,21 +42,25 @@ sub main
     print $fh ' ' x10, '<g class="grid b-grid" id="bGrid"><line x1="000" x2="600" y1="600" y2="600"></line></g>'."\n";
     print $fh ' ' x10, '<g class="grid l-grid" id="lGrid"><line x1="000" x2="000" y1="000" y2="600"></line></g>'."\n";
 
-    foreach my $id_lieu (sort {$a<=>$b} keys %LIEUX_YAML)
+    my $req_lieux_id = $dbh->prepare( "SELECT * FROM FP_Lieu" );
+    $req_lieux_id->execute();
+    while (my @row = $req_lieux_id->fetchrow_array)
     {
-        my $position = "<b>X</b> = $LIEUX_YAML{$id_lieu}{'X'} | <b>Y</b> = $LIEUX_YAML{$id_lieu}{'Y'} | <b>N</b> = $LIEUX_YAML{$id_lieu}{'Z'}";
-        my $cx = ($LIEUX_YAML{$id_lieu}{'X'} + 200) * 1.5;
-        my $cy = (200 - $LIEUX_YAML{$id_lieu}{'Y'}) * 1.5;
-        my $tt = '\''.$LIEUX_YAML{$id_lieu}{'Nom'}.' ('.$position.')\'';
-        my $dv = $LIEUX_YAML{$id_lieu}{'Type'};
-           $dv =~ s/^Amphi.*$/Amphitheatre/g;
-           $dv =~ s/^.*cycle$/Hemicycle/g;
-           $dv =~ s/^Mona.*$/Monastere/g;
+        if ( ! $row[6] ) { next } # If coordinates not present in DB, we skip the display
+        my $position = "<b>X</b> = $row[6] | <b>Y</b> = $row[7] | <b>N</b> = $row[8]";
+        my $cx       = ($row[6] + 200) * 1.5;
+        my $cy       = (200 - $row[7]) * 1.5;
+        my $tt       = '\''.Encode::decode_utf8($row[1]).' ('.$position.')\'';
+        my $dv       = $row[4];
+           $dv       =~ s/^Amphi.*$/Amphitheatre/g;
+           $dv       =~ s/^.*cycle$/Hemicycle/g;
+           $dv       =~ s/^Mona.*$/Monastere/g;
 
         print $fh ' ' x10, '<g class="'.$dv.'">'."\n";
         print $fh ' ' x12, '<circle cx="'.$cx.'" cy="'.$cy.'" r="2" onmousemove="showTooltip(evt, '.$tt.')";" onmouseout="hideTooltip();"></circle>'."\n";
         print $fh ' ' x10, '</g>'."\n";
     }
+    $req_lieux_id->finish();
 
     print $fh ' ' x 8, '</svg>'."\n";
     print $fh ' ' x 6, '</div>'."\n";
@@ -83,6 +94,7 @@ sub main
     print $fh $GLB::variables::vuescript;
     print $fh $GLB::variables::end;
     close $fh;
+    print "]\n";
 }
 
 1;

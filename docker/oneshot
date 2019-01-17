@@ -1,0 +1,42 @@
+#!/usr/bin/perl
+use warnings;
+use strict;
+
+my  $yaml      = '/home/gobland-bot/gl-config.yaml';
+
+use lib '/home/gobland-bot/lib/';
+use GLB::HTML::createIndex;
+use GLB::HTML::createEquipement;
+use GLB::HTML::createMateriaux;
+use GLB::HTML::createComposants;
+use GLB::HTML::createProfil;
+use GLB::HTML::createVue;
+use GLB::HTML::createPXBank;
+use GLB::HTML::createGPS;
+use GLB::HTML::createCavernes;
+use GLB::HTML::createCdM;
+use GLB::queries;
+use GLB::GLAPI;
+
+GLB::GLAPI::GetClanMembres($yaml);
+GLB::GLAPI::GetClanMembres2($yaml);
+GLB::GLAPI::getClanSkills($yaml);
+GLB::GLAPI::GetClanEquipement($yaml);
+GLB::GLAPI::getClanCavernes($yaml);
+GLB::GLAPI::getClanCafards($yaml);
+GLB::GLAPI::getMeuteMembres($yaml);
+GLB::GLAPI::getMPBot($yaml);
+GLB::GLAPI::getVue($yaml);
+
+GLB::functions::GetCompsTT();
+
+GLB::HTML::createIndex::main();
+GLB::HTML::createEquipement::main();
+GLB::HTML::createMateriaux::main();
+GLB::HTML::createComposants::main();
+GLB::HTML::createProfil::main();
+GLB::HTML::createVue::main();
+GLB::HTML::createPXBank::main();
+GLB::HTML::createGPS::main();
+GLB::HTML::createCavernes::main();
+GLB::HTML::createCdM::main();

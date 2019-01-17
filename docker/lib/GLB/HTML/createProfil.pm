@@ -8,23 +8,27 @@ use lib '/home/gobland-bot/lib/';
 use GLB::functions;
 use GLB::variables;
 
-my $gobs_ref    = $GLB::variables::gobs;
-my %gobs        = %{$gobs_ref};
-my $gobs2_ref   = $GLB::variables::gobs2;
-my %gobs2       = %{$gobs2_ref};
-my $stuff_ref   = $GLB::variables::stuff;
-my %stuff       = %{$stuff_ref};
-my $skill_ref   = $GLB::variables::skill;
-my %skill       = %{$skill_ref};
-my $cafards_ref = $GLB::variables::cafards;
-my %cafards     = %{$cafards_ref};
+use DBI;
+
+my $dbh = DBI->connect(
+       "dbi:SQLite:dbname=/home/gobland-bot/gobland.db",
+       "",
+       "",
+       { RaiseError => 1 },
+    ) or die $DBI::errstr;
 
 my $yaml       = '/home/gobland-bot/gl-config.yaml';
 
 sub main
 {
-    for my $gob_id ( sort keys %gobs )
+    print "GLB::HTML::createProfil[";
+    my @gob_ids = @GLB::variables::gob_ids;
+
+    for my $gob_id ( sort @gob_ids )
     {
+
+        print '.';
+
         my $t_start  = [gettimeofday()];
         my $dir      = '/var/www/localhost/htdocs/gobelins/';
         my $filename = $dir.$gob_id.'.html';
@@ -36,33 +40,56 @@ sub main
         print $fh ' ' x 6, '<div id="content">'."\n";
         print $fh ' ' x 6, '<link href="/style/tt_r.css"       rel="stylesheet" type="text/css" />'."\n";
 
-        my $position = $gobs{$gob_id}{'X'}.', '.$gobs{$gob_id}{'Y'}.', '.$gobs{$gob_id}{'N'};
-        my $duree_b  = GLB::functions::GetDureeDLA($gobs2{$gob_id}{'DLA'});
-        my $duree_p  = GLB::functions::GetDureeDLA($gobs2{$gob_id}{'BPDLA'});
-        my $duree_bm = GLB::functions::GetDureeDLA($gobs2{$gob_id}{'BMDLA'});
-        my $duree_s  = $gobs2{$gob_id}{'DLA'} + $gobs2{$gob_id}{'BMDLA'} + $gobs2{$gob_id}{'BPDLA'};
-        my $duree_t  = GLB::functions::GetDureeDLA($duree_s);
+        # Caracteristiques
+        # Request for Profil info with a JOIN for DLA
+        my $req_gob = $dbh->prepare( "SELECT Gobelins.Id,Gobelin,Tribu,Niveau,X,Y,N,PA,PV,PVMax,CT,Gobelins2.DLA,BPDLA,BMDLA,Gobelins.DLA, \
+                                             ATT,BPATT,BMATT,  \
+                                             ESQ,BPESQ,BMESQ,  \
+                                             DEG,BPDEG,BMDEG,  \
+                                             REG,BPREG,BMREG,  \
+                                             PER,BPPER,BMPER,  \
+                                             BPArm,BMArm,      \
+                                             PV,PVMax,Faim     \
+                                      FROM Gobelins \
+                                      INNER JOIN Gobelins2 on Gobelins.Id = Gobelins2.Id \
+                                      WHERE Gobelins.Id = $gob_id \
+                                      ORDER BY Gobelins.Id" );
+        $req_gob->execute();
+
+        my @row = $req_gob->fetchrow_array;
+        $req_gob->finish();
+
+        print $fh ' ' x 8, '<h1>Profil de '.$row[1].'</h1>'."\n";
+        print $fh ' ' x 8, '<div id="profilInfos">'."\n";
+
+        my $position  = $row[4].', '.$row[5].', '.$row[6];
+
+        my $duree_b   = GLB::functions::GetDureeDLA($row[11]);
+        my $duree_p   = GLB::functions::GetDureeDLA($row[12]);
+        my $duree_bm  = GLB::functions::GetDureeDLA($row[13]);
+
+        my $duree_s   = $row[11] + $row[12] + $row[13];
+        my $duree_t   = GLB::functions::GetDureeDLA($duree_s);
+
         my $faim_png  = '<img src="/images/stuff/icon_74.png">';
         my $ct_png    = '<img src="/images/stuff/icon_111.png">';
 
-        print $fh ' ' x 8, '<h1>Profil de '.$gobs{$gob_id}{'Nom'}.'</h1>'."\n";
-        print $fh ' ' x 8, '<div id="profilInfos">'."\n";
         print $fh ' ' x10, '<fieldset>'."\n";
         print $fh ' ' x12, '<legend>Caracteristiques</legend>'."\n";
-        print $fh ' ' x12, '<strong>Tribu</strong> : '.$gobs{$gob_id}{'Tribu'}.'<br/>'."\n";
-        print $fh ' ' x12, '<strong>Niveau</strong> : '.$gobs{$gob_id}{'Niveau'}.'<br/>'."\n";
-        print $fh ' ' x12, '<strong>Date Limite d\'Action</strong> : '.$gobs{$gob_id}{'DLA'}.'<br/>'."\n";
+        print $fh ' ' x12, '<strong>Tribu</strong> : '.$row[2].'<br/>'."\n";
+        print $fh ' ' x12, '<strong>Niveau</strong> : '.$row[4].'<br/>'."\n";
+        print $fh ' ' x12, '<strong>Date Limite d\'Action</strong> : '.$row[14].'<br/>'."\n";
         print $fh ' ' x12, '<strong>Position</strong> : '.$position.'<br/>'."\n";
         print $fh ' ' x12, '<br>'."\n";
-        print $fh ' ' x12, '<strong>ATT</strong> : '.$gobs2{$gob_id}{'ATT'}.'D '.sprintf("%+d",$gobs2{$gob_id}{'BPATT'}).' '.sprintf("%+d",$gobs2{$gob_id}{'BMATT'}).'<br/>'."\n";
-        print $fh ' ' x12, '<strong>ESQ</strong> : '.$gobs2{$gob_id}{'ESQ'}.'D '.sprintf("%+d",$gobs2{$gob_id}{'BPESQ'}).' '.sprintf("%+d",$gobs2{$gob_id}{'BMESQ'}).'<br/>'."\n";
-        print $fh ' ' x12, '<strong>DEG</strong> : '.$gobs2{$gob_id}{'DEG'}.'D '.sprintf("%+d",$gobs2{$gob_id}{'BPDEG'}).' '.sprintf("%+d",$gobs2{$gob_id}{'BMDEG'}).'<br/>'."\n";
-        print $fh ' ' x12, '<strong>REG</strong> : '.$gobs2{$gob_id}{'REG'}.'D '.sprintf("%+d",$gobs2{$gob_id}{'BPREG'}).' '.sprintf("%+d",$gobs2{$gob_id}{'BMREG'}).'<br/>'."\n";
-        print $fh ' ' x12, '<strong>PER</strong> : '.$gobs2{$gob_id}{'PER'}.' '. sprintf("%+d",$gobs2{$gob_id}{'BPPER'}).' '.sprintf("%+d",$gobs2{$gob_id}{'BMPER'}).'<br/>'."\n";
-        print $fh ' ' x12, '<strong>ARM</strong> : '.                             $gobs2{$gob_id}{'BPArm'}.' '.sprintf("%+d",$gobs2{$gob_id}{'BMArm'}).'<br/>'."\n";
-        print $fh ' ' x12, '<strong>PVs</strong> : '.$gobs{$gob_id}{'PV'}.' / '.$gobs2{$gob_id}{'PVMax'}.'<br/>'."\n";
+        print $fh ' ' x12, '<strong>ATT</strong> : '.$row[15].'D '.sprintf("%+d",$row[16]).' '.sprintf("%+d",$row[17]).'<br/>'."\n";
+        print $fh ' ' x12, '<strong>ESQ</strong> : '.$row[18].'D '.sprintf("%+d",$row[19]).' '.sprintf("%+d",$row[20]).'<br/>'."\n";
+        print $fh ' ' x12, '<strong>DEG</strong> : '.$row[21].'D '.sprintf("%+d",$row[22]).' '.sprintf("%+d",$row[23]).'<br/>'."\n";
+        print $fh ' ' x12, '<strong>REG</strong> : '.$row[24].'D '.sprintf("%+d",$row[25]).' '.sprintf("%+d",$row[24]).'<br/>'."\n";
+        print $fh ' ' x12, '<strong>PER</strong> : '.$row[27].' ' .sprintf("%+d",$row[28]).' '.sprintf("%+d",$row[29]).'<br/>'."\n";
+        print $fh ' ' x12, '<strong>ARM</strong> : '.$row[30].' ' .sprintf("%+d",$row[31]).'<br/>'."\n";
+        print $fh ' ' x12, '<strong>PVs</strong> : '.$row[32].' / '.$row[33].'<br/>'."\n";
         print $fh ' ' x12, '<br>'."\n";
-        print $fh ' ' x12, '<strong>'.$faim_png.'Faim</strong> : '.$gobs2{$gob_id}{'Faim'}.'<br/>'."\n";
+        print $fh ' ' x12, '<strong>'.$faim_png.'Faim</strong> : '.$row[34].'<br/>'."\n";
         print $fh ' ' x12, '<br>'."\n";
         print $fh ' ' x12, '<strong>Duree normale du tour</strong> : '.$duree_b.'<br/>'."\n";
         print $fh ' ' x12, '<strong>Bonus / Malus de duree</strong> : '.$duree_bm.'<br/>'."\n";
@@ -71,111 +98,128 @@ sub main
         print $fh ' ' x12, '<strong>Duree totale du tour</strong> : '.$duree_t.'</span><br/>'."\n";
         print $fh ' ' x12, '<strong>Prochaine DLA</strong> : [A CODER]</span><br/>'."\n";
         print $fh ' ' x12, '<br>'."\n";
-        print $fh ' ' x12, '<strong>'.$ct_png.'Canines de Trolls</strong> : '.$gobs{$gob_id}{'CT'}.' CT<br/>'."\n";
+        print $fh ' ' x12, '<strong>'.$ct_png.'Canines de Trolls</strong> : '.$row[10].' CT<br/>'."\n";
         print $fh ' ' x10, '</fieldset>'."\n";
+
+        # Affinites
+        # Request for Affinites info with a JOIN for DLA
+        my $req_aff = $dbh->prepare( "SELECT MM,BMM, \
+                                             RM,BRM, \
+                                             MT,BMT, \
+                                             RT,BRT, \
+                                             MR,BMR, \
+                                             RR,BRR, \
+                                             MS,BMS, \
+                                             RS,BRS, \
+                                             MC,BMC, \
+                                             RC,BRC, \
+                                             MP,BMP, \
+                                             RP,BRP  \
+                                      FROM Gobelins2 \
+                                      WHERE Id = $gob_id" );
+        $req_aff->execute();
+
+        my @row_aff = $req_aff->fetchrow_array;
+        $req_aff->finish();
+
+        my $style = 'style="border: 0px;float: left;margin: 0px;font-family: courier;font-size: 12px;"';
+
         print $fh ' ' x10, '<fieldset>'."\n";
         print $fh ' ' x12, '<legend>'.Encode::decode_utf8('Affinités').'</legend>'."\n";
+        print $fh ' ' x12, '<table '.$style.'>'."\n";
+
         my @ecoles    = ('M','T','R','S','C','P');
         my @rms       = ('M','R');
-        print $fh ' ' x12, '<table style="border: 0px;float: left;margin: 0px;font-family: courier;font-size: 12px;">'."\n";
+        my $aff_count = 0;
+
         foreach my $ecole (@ecoles)
         {
             print $fh ' ' x12, '<tr>'."\n";
             foreach my $rm (@rms)
             {
                 my $affinite = $rm.$ecole;
-                my $sum = $gobs2{$gob_id}{$affinite}{$affinite} + $gobs2{$gob_id}{$affinite}{'B'};
-                my $aff = $gobs2{$gob_id}{$affinite}{$affinite};
-                my $bon = sprintf("%+d",$gobs2{$gob_id}{$affinite}{'B'});
+                my $sum = $row_aff[$aff_count]+$row_aff[$aff_count+1];
+                my $aff = $row_aff[$aff_count];
+                my $bon = sprintf("%+d",$row_aff[$aff_count+1]);
                 print $fh ' ' x12, '<td style="border: 0px;text-align: left;padding: 1px;font-size: 12px;">'."\n";
                 print $fh ' ' x14, '<strong>'.$affinite.'</strong> : '.$sum.' ('.$aff.$bon.')'."\n";
                 print $fh ' ' x12, '</td>'."\n";
+                $aff_count = $aff_count + 2;
             }
             print $fh ' ' x12, '</tr>'."\n";
         }
+
         print $fh ' ' x12, '</table>'."\n";
         print $fh ' ' x10, '</fieldset>'."\n";
+
+        # Cafards
         print $fh ' ' x10, '<fieldset>'."\n";
         print $fh ' ' x12, '<legend>Cafards</legend>'."\n";
 
-        foreach my $c_id ( sort keys %{$cafards{$gob_id}} )
+        my $req_cafards = $dbh->prepare( "SELECT Id,Type,Effet,PNG \
+                                          FROM Cafards \
+                                          WHERE Id = '$gob_id'" );
+        $req_cafards->execute();
+        while (my @row = $req_cafards->fetchrow_array)
         {
-            my $nom     = $cafards{$gob_id}{$c_id}{'Nom'};
-            my $type    = $cafards{$gob_id}{$c_id}{'Type'};
-            my $effet   = $cafards{$gob_id}{$c_id}{'Effet'};
-            my $c_png   = $cafards{$gob_id}{$c_id}{'PNG'};
+            my $c_id    = $row[0];
+            my $type    = Encode::decode_utf8($row[1]);
+            my $effet   = $row[2];
+            my $c_png   = $row[3];
 
-            print $fh ' ' x12, '<li>'.$c_png.' ['.$c_id.'] '.$type.' ('.$effet.')</li>'."\n";
+            print $fh ' ' x12, '<li><img src="'.$c_png.'"> ['.$c_id.'] '.$type.' ('.$effet.')</li>'."\n";
         }
+        $req_cafards->finish();
 
         print $fh ' ' x10, '</fieldset>'."\n";
 
-        # Meute <fieldset>
-        my $meute_ref   = GLB::GLAPI::getMeuteMembres($yaml,$gob_id);
-        my %meute       = %{$meute_ref};
-
-        if ( %meute )
+        # Meute
+        my %meute       = %GLB::variables::meute;
+        my $nom_meute   = '';
+        my $id_meute    = '';
+        if ( $meute{$gob_id}{'Id'} )
         {
-            my $nom_meute = $meute{$gob_id}{'NomMeute'};
-            my $id_meute  = $meute{$gob_id}{'IdMeute'};
+            $id_meute  = $meute{$gob_id}{'Id'};
+            $nom_meute = $meute{$gob_id}{'Nom'};
 
             print $fh ' ' x10, '<fieldset>'."\n";
             print $fh ' ' x12, '<legend>Meute : '.$nom_meute.' ('.$id_meute.')</legend>'."\n";
-            foreach my $member_id ( sort keys %{$meute{$gob_id}{'MembersMeute'}} )
-            {
-                my $nom     = $meute{$gob_id}{'MembersMeute'}{$member_id}{'Nom'};
-                my $tribu   = $meute{$gob_id}{'MembersMeute'}{$member_id}{'Tribu'};
-                my $niveau  = $meute{$gob_id}{'MembersMeute'}{$member_id}{'Niveau'};
 
-                print $fh ' ' x12, '<li>'.$nom.' ('.$member_id.') ['.$tribu.'] (lvl '.$niveau.')'."\n";
+            my $req_meute_compo = $dbh->prepare( "SELECT Gobelins.Id,Nom,Tribu,Niveau \
+                                                  FROM Meutes \
+                                                  INNER JOIN Gobelins on Gobelins.Id = Meutes.Id \
+                                                  WHERE IdMeute = '$id_meute'" );
+               $req_meute_compo->execute();
+            while (my @row = $req_meute_compo->fetchrow_array)
+            {
+                print $fh ' ' x12, '<li>'.$row[1].' ('.$row[0].') ['.$row[2].'] (lvl '.$row[3].')'."\n";
             }
+            $req_meute_compo->finish();
             print $fh ' ' x10, '</fieldset>'."\n";
         }
 
+        # Talents
         print $fh ' ' x10, '<fieldset>'."\n";
         print $fh ' ' x12, '<legend>Talents</legend>'."\n";
-        print $fh ' ' x12, '<strong>Techniques</strong> :<br/>'."\n";
-        print $fh ' ' x12, '<ul>'."\n";
-
-        my $skill_tt_ref = GLB::functions::GetCompsTT($gob_id,$skill_ref,$gobs2_ref);
-        my %skill_tt     = %{$skill_tt_ref};
-
-        foreach my $t_id ( sort keys %{$skill{$gob_id}{'Talents'}{'T'}} )
-        {
-            my $nom     = Encode::decode_utf8($skill{$gob_id}{'Talents'}{'T'}{$t_id}{'Nom'});
-            my $percent = $skill{$gob_id}{'Talents'}{'T'}{$t_id}{'Connaissance'};
-            my $niveau  = $skill{$gob_id}{'Talents'}{'T'}{$t_id}{'Niveau'};
-
-
-            if ( $skill_tt{$gob_id}{'T'}{$t_id}{'tt'} )
-            {
-                my $tt = $skill_tt{$gob_id}{'T'}{$t_id}{'tt'};
-                print $fh ' ' x14, '<li>'."\n";
-                print $fh ' ' x16, '<div class="tt_r">'."\n";
-                print $fh ' ' x18, $nom.' ('.$percent.' %) [Niv. '.$niveau.']'."\n";
-                print $fh ' ' x18, '<span class="tt_r_text">'.$tt.'</span>'."\n";
-                print $fh ' ' x16, '</div>'."\n";
-                print $fh ' ' x14, '</li>'."\n";
-            }
-            else
-            {
-                print $fh ' ' x14, '<li>'.$nom.' ('.$percent.' %) [Niv. '.$niveau.']</li>'."\n";
-            }
-        }
-
-        print $fh ' ' x12, '</ul>'."\n";
         print $fh ' ' x12, '<strong>Competences</strong> :<br/>'."\n";
         print $fh ' ' x12, '<ul>'."\n";
 
-        foreach my $t_id ( sort keys %{$skill{$gob_id}{'Talents'}{'C'}} )
-        {
-            my $nom     = Encode::decode_utf8($skill{$gob_id}{'Talents'}{'C'}{$t_id}{'Nom'});
-            my $percent = $skill{$gob_id}{'Talents'}{'C'}{$t_id}{'Connaissance'};
-            my $niveau  = $skill{$gob_id}{'Talents'}{'C'}{$t_id}{'Niveau'};
+        my $req_skill_c = $dbh->prepare( "SELECT IdGob,Skills.IdSkill,Niveau,Connaissance,NomSkill,Tooltip \
+                                          FROM Skills \
+                                          INNER JOIN FP_C on Skills.IdSkill = FP_C.IdSkill \
+                                          WHERE Skills.Type = 'C' AND Skills.IdGob = '$gob_id'" );
+           $req_skill_c->execute();
 
-            if ( $skill_tt{$gob_id}{'C'}{$t_id}{'tt'} )
+        while (my @row = $req_skill_c->fetchrow_array)
+        {
+            my $niveau  = $row[2];
+            my $percent = $row[3];
+            my $nom     = Encode::decode_utf8($row[4]);
+            my $tt      = $row[5];
+
+            if ( $tt )
             {
-                my $tt = $skill_tt{$gob_id}{'C'}{$t_id}{'tt'};
+                $tt = Encode::decode_utf8($tt);
                 print $fh ' ' x14, '<li>'."\n";
                 print $fh ' ' x16, '<div class="tt_r">'."\n";
                 print $fh ' ' x18, $nom.' ('.$percent.' %) [Niv. '.$niveau.']'."\n";
@@ -188,30 +232,65 @@ sub main
                 print $fh ' ' x14, '<li>'.$nom.' ('.$percent.' %) [Niv. '.$niveau.']</li>'."\n";
             }
         }
+        $req_skill_c->finish();
+
+        print $fh ' ' x12, '</ul>'."\n";
+        print $fh ' ' x12, '<strong>Techniques</strong> :<br/>'."\n";
+        print $fh ' ' x12, '<ul>'."\n";
+
+        my $req_skill_t = $dbh->prepare( "SELECT IdGob,Skills.IdSkill,Niveau,Connaissance,NomSkill,Tooltip \
+                                          FROM Skills \
+                                          INNER JOIN FP_T on Skills.IdSkill = FP_T.IdSkill \
+                                          WHERE Skills.Type = 'T' AND Skills.IdGob = '$gob_id'" );
+           $req_skill_t->execute();
+
+        while (my @row = $req_skill_t->fetchrow_array)
+        {
+            my $niveau  = $row[2];
+            my $percent = $row[3];
+            my $nom     = Encode::decode_utf8($row[4]);
+            my $tt      = $row[5];
+
+            if ( $tt )
+            {
+                $tt = Encode::decode_utf8($tt);
+                print $fh ' ' x14, '<li>'."\n";
+                print $fh ' ' x16, '<div class="tt_r">'."\n";
+                print $fh ' ' x18, $nom.' ('.$percent.' %) [Niv. '.$niveau.']'."\n";
+                print $fh ' ' x18, '<span class="tt_r_text">'.$tt.'</span>'."\n";
+                print $fh ' ' x16, '</div>'."\n";
+                print $fh ' ' x14, '</li>'."\n";
+            }
+            else
+            {
+                print $fh ' ' x14, '<li>'.$nom.' ('.$percent.' %) [Niv. '.$niveau.']</li>'."\n";
+            }
+        }
+        $req_skill_t->finish();
 
         print $fh ' ' x12, '</ul>'."\n";
         print $fh ' ' x10, '</fieldset>'."\n";
 
+        # Equipement
         print $fh ' ' x10, '<fieldset>'."\n";
         print $fh ' ' x12, '<legend>'.Encode::decode_utf8('Equipement Equipé').'</legend>'."\n";
-        foreach my $e ( sort keys %{$stuff{$gob_id}} )
+
+        my $req_stuff_equipe = $dbh->prepare( "SELECT Id,Type,Nom,Magie,Desc \
+                                               FROM ItemsGobelins \
+                                               WHERE Utilise = 'VRAI' AND Gobelin = '$gob_id'" );
+           $req_stuff_equipe->execute();
+        while (my @row = $req_stuff_equipe->fetchrow_array)
         {
-            if ( $e eq 'Equipe' )
-            {
-                for my $item_id ( sort keys %{$stuff{$gob_id}{$e}} )
-                {
-                    my $type     = Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Type'});
-                    my $nom      = $stuff{$gob_id}{$e}{$item_id}{'Nom'};
-                    my $item_png = GLB::functions::GetStuffIcon($type, $nom);
-                    my $desc     = $stuff{$gob_id}{$e}{$item_id}{'Desc'};
-                    my $template = '<b>'.Encode::decode_utf8($stuff{$gob_id}{$e}{$item_id}{'Magie'}).'</b>';
-                    my $luxe     = GLB::functions::GetLuxe($type,$nom,$desc);
+                my $type     = Encode::decode_utf8($row[1]);
+                my $nom      = Encode::decode_utf8($row[2]);
+                my $item_png = GLB::functions::GetStuffIcon($type, $nom);
+                my $desc     = Encode::decode_utf8($row[4]);
+                my $template = '<b>'.Encode::decode_utf8($row[3]).'</b>';
+                my $luxe     = GLB::functions::GetLuxe($type,$nom,$desc);
 
-                    my $item_txt = '['.$item_id.'] '.$type.' : '.$nom.' '.$template.' ('.$desc.')'.$luxe.'<br>';
+                my $item_txt = '['.$row[0].'] '.$type.' : '.$nom.' '.$template.' ('.$desc.')'.$luxe.'<br>';
 
-                    print $fh ' ' x14, $item_png.$item_txt."\n";
-                }
-            }
+                print $fh ' ' x14, $item_png.$item_txt."\n";
         }
         print $fh ' ' x10, '</fieldset>'."\n";
 
@@ -223,6 +302,7 @@ sub main
         print $fh $GLB::variables::end;
         close $fh;
     }
+    print "]\n";
 }
 
 1;

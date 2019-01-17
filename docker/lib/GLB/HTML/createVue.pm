@@ -7,17 +7,25 @@ use Time::HiRes qw[gettimeofday tv_interval];
 use lib '/home/gobland-bot/lib/';
 use GLB::variables;
 
-my $gobs_ref   = $GLB::variables::gobs;
-my %gobs       = %{$gobs_ref};
-my $gobs2_ref  = $GLB::variables::gobs2;
-my %gobs2      = %{$gobs2_ref};
+use DBI;
+
+my $dbh = DBI->connect(
+       "dbi:SQLite:dbname=/home/gobland-bot/gobland.db",
+       "",
+       "",
+       { RaiseError => 1 },
+    ) or die $DBI::errstr;
 
 my $yaml       = '/home/gobland-bot/gl-config.yaml';
 
 sub main
 {
-    for my $gob_id ( sort keys %gobs )
+    print "GLB::HTML::createVue[";
+    my @gob_ids = @GLB::variables::gob_ids;
+
+    for my $gob_id ( sort @gob_ids )
     {
+        print '.';
         my $glyaml = YAML::Tiny->read( $yaml );
         if ( $glyaml->[0]->{clan}{$gob_id} )
         {
@@ -29,9 +37,22 @@ sub main
             binmode($fh, ":utf8");
             print $fh $GLB::variables::begin;
 
-            my $VUE_ref    = GLB::GLAPI::getVue($yaml, $gob_id);
-            my %VUE        = %{$VUE_ref};
             my %ITEMS;
+
+            # Request for PX info with a JOIN for PITotal
+            my $req_data = $dbh->prepare( "SELECT PER,BMPER,BPPER,X,Y,N,Nom FROM Gobelins \
+                                           INNER JOIN Gobelins2 on Gobelins.Id = Gobelins2.Id \
+                                           WHERE Gobelins.Id = $gob_id" );
+            $req_data->execute();
+
+            my @gob = $req_data->fetchrow_array;
+            $req_data->finish();
+
+            my $cases   = $gob[0] + $gob[1] + $gob[2];
+            my $X       = $gob[3];
+            my $Y       = $gob[4];
+            my $N       = $gob[5];
+            my $nom_gob = $gob[6];
 
             my $T_emoji = '<img src="/images/1f4b0.png" width="16" height="16">'; #💰
             my $L_emoji = '<img src="/images/1f3e0.png" width="16" height="16">'; #🏠
@@ -45,67 +66,90 @@ sub main
             my $L_count = 0;
             my $G_count = 0;
 
-            foreach my $type ( sort keys %VUE )
+            my $x_min = $X - $cases;
+            my $x_max = $X + $cases;
+            my $y_min = $Y - $cases;
+            my $y_max = $Y + $cases;
+            my $n_max = sprintf("%d",$N + ($cases / 2));
+            my $n_min = sprintf("%d",$N - ($cases / 2));
+
+            # Request for elements in the Gob sight
+            my $req_vue = $dbh->prepare( "SELECT Id,Categorie,Nom,Niveau,Type,Clan,X,Y,N,Z \
+                                          FROM Vue \
+                                          WHERE X BETWEEN '$x_min' AND '$x_max' \
+                                          AND Y BETWEEN '$y_min' AND '$y_max' \
+                                          AND N BETWEEN '$n_min' AND '$n_max'" );
+
+            $req_vue->execute();
+            while (my @row = $req_vue->fetchrow_array)
             {
-                foreach my $id ( sort keys %{$VUE{$type}} )
+                my $id   = $row[0];
+                my $cat  = $row[1];
+                my $nom  = $row[2];
+                my $niv  = $row[3];
+
+                if    ( $cat eq 'T'                  ) { $T_count++ }
+                elsif ( $cat eq 'C'                  ) { $C_count++ }
+                elsif ( $cat eq 'G'                  ) { $G_count++ }
+                elsif ( $cat eq 'L' && $nom ne 'Mur' && $nom ne 'Arbre' ) { $L_count++ }
+
+                my $x = $row[6];
+                my $y = $row[7];
+                my $n = $row[8];
+
+                if (! $ITEMS{$x}{$y})
                 {
-                    if ( $type eq 'T' ) { $T_count++ }
-                    elsif ( $type eq 'C' ) { $C_count++ }
-                    elsif ( $type eq 'G' ) { $G_count++ }
-                    elsif ( $type eq 'L' && $VUE{$type}{$id}{'Nom'} ne 'Mur' ) { $L_count++ }
+                    $ITEMS{$x}{$y}{'td'} = '';
+                    $ITEMS{$x}{$y}{'tt'} = "<center>&nbsp;&nbsp;X = $x | Y = $y<br><br></center>";
+                }
 
-                    my $x = $VUE{$type}{$id}{'X'};
-                    my $y = $VUE{$type}{$id}{'Y'};
-                    if (! $ITEMS{$x}{$y})
-                    {
-                        $ITEMS{$x}{$y}{'td'} = '';
-                        $ITEMS{$x}{$y}{'tt'} = "<center>&nbsp;&nbsp;X = $x | Y = $y<br><br></center>";
-                    }
+                if ( $cat eq 'T' && $ITEMS{$x}{$y}{'td'} !~ /1f4b0/ )
+                {
+                    $ITEMS{$x}{$y}{'td'} .= $T_emoji;
+                }
+                elsif ( $cat eq 'L' && $ITEMS{$x}{$y}{'td'} !~ /1f3e0/ && $nom !~ /Mur|Arbre/)
+                {
+                    $ITEMS{$x}{$y}{'td'} .= $L_emoji;
+                }
+                elsif ( $cat eq 'L' && $nom eq 'Mur')
+                {
+                    $ITEMS{$x}{$y}{'td'} .= $W_emoji;
+                }
+                elsif ( $cat eq 'L' && $nom eq 'Arbre')
+                {
+                    $ITEMS{$x}{$y}{'td'} .= $A_emoji;
+                }
+                elsif ( $cat eq 'C' && $ITEMS{$x}{$y}{'td'} !~ /1f47f/ )
+                {
+                    $ITEMS{$x}{$y}{'td'} .= $C_emoji;
+                }
+                elsif ( $cat eq 'G' && $ITEMS{$x}{$y}{'td'} !~ /1f60e/ )
+                {
+                    $ITEMS{$x}{$y}{'td'} .= $G_emoji;
+                }
 
-                    if ( $type eq 'T' && $ITEMS{$x}{$y}{'td'} !~ /1f4b0/ )
-                    {
-                        $ITEMS{$x}{$y}{'td'} .= $T_emoji;
-                    }
-                    elsif ( $type eq 'L' && $ITEMS{$x}{$y}{'td'} !~ /1f3e0/ && $VUE{$type}{$id}{'Nom'} !~ /Mur|Arbre/)
-                    {
-                        $ITEMS{$x}{$y}{'td'} .= $L_emoji;
-                    }
-                    elsif ( $type eq 'L' && $VUE{$type}{$id}{'Nom'} eq 'Mur')
-                    {
-                        $ITEMS{$x}{$y}{'td'} .= $W_emoji;
-                    }
-                    elsif ( $type eq 'L' && $VUE{$type}{$id}{'Nom'} eq 'Arbre')
-                    {
-                        $ITEMS{$x}{$y}{'td'} .= $A_emoji;
-                    }
-                    elsif ( $type eq 'C' && $ITEMS{$x}{$y}{'td'} !~ /1f47f/ )
-                    {
-                        $ITEMS{$x}{$y}{'td'} .= $C_emoji;
-                    }
-                    elsif ( $type eq 'G' && $ITEMS{$x}{$y}{'td'} !~ /1f60e/ )
-                    {
-                        $ITEMS{$x}{$y}{'td'} .= $G_emoji;
-                    }
+                if ( $ITEMS{$x}{$y}{'tt'} !~ /N = $n/ )
+                {
+                    $ITEMS{$x}{$y}{'tt'} .= "&nbsp;&nbsp;<b>N = $n</b><br>";
+                }
 
-                    my $n = $VUE{$type}{$id}{'N'};
-                    if ( $ITEMS{$x}{$y}{'tt'} !~ /N = $n/ )
-                    {
-                        $ITEMS{$x}{$y}{'tt'} .= "&nbsp;&nbsp;<b>N = $n</b><br>";
-                    }
+                my $tt_text_c = 'black';
+                if ($cat eq 'G') { $tt_text_c = 'cyan'};
+                if ($cat eq 'C') { $tt_text_c = 'grey'};
 
-                    my $tt_text_c = 'black';
-                    if ($type eq 'G') { $tt_text_c = 'blue'};
-                    $ITEMS{$x}{$y}{'tt'} .= "&nbsp;&nbsp;[$id] <span style='color:$tt_text_c'>".Encode::decode_utf8($VUE{$type}{$id}{'Nom'}).'</span><br>';
+                if ($cat eq 'G' || $cat eq 'C')
+                {
+                    $ITEMS{$x}{$y}{'tt'} .= "&nbsp;&nbsp;[$id] <span style='color:$tt_text_c'>".Encode::decode_utf8($nom).' (Niv. '.$niv.')'.'</span><br>';
+                }
+                else
+                {
+                    $ITEMS{$x}{$y}{'tt'} .= "&nbsp;&nbsp;[$id] <span style='color:$tt_text_c'>".Encode::decode_utf8($nom).'</span><br>';
                 }
             }
 
-            my $cases = $gobs2{$gob_id}{'PER'} + $gobs2{$gob_id}{'BPPER'} + $gobs2{$gob_id}{'BMPER'};
-            my $X     = $gobs{$gob_id}{'X'};
-            my $Y     = $gobs{$gob_id}{'Y'};
-
             print $fh ' ' x 6, '<div id="content">'."\n";
 
-            print $fh ' ' x 6, '<h1>Vue de '.$gobs{$gob_id}{'Nom'}.' ('.$cases.' cases)'.'</h1>'."\n";
+            print $fh ' ' x 6, '<h1>Vue de '.$nom_gob.' ('.$cases.' cases)'.'</h1>'."\n";
             print $fh ' ' x 8, '<table cellspacing="0" id="GobVue">'."\n";
             print $fh ' ' x10, '<caption>'."\n";
             print $fh ' ' x12, '<br>'.$T_emoji.'Tresors ('.$T_count.') | '.$G_emoji.'Gobelins ('.$G_count.') | '.$L_emoji.' Lieux ('.$L_count.')'."\n";
@@ -171,6 +215,7 @@ sub main
             close $fh;
         }
     }
+    print "]\n";
 }
 
 1;

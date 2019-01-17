@@ -7,13 +7,19 @@ use Time::HiRes qw[gettimeofday tv_interval];
 use lib '/home/gobland-bot/lib/';
 use GLB::variables;
 
-my $gobs_ref   = $GLB::variables::gobs;
-my %gobs       = %{$gobs_ref};
-my $stuff_ref  = $GLB::variables::cavernes;
-my %stuff      = %{$stuff_ref};
+use DBI;
+
+my $dbh = DBI->connect(
+       "dbi:SQLite:dbname=/home/gobland-bot/gobland.db",
+       "",
+       "",
+       { RaiseError => 1 },
+    ) or die $DBI::errstr;
 
 sub main
 {
+    print "GLB::HTML::createCavernes[";
+
     my $t_start  = [gettimeofday()];
     my $filename = '/var/www/localhost/htdocs/cavernes.html';
     open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
@@ -28,151 +34,147 @@ sub main
     print $fh ' ' x 8, '<h2 class="expanded">Equipements Gobelins dans les Cavernes</h2>'."\n";
     print $fh ' ' x 8, '<table cellspacing="0" id="profilInfos">'."\n";
 
-    #Equipement
-    for my $c_id ( sort keys %stuff )
+    #Equipements
+    print $fh ' ' x10, '<tr class="expanded">'."\n";
+    print $fh ' ' x12, '<th>Equipements</th>'."\n";
+    print $fh ' ' x10, '</tr>'."\n";
+    print $fh ' ' x10, '<tr>'."\n";
+    print $fh ' ' x12, '<td>'."\n";
+    print $fh ' ' x14, '<ul class="membreEquipementList">'."\n";
+
+    foreach my $item_type ('Arme 1 Main', 'Arme 2 mains', 'Anneau', 'Armure', 'Baguette', 'Bijou', 'Bottes', 'Bouclier', 'Casque', 'Nourriture','Outil', 'Potion', 'Talisman')
     {
-        print $fh ' ' x10, '<tr class="expanded">'."\n";
-        print $fh ' ' x12, '<th>Equipement(s) de '.$c_id.'</th>'."\n";
-        print $fh ' ' x10, '</tr>'."\n";
-        print $fh ' ' x10, '<tr>'."\n";
-        print $fh ' ' x12, '<td>'."\n";
-        print $fh ' ' x14, '<ul class="membreEquipementList">'."\n";
-        foreach my $e ( sort keys %{$stuff{$c_id}} )
+        print '.';
+        my $sth = $dbh->prepare( "SELECT Id,Type,Identifie,Nom,Magie,Desc,Poids,Taille,Qualite,Localisation,Utilise,Prix,Reservation,Matiere \
+                                  FROM   ItemsCavernes \
+                                  WHERE  Type = '$item_type' \
+                                  ORDER  BY Type,Nom;" );
+        $sth->execute();
+
+        my $png_done = 'DOING';
+        while (my @row = $sth->fetchrow_array)
         {
-            for my $type ( sort keys %{$stuff{$c_id}{$e}} )
+            my $item_id  = $row[0];
+            my $nom      = Encode::decode_utf8($row[3]);
+            my $min      = ', '.sprintf("%.1f", $row[6]/60) . ' min';
+            my $desc     = Encode::decode_utf8($row[5]);
+            my $template = '<b>'.$row[4].'</b>';
+            my $luxe     = GLB::functions::GetLuxe($item_type,$nom,$desc);
+
+            if ( $png_done ne 'DONE' )
             {
-                my $png_done = 'DOING';
-                for my $item_id ( sort keys %{$stuff{$c_id}{$e}{$type}} )
-                {
-                    if ( $type !~ /^Minerai$|Mat.riau|Composant|Roche/ )
-                    {
-                        my $min      = ', '.sprintf("%.1f", $stuff{$c_id}{$e}{$type}{$item_id}{'Poids'}/60) . ' min';
-                        my $nom      = $stuff{$c_id}{$e}{$type}{$item_id}{'Nom'};
-                        my $desc     = $stuff{$c_id}{$e}{$type}{$item_id}{'Desc'};
-                        my $template = '<b>'.$stuff{$c_id}{$e}{$type}{$item_id}{'Magie'}.'</b>';
-                        my $luxe     = GLB::functions::GetLuxe($type,$nom,$desc);
-
-                        if ( $png_done ne 'DONE' )
-                        {
-                            my $item_png = GLB::functions::GetStuffIcon($type, $stuff{$c_id}{$e}{$type}{$item_id}{'Nom'});
-                            print $fh ' ' x 16,'<div style="text-align:center; type="'.$type.'">'."\n";
-                            print $fh ' ' x 18, '<br>'.$item_png.'<br>'."\n";
-                            print $fh ' ' x 16,'</div>'."\n";
-                        }
-
-                           $type     = Encode::decode_utf8($type);
-                        my $item_txt = '['.$item_id.'] '.$type.' : '.$nom.' '.$template.' ('.$desc.')'.$min.$luxe.'<br>';
-
-                        print $fh ' ' x 16, '<li class="equipement'.$e.'">'."\n";
-                        print $fh ' ' x 18, $item_txt."\n";
-                        print $fh ' ' x 16, '</li>'."\n";
-                    }
-                    $png_done = 'DONE';
-                }
+                $png_done    = 'DONE';
+                my $item_png = GLB::functions::GetStuffIcon($item_type,$nom);
+                print $fh ' ' x 16,'<div style="text-align:center; type="'.$item_type.'">'."\n";
+                print $fh ' ' x 18, '<br>'.$item_png.'<br>'."\n";
+                print $fh ' ' x 16,'</div>'."\n";
             }
-            if ( $e eq 'Equipe' ) { print $fh ' ' x 16, '<br>'."\n" }
+
+            my $item_txt = '['.$item_id.'] '.$item_type.' : '.$nom.' '.$template.' ('.$desc.')'.$min.$luxe.'<br>';
+
+            print $fh ' ' x 16, '<li class="equipementNonEquipe">'."\n";
+            print $fh ' ' x 18, $item_txt."\n";
+            print $fh ' ' x 16, '</li>'."\n";
         }
-        print $fh ' ' x14, '</ul>'."\n";
-        print $fh ' ' x12, '</td>'."\n";
-        print $fh ' ' x10, '</tr>'."\n";
+        $sth->finish();
     }
+
+    print $fh ' ' x14, '</ul>'."\n";
+    print $fh ' ' x12, '</td>'."\n";
+    print $fh ' ' x10, '</tr>'."\n";
 
     # Composants
-    for my $c_id ( sort keys %stuff )
+    print $fh ' ' x10, '<tr class="expanded">'."\n";
+    print $fh ' ' x12, '<th>Composants</th>'."\n";
+    print $fh ' ' x10, '</tr>'."\n";
+    print $fh ' ' x10, '<tr>'."\n";
+    print $fh ' ' x12, '<td>'."\n";
+    print $fh ' ' x14, '<ul class="membreEquipementList">'."\n";
+
+    print '.';
+
+    my $sth = $dbh->prepare( "SELECT Id,Type,Identifie,Nom,Magie,Desc,Poids,Taille,Qualite,Localisation,Utilise,Prix,Reservation,Matiere \
+                              FROM   ItemsCavernes \
+                              WHERE  Type = 'Composant' \
+                              ORDER  BY Type,Nom;" );
+    $sth->execute();
+
+    my $item_png = GLB::functions::GetStuffIcon('Composant', '');
+    print $fh ' ' x 16,'<div style="text-align:center;">'."\n";
+    print $fh ' ' x 18, '<br>'.$item_png.'<br>'."\n";
+    print $fh ' ' x 16,'</div>'."\n";
+
+    while (my @row = $sth->fetchrow_array)
     {
-        print $fh ' ' x10, '<tr class="expanded">'."\n";
-        print $fh ' ' x12, '<th>Composant(s) de '.$c_id.'</th>'."\n";
-        print $fh ' ' x10, '</tr>'."\n";
-        print $fh ' ' x10, '<tr>'."\n";
-        print $fh ' ' x12, '<td>'."\n";
-        print $fh ' ' x14, '<ul class="membreEquipementList">'."\n";
-        foreach my $e ( sort keys %{$stuff{$c_id}} )
+        my $item_id  = $row[0];
+        my $nom      = Encode::decode_utf8($row[3]);
+        my $min      = ', '.sprintf("%.1f", $row[6]/60) . ' min';
+        my $desc     = GLB::functions::GetQualite('Composant', $row[8]);
+
+        my $item_txt = '['.$item_id.'] '.$nom.' ('.$desc.')'.$min."\n";
+
+        print $fh ' ' x 16, '<li class="equipementNonEquipe">'."\n";
+        print $fh ' ' x 18, $item_txt."\n";
+        print $fh ' ' x 16, '</li>'."\n";
+    }
+    $sth->finish();
+
+    print $fh ' ' x14, '</ul>'."\n";
+    print $fh ' ' x12, '</td>'."\n";
+    print $fh ' ' x10, '</tr>'."\n";
+
+
+    # Matériaux
+    print $fh ' ' x10, '<tr class="expanded">'."\n";
+    print $fh ' ' x12, '<th>Materiaux</th>'."\n";
+    print $fh ' ' x10, '</tr>'."\n";
+    print $fh ' ' x10, '<tr>'."\n";
+    print $fh ' ' x12, '<td>'."\n";
+    print $fh ' ' x14, '<ul class="membreEquipementList">'."\n";
+
+    foreach my $item_type ('Minerai', 'Roche', 'Matériau')
+    {
+        print '.';
+        my $sth = $dbh->prepare( "SELECT Id,Type,Identifie,Nom,Magie,Desc,Poids,Taille,Qualite,Localisation,Utilise,Prix,Reservation,Matiere \
+                                  FROM   ItemsCavernes \
+                                  WHERE  Type = '$item_type' \
+                                  ORDER  BY Type,Nom;" );
+        $sth->execute();
+
+        my $png_done = 'DOING';
+        while (my @row = $sth->fetchrow_array)
         {
-            for my $type ( sort keys %{$stuff{$c_id}{$e}} )
+            my $item_id = $row[0];
+            my $nom     = Encode::decode_utf8($row[3]);
+            my $min     = ', '.sprintf("%.1f", $row[6]/60) . ' min';
+            my $desc    = GLB::functions::GetQualite($item_type, $row[8]);
+            my $nbr     = $row[7];
+            my $carats  = GLB::functions::GetCarats($row[8],$nbr);
+
+            if ( $png_done ne 'DONE' )
             {
-                my $png_done = 'DOING';
-                for my $item_id ( sort keys %{$stuff{$c_id}{$e}{$type}} )
-                {
-                    if ( $type eq 'Composant' )
-                    {
-                        my $min     = ', '.sprintf("%.1f", $stuff{$c_id}{$e}{$type}{$item_id}{'Poids'}/60) . ' min';
-                        my $nom     = $stuff{$c_id}{$e}{$type}{$item_id}{'Nom'};
-                        my $desc    = GLB::functions::GetQualite($type, $stuff{$c_id}{$e}{$type}{$item_id}{'Qualite'});
-
-                        if ( $png_done ne 'DONE' )
-                        {
-                            my $item_png = GLB::functions::GetStuffIcon($type, $stuff{$c_id}{$e}{$type}{$item_id}{'Nom'});
-                            print $fh ' ' x 16,'<div style="text-align:center;">'."\n";
-                            print $fh ' ' x 18, '<br>'.$item_png.'<br>'."\n";
-                            print $fh ' ' x 16,'</div>'."\n";
-                        }
-
-                        my $item_txt = '['.$item_id.'] '.$nom.' ('.$desc.')'.$min."\n";
-
-                        print $fh ' ' x 16, '<li class="equipement'.$e.'">'."\n";
-                        print $fh ' ' x 18, $item_txt."\n";
-                        print $fh ' ' x 16, '</li>'."\n";
-                    }
-                    $png_done = 'DONE';
-                }
+                $png_done    = 'DONE';
+                my $item_png = GLB::functions::GetMateriauIcon($nom);
+                print $fh ' ' x 16,'<div style="text-align:center; type="'.$item_type.'">'."\n";
+                print $fh ' ' x 18, '<br>'.$item_png.'<br>'."\n";
+                print $fh ' ' x 16,'</div>'."\n";
             }
-            if ( $e eq 'Equipe' ) { print $fh ' ' x 16, '<br>'."\n" }
+
+            my $item_txt  = '<div class="tt_r">'."\n";
+               $item_txt .= ' ' x 20 . '['.$item_id.'] '.$nom.' de taille '.$nbr.' ('.$desc.')'.$min."\n";
+               $item_txt .= ' ' x 20 . '<span class="tt_r_text">'.$carats.' Carats</span>'."\n";
+               $item_txt .= ' ' x 18 . '</div>'."\n";
+
+            print $fh ' ' x 16, '<li class="equipementNonEquipe">'."\n";
+            print $fh ' ' x 18, $item_txt."\n";
+            print $fh ' ' x 16, '</li>'."\n";
         }
-        print $fh ' ' x14, '</ul>'."\n";
-        print $fh ' ' x12, '</td>'."\n";
-        print $fh ' ' x10, '</tr>'."\n";
+        $sth->finish();
     }
 
-    #Matériaux
-    for my $c_id ( sort keys %stuff )
-    {
-        print $fh ' ' x10, '<tr class="expanded">'."\n";
-        print $fh ' ' x12, '<th>Materiaux de '.$c_id.'</th>'."\n";
-        print $fh ' ' x10, '</tr>'."\n";
-        print $fh ' ' x10, '<tr>'."\n";
-        print $fh ' ' x12, '<td>'."\n";
-        print $fh ' ' x14, '<ul class="membreEquipementList">'."\n";
-        foreach my $e ( sort keys %{$stuff{$c_id}} )
-        {
-            for my $type ( sort keys %{$stuff{$c_id}{$e}} )
-            {
-                my $png_done = 'DOING';
-                for my $item_id ( sort keys %{$stuff{$c_id}{$e}{$type}} )
-                {
-                    if ( $stuff{$c_id}{$e}{$type}{$item_id}{'Type'} =~ /^Minerai$|Mat.riau|Roche/ )
-                    {
-                        my $nom     = Encode::decode_utf8($stuff{$c_id}{$e}{$type}{$item_id}{'Nom'});
-                        my $min     = ', '.sprintf("%.1f", $stuff{$c_id}{$e}{$type}{$item_id}{'Poids'}/60) . ' min';
-                        my $desc    = GLB::functions::GetQualite($type, $stuff{$c_id}{$e}{$type}{$item_id}{'Qualite'});
-                        my $nbr     = $stuff{$c_id}{$e}{$type}{$item_id}{'Taille'};
-                        my $carats  = $nbr * $stuff{$c_id}{$e}{$type}{$item_id}{'Qualite'};
-
-                        if ( $png_done ne 'DONE' )
-                        {
-                            my $item_png = GLB::functions::GetMateriauIcon($nom);
-                            print $fh ' ' x 16,'<div style="text-align:center; type="'.$type.'">'."\n";
-                            print $fh ' ' x 18, '<br>'.$item_png.'<br>'."\n";
-                            print $fh ' ' x 16,'</div>'."\n";
-                        }
-
-                        my $item_txt  = '<div class="tt_r">'."\n";
-                           $item_txt .= ' ' x 20 . '['.$item_id.'] '.$nom.' de taille '.$nbr.' ('.$desc.')'.$min."\n";
-                           $item_txt .= ' ' x 20 . '<span class="tt_r_text">'.$carats.' Carats</span>'."\n";
-                           $item_txt .= ' ' x 18 . '</div>'."\n";
-
-                        print $fh ' ' x 16, '<li class="equipement'.$e.'">'."\n";
-                        print $fh ' ' x 18, $item_txt."\n";
-                        print $fh ' ' x 16, '</li>'."\n";
-                    }
-                    $png_done = 'DONE';
-                }
-            }
-            if ( $e eq 'Equipe' ) { print $fh ' ' x 16, '<br>'."\n" }
-        }
-        print $fh ' ' x14, '</ul>'."\n";
-        print $fh ' ' x12, '</td>'."\n";
-        print $fh ' ' x10, '</tr>'."\n";
-    }
+    print $fh ' ' x14, '</ul>'."\n";
+    print $fh ' ' x12, '</td>'."\n";
+    print $fh ' ' x10, '</tr>'."\n";
 
     print $fh ' ' x 8, '</table>'."\n";
 
@@ -182,6 +184,7 @@ sub main
     print $fh $GLB::variables::vuescript;
     print $fh $GLB::variables::end;
     close $fh;
+    print "]\n";
 }
 
 1;

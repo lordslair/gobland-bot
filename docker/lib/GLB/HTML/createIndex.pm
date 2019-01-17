@@ -8,14 +8,24 @@ use lib '/home/gobland-bot/lib/';
 use GLB::functions;
 use GLB::variables;
 
-my $gobs_ref   = $GLB::variables::gobs;
-my %gobs       = %{$gobs_ref};
-my $gobs2_ref  = $GLB::variables::gobs2;
-my %gobs2      = %{$gobs2_ref};
 my $clan_name  = $GLB::variables::clan_name;
+
+use DBI;
+
+my $dbh = DBI->connect(
+       "dbi:SQLite:dbname=/home/gobland-bot/gobland.db",
+       "",
+       "",
+       { RaiseError => 1 },
+    ) or die $DBI::errstr;
+
+my $yaml       = '/home/gobland-bot/gl-config.yaml';
 
 sub main
 {
+
+    print "GLB::HTML::createIndex[";
+
     my $t_start  = [gettimeofday()]; 
     my $filename = '/var/www/localhost/htdocs/index.html';
     open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
@@ -32,6 +42,7 @@ sub main
     print $fh ' ' x12, '<th>Race</th>'."\n";
     print $fh ' ' x12, '<th>Niv.</th>'."\n";
     print $fh ' ' x12, '<th>Position</th>'."\n";
+    print $fh ' ' x12, '<th>Meute</th>'."\n";
     print $fh ' ' x12, '<th>PV</th>'."\n";
     print $fh ' ' x12, '<th>PA</th>'."\n";
     print $fh ' ' x12, '<th>Dates</th>'."\n";
@@ -40,36 +51,58 @@ sub main
 
     my $ct_total   = 0;
 
-    for my $gob_id ( sort keys %gobs )
+    my @gob_ids = @GLB::variables::gob_ids;
+
+    for my $gob_id ( sort @gob_ids )
     {
-        my $position = $gobs{$gob_id}{'X'}.', '.$gobs{$gob_id}{'Y'}.', '.$gobs{$gob_id}{'N'};
+
+        print '.';
+
+        # Request for Profil info with a JOIN for PVTotal
+        my $req_gob = $dbh->prepare( "SELECT Gobelins.Id,Tribu,Gobelin,Niveau,X,Y,N,PA,PV,PVMax,CT,Gobelins.DLA FROM Gobelins \
+                                      INNER JOIN Gobelins2 on Gobelins.Id = Gobelins2.Id \
+                                      WHERE Gobelins.Id = $gob_id \
+                                      ORDER BY Gobelins.Id" );
+        $req_gob->execute();
+
+        my @row = $req_gob->fetchrow_array;
+        $req_gob->finish();
+
+        my $position = $row[4].', '.$row[5].', '.$row[6];
+
+        my %meute       = %GLB::variables::meute;
+        my $nom_meute   = '';
+        my $id_meute    = '';
+        if ( $meute{$gob_id}{'Id'}  ) { $id_meute  = $meute{$gob_id}{'Id'}  }
+        if ( $meute{$gob_id}{'Nom'} ) { $nom_meute = $meute{$gob_id}{'Nom'} }
 
         my $pad;
-        if ( $gobs{$gob_id}{'PA'} > 0 )
+        if ( $row[7] > 0 )
         {
             $pad = ' class="PADispo"';
         } else { $pad = ' ' }
 
-        my $color   = GLB::functions::GetColor($gobs{$gob_id}{'PV'},$gobs2{$gob_id}{'PVMax'});
-        my $percent = ($gobs{$gob_id}{'PV'} / $gobs2{$gob_id}{'PVMax'}) * 100;
+        my $color   = GLB::functions::GetColor($row[8],$row[9]);
+        my $percent = ($row[8] / $row[9]) * 100;
         my $lifebar = '<br><div class="vieContainer"><div style="background-color:'.$color.'; width: '.$percent.'%">&nbsp;</div></div>';
 
-        $ct_total += $gobs{$gob_id}{'CT'};
+        $ct_total += $row[10];
 
         print $fh ' ' x10, '<tr>'."\n";
         print $fh ' ' x12, '<td>'."\n";
-        print $fh ' ' x14, '<a href="http://games.gobland.fr/Profil.php?IdPJ='.$gob_id.'" target="_blank">'.$gobs{$gob_id}{'Nom'}.'</a>'."\n";
+        print $fh ' ' x14, '<a href="http://games.gobland.fr/Profil.php?IdPJ='.$gob_id.'" target="_blank">'.$row[2].'</a>'."\n";
         print $fh ' ' x12, '</td>'."\n";
         print $fh ' ' x12, '<td>'.$gob_id.'</td>'."\n";
-        print $fh ' ' x12, '<td>'.$gobs{$gob_id}{'Tribu'}.'</td>'."\n";
-        print $fh ' ' x12, '<td>'.$gobs{$gob_id}{'Niveau'}.'</td>'."\n";
+        print $fh ' ' x12, '<td>'.$row[1].'</td>'."\n";
+        print $fh ' ' x12, '<td>'.$row[3].'</td>'."\n";
         print $fh ' ' x12, '<td>'.$position.'</td>'."\n";
-        print $fh ' ' x12, '<td>'.$gobs{$gob_id}{'PV'}.' / '.$gobs2{$gob_id}{'PVMax'}.$lifebar.'</td>'."\n";
-        print $fh ' ' x12, '<td'.$pad.'>'.$gobs{$gob_id}{'PA'}.'</td>'."\n";
-        print $fh ' ' x12, '<td><span class="DLA"> DLA : '.$gobs{$gob_id}{'DLA'}.'</span><br><span class="pDLA">pDLA : [A CODER]</span></td>'."\n";
+        print $fh ' ' x12, '<td>'.$nom_meute.' ('.$id_meute.')</td>'."\n";
+        print $fh ' ' x12, '<td>'.$row[8].' / '.$row[9].$lifebar.'</td>'."\n";
+        print $fh ' ' x12, '<td'.$pad.'>'.$row[7].'</td>'."\n";
+        print $fh ' ' x12, '<td><span class="DLA"> DLA : '.$row[11].'</span><br><span class="pDLA">pDLA : [A CODER]</span></td>'."\n";
         print $fh ' ' x12, '<td>'."\n";
-        print $fh ' ' x14, '/gobelins/'.$gob_id.'.html" title="Votre profil">PROFIL</a>'."\n";
-        print $fh ' ' x14, '/vue/'.$gob_id.'.html" title="Votre vue">VUE</a>'."\n";
+        print $fh ' ' x14, '<a href="/gobelins/'.$gob_id.'.html" title="Votre profil">PROFIL</a>'."\n";
+        print $fh ' ' x14, '<a href="/vue/'.$gob_id.'.html" title="Votre vue">VUE</a>'."\n";
         print $fh ' ' x12, '</td>'."\n";
         print $fh ' ' x10, '</tr>'."\n";
     }
@@ -85,6 +118,7 @@ sub main
 
     print $fh $GLB::variables::end;
     close $fh;
+    print "]\n";
 }
 
 1;
