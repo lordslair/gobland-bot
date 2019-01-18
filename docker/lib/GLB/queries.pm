@@ -3,17 +3,71 @@ package GLB::queries;
 use warnings;
 use strict;
 
-    use DBI;
+use DBI;
 
-    my $dbh = DBI->connect(
-        "dbi:SQLite:dbname=/home/gobland-bot/gobland.db",
-        "",
-        "",
-        { RaiseError => 1 },
-    ) or die $DBI::errstr;
+my $sqlite_db = '/home/gobland-bot/gobland.db';
+my $driver_db = 'SQLite';
+my $dsn       = "DBI:$driver_db:dbname=$sqlite_db";
+
+sub req_gobelin_id
+{
+    my @gob_ids;
+
+    my $sql = "SELECT Id FROM Gobelins;";
+    my $dbh = DBI->connect($dsn, '', '', { RaiseError => 1 }) or die $DBI::errstr;
+    my $sth = $dbh->prepare( "$sql" );
+    $sth->execute();
+
+    while (my $lastline = $sth->fetchrow_array) { push @gob_ids, $lastline }
+
+    $sth->finish();
+    $dbh->disconnect();
+
+    return @gob_ids;
+}
+
+sub req_id2gob
+{
+    my %id2gob;
+
+    my $sql = "SELECT Id,Gobelin FROM 'Gobelins' ORDER BY Id;";
+    my $dbh = DBI->connect($dsn, '', '', { RaiseError => 1 }) or die $DBI::errstr;
+    my $sth = $dbh->prepare( "$sql" );
+    $sth->execute();
+
+    while (my @row = $sth->fetchrow_array) { $id2gob{$row[0]} = $row[1] }
+
+    $sth->finish();
+    $dbh->disconnect();
+
+    return %id2gob;
+}
+
+sub req_meute
+{
+    my %meute;
+
+    my $sql = "SELECT Id,IdMeute,NomMeute FROM 'Meutes' ORDER BY Id;";
+    my $dbh = DBI->connect($dsn, '', '', { RaiseError => 1 }) or die $DBI::errstr;
+    my $sth = $dbh->prepare( "$sql" );
+    $sth->execute();
+
+   while (my @row = $sth->fetchrow_array)
+   {
+       $meute{$row[0]}{'Id'}  = $row[1];
+       $meute{$row[0]}{'Nom'} = $row[2];
+   }
+
+    $sth->finish();
+    $dbh->disconnect();
+
+    return %meute;
+}
 
 sub MP2CdM
 {
+    my $dbh = DBI->connect($dsn, '', '', { RaiseError => 1 }) or die $DBI::errstr;
+
     my $req_mps = $dbh->prepare( "SELECT Id,IdGob,PMDate,PMSubject,PMText \
                                   FROM MPBot \
                                   WHERE PMSubject LIKE 'Résultat CdM%' \
