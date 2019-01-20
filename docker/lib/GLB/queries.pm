@@ -88,6 +88,7 @@ sub MP2CdM
         {
             $mob_id   = $1;
             $mob_name = $2;
+            $mob_name =~ s/\'/\'\'/g;
         }
 
         my $mob_niv;
