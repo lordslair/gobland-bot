@@ -19,14 +19,10 @@ my $dbh = DBI->connect(
 
 sub main
 {
-    print "GLB::HTML::createProfil[";
     my @gob_ids = @GLB::variables::gob_ids;
 
     for my $gob_id ( sort @gob_ids )
     {
-
-        print '.';
-
         my $t_start  = [gettimeofday()];
         my $dir      = '/var/www/localhost/htdocs/gobelins/';
         my $filename = $dir.$gob_id.'.html';
@@ -148,6 +144,33 @@ sub main
         }
 
         print $fh ' ' x12, '</table>'."\n";
+        print $fh ' ' x10, '</fieldset>'."\n";
+
+        # Suivants
+        print $fh ' ' x10, '<fieldset>'."\n";
+        print $fh ' ' x12, '<legend>Suivants</legend>'."\n";
+
+        my $req_suivants = $dbh->prepare( "SELECT Suivants.Id,Vue.Nom,Vue.Niveau,Vue.X,Vue.Y,Vue.N \
+                                           FROM Suivants \
+                                           INNER JOIN Vue on Suivants.Id = Vue.Id \
+                                           WHERE Suivants.IdGob = '$gob_id' \
+                                           ORDER BY Suivants.Id" );
+        $req_suivants->execute();
+        while (my @row = $req_suivants->fetchrow_array)
+        {
+            my $suivant_id  = $row[0];
+            my $suivant_nom = $row[1];
+            my $suivant_niv = $row[2];
+            my $X           = $row[3];
+            my $Y           = $row[4];
+            my $N           = $row[5];
+            my $title       = '[ X='.$X.' | Y= '.$Y.' | N= '.$N.' ] '.$suivant_nom;
+            my $link        = '<a href="/vue/'.$suivant_id.'.html" title="'.$title.'">'.$suivant_nom.'</a>';
+
+            print $fh ' ' x12, '<li>['.$suivant_id.'] '.$link.' (Niv. '.$suivant_niv.')</li>'."\n";
+        }
+        $req_suivants->finish();
+
         print $fh ' ' x10, '</fieldset>'."\n";
 
         # Cafards
@@ -300,7 +323,6 @@ sub main
         print $fh $GLB::variables::end;
         close $fh;
     }
-    print "]\n";
 }
 
 1;
