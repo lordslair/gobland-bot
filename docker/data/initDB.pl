@@ -222,6 +222,9 @@ if ( ! -f $sqlite_db )
                                  PERMin   INT,
                                  PERMax   INT)");
 
+    $dbh->do("CREATE TABLE Suivants (Id        INT PRIMARY KEY,
+                                     IdGob     INT)");
+
 }
 else
 {
