@@ -427,6 +427,21 @@ sub GetLuxe
     }
 }
 
+sub GetCraft
+{
+    my $type      = shift;
+    my $nom       = shift;
+    my $desc      = shift;
+    my $template  = shift;
+
+    my $craft     = ' <img height="10px" width="10px" src="/images/stuff/craft.png">';
+
+    if ( $template )
+    {
+        if ( $template =~ /de Ma.tre/ ) { return $craft }
+    }
+}
+
 sub GetCarats
 {
     my $quali_id  = shift;

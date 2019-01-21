@@ -308,8 +308,9 @@ sub main
                 my $desc     = Encode::decode_utf8($row[4]);
                 my $template = '<b>'.Encode::decode_utf8($row[3]).'</b>';
                 my $luxe     = GLB::functions::GetLuxe($type,$nom,$desc);
+                my $craft    = GLB::functions::GetCraft($type,$nom,$desc,$template);
 
-                my $item_txt = '['.$row[0].'] '.$type.' : '.$nom.' '.$template.' ('.$desc.')'.$luxe.'<br>';
+                my $item_txt = '['.$row[0].'] '.$type.' : '.$nom.' '.$template.' ('.$desc.')'.$luxe.$craft.'<br>';
 
                 print $fh ' ' x14, $item_png.$item_txt."\n";
         }

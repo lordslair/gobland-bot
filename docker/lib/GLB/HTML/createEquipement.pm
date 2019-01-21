@@ -66,8 +66,9 @@ sub main
             my $desc     = Encode::decode_utf8($row[6]);
             my $template = '<b>'.Encode::decode_utf8($row[5]).'</b>';
             my $luxe     = GLB::functions::GetLuxe($type,$nom,$desc);
+            my $craft    = GLB::functions::GetCraft($type,$nom,$desc,$template);
 
-            print $fh ' ' x 16, '<li class="equipementEquipe">'.'['.$item_id.'] '.$type.' : '.$nom.' '.$template.' ('.$desc.'), '.$min.' min'.$luxe.'</li>'."\n";
+            print $fh ' ' x 16, '<li class="equipementEquipe">'.'['.$item_id.'] '.$type.' : '.$nom.' '.$template.' ('.$desc.'), '.$min.' min'.$luxe.$craft.'</li>'."\n";
         }
 
         print $fh ' ' x 16, '<br>'."\n";
@@ -88,8 +89,9 @@ sub main
             my $desc     = Encode::decode_utf8($row[6]);
             my $template = '<b>'.Encode::decode_utf8($row[5]).'</b>';
             my $luxe     = GLB::functions::GetLuxe($type,$nom,$desc);
+            my $craft    = GLB::functions::GetCraft($type,$nom,$desc,$template);
 
-            print $fh ' ' x 16, '<li class="equipementNonEquipe">'.'['.$item_id.'] '.$type.' : '.$nom.' '.$template.' ('.$desc.'), '.$min.' min'.$luxe.'</li>'."\n";
+            print $fh ' ' x 16, '<li class="equipementNonEquipe">'.'['.$item_id.'] '.$type.' : '.$nom.' '.$template.' ('.$desc.'), '.$min.' min'.$luxe.$craft.'</li>'."\n";
         }
 
         print $fh ' ' x14, '</ul>'."\n";
