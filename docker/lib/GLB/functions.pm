@@ -379,8 +379,9 @@ sub GetLuxe
 
     if ( $type eq 'Talisman' )
     {
-        if    ( $nom eq 'Collier' )              { if ( $desc =~ /MM:[+]10 . RM:[+]10/ ) { return $ok } }
-        elsif ( $nom =~ /^Phylact.re$/ )         { if ( $desc =~ /MP:[+]10 . RP:[+]10/ ) { return $ok } }
+        if ( $desc =~ /M.:[+]10 . R.:[+]10/ )                       { return $ok }
+        if ( $desc =~ /...:[-]1 . M.:[+]20 . R.:[+]20/ )            { return $ok }
+        if ( $desc =~ /...:[-]4 . M.:[+]40 . R.:[+]40/ )            { return $ok }
     }
     elsif ( $type eq 'Bouclier' )
     {
