@@ -395,8 +395,7 @@ sub GetLuxe
     }
     elsif ( $type eq 'Bottes' )
     {
-        if    ( $nom =~ /en os/ )                { if ( $desc =~ /RT:[+]10/ )            { return $ok } }
-        elsif ( $nom =~ /en m.tal/ )             { if ( $desc =~ /RC:[+]10/ )            { return $ok } }
+        if ( $desc =~ /R.:[+]10/ )                                  { return $ok }
     }
     elsif ( $type eq 'Arme 1 Main' )
     {
