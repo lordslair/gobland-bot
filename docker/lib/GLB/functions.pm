@@ -384,9 +384,8 @@ sub GetLuxe
     }
     elsif ( $type eq 'Bouclier' )
     {
-        if    ( $nom eq 'Rondache en bois' )     { if ( $desc =~ /RP:[+]10/ )            { return $ok } }
-        elsif ( $nom eq 'Egide' )                { if ( $desc =~ /RC:[+]10/ )            { return $ok } }
-        elsif ( $nom eq 'Clipeus' )              { if ( $desc =~ /RS:[+]10/ )            { return $ok } }
+        if ( $desc =~ /Arm:[+]1 . ESQ:[+]1 . R.:[+]10/ )            { return $ok } # Petit Bouclier
+        if ( $desc =~ /Arm:[+]2 . ESQ:[+]1 . R.:[+]15/ )            { return $ok } # Grand Bouclier
     }
     elsif ( $type eq 'Casque' )
     {
