@@ -390,19 +390,8 @@ sub GetLuxe
     }
     elsif ( $type eq 'Casque' )
     {
-        if    ( $nom eq 'Bacinet' )              { if ( $desc =~ /MC:[+]10/ )            { return $ok } }
-        elsif ( $nom eq 'Barbute' )              { if ( $desc =~ /RP:[+]10/ )            { return $ok } }
-        elsif ( $nom eq 'Cagoule' )              { if ( $desc =~ /MS:[+]10/ )            { return $ok } }
-        elsif ( $nom eq 'Casque en cuir' )       { if ( $desc =~ /RS:[+]10/ )            { return $ok } }
-        elsif ( $nom =~ /Casque en m.tal/ )      { if ( $desc =~ /RC:[+]10/ )            { return $ok } }
-        elsif ( $nom eq 'Casque en os' )         { if ( $desc =~ /RT:[+]10/ )            { return $ok } }
-        elsif ( $nom eq 'Cerebro' )              { if ( $desc =~ /MP:[+]10/ )            { return $ok } }
-        elsif ( $nom eq 'Chapeau pointu' )       { if ( $desc =~ /MM:[+]10/ )            { return $ok } }
-        elsif ( $nom eq 'Lorgnons' )             { if ( $desc =~ /MR:[+]10/ )            { return $ok } }
-        elsif ( $nom eq 'Masque d\'Alowin' )     { if ( $desc =~ /RR:[+]10/ )            { return $ok } }
-        elsif ( $nom eq 'Scalp' )                { if ( $desc =~ /MT:[+]10/ )            { return $ok } }
-        elsif ( $nom eq 'Turban' )               { if ( $desc =~ /RM:[+]10/ )            { return $ok } }
-
+        if ( $desc =~ /M.:[+]10/ )                                  { return $ok }
+        if ( $desc =~ /R.:[+]10/ )                                  { return $ok }
     }
     elsif ( $type eq 'Bottes' )
     {
