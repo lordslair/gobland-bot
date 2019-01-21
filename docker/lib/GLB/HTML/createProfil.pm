@@ -306,7 +306,8 @@ sub main
                 my $nom      = Encode::decode_utf8($row[2]);
                 my $item_png = GLB::functions::GetStuffIcon($type, $nom);
                 my $desc     = Encode::decode_utf8($row[4]);
-                my $template = '<b>'.Encode::decode_utf8($row[3]).'</b>';
+                my $template = '';
+                   $template = '<b>'.Encode::decode_utf8($row[3]).'</b>' if ( $row[3] );
                 my $luxe     = GLB::functions::GetLuxe($type,$nom,$desc);
                 my $craft    = GLB::functions::GetCraft($type,$nom,$desc,$template);
 

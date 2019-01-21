@@ -64,7 +64,8 @@ sub main
             my $min      = sprintf("%.1f",$row[7]/60);
             my $nom      = Encode::decode_utf8($row[4]);
             my $desc     = Encode::decode_utf8($row[6]);
-            my $template = '<b>'.Encode::decode_utf8($row[5]).'</b>';
+            my $template = '';
+               $template = '<b>'.Encode::decode_utf8($row[5]).'</b>' if ( $row[5] );
             my $luxe     = GLB::functions::GetLuxe($type,$nom,$desc);
             my $craft    = GLB::functions::GetCraft($type,$nom,$desc,$template);
 
@@ -87,7 +88,8 @@ sub main
             my $min      = sprintf("%.1f",$row[7]/60);
             my $nom      = Encode::decode_utf8($row[4]);
             my $desc     = Encode::decode_utf8($row[6]);
-            my $template = '<b>'.Encode::decode_utf8($row[5]).'</b>';
+            my $template = '';
+               $template = '<b>'.Encode::decode_utf8($row[5]).'</b>' if ( $row[5] );
             my $luxe     = GLB::functions::GetLuxe($type,$nom,$desc);
             my $craft    = GLB::functions::GetCraft($type,$nom,$desc,$template);
 
