@@ -425,6 +425,17 @@ sub GetLuxe
     {
         if    ( $nom eq 'Anneau Barbare' )       { if ( $desc =~ /MS:[-]5/  )            { return $ok } }
     }
+    elsif ( $type eq 'Armure' )
+    {
+        if ( $desc =~ /ESQ:[+]1 . M.:[+]10 . R.:[+]10/ )            { return $ok } # Armures Legères
+        if ( $desc =~ /ESQ:[+]2 . R.:[-]5 . R.:[+]50/ )             { return $ok }
+        if ( $desc =~ /Arm:[+]2 . R.:[-]5 . R.:[+]5 . R.:[+]10/ )   { return $ok }
+
+        if ( $desc =~ /ESQ:[-]1 . R.:[+]40/ )                       { return $ok } # Armures Moyennes
+        if ( $desc =~ /ESQ:[-]3 . R.:[+]100/ )                      { return $ok }
+
+        if ( $desc =~ /ESQ:[-]6 . R.:[+]200/ )                      { return $ok } # Armures Lourdes
+    }
 }
 
 sub GetCraft
