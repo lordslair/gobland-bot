@@ -440,6 +440,13 @@ sub GetCraft
     {
         if ( $template =~ /de Ma.tre/ ) { return $craft }
     }
+    else
+    {
+        if    ( ($nom eq 'Bottes')            && ($desc ne 'ESQ:+2') )                           { return $craft }
+        elsif ( ($nom eq 'Tunique')           && ($desc !~ /^ESQ:+1 | MS:+(\d*) | RS:+(\d*)$/) ) { return $craft }
+        elsif ( ($nom eq 'Gorgeron en cuir')  && ($desc ne 'Arm:+1') )                           { return $craft }
+        elsif ( ($nom eq 'Targe')             && ($desc ne 'ESQ:+1') )                           { return $craft }
+    }
 }
 
 sub GetCarats
