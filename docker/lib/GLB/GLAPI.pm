@@ -503,6 +503,7 @@ sub getClanCavernes
                 if ( $line[4] =~ /'/    ) { $line[4]     =~ s/\'/\'\'/g}
                 if ( $line[7] eq ""     ) { $line[7]     = 1  } # Patch for Empty Baguette size
                 if ( $line[8] eq ""     ) { $line[8]     = 0  } # Patch for Empty Baguette quality
+                if ( $line[9] =~ /'/    ) { $line[9]     =~ s/\'/\'\'/g}
                 if ( !$line[12]         ) { $line[12]    = '' } # Patch for Empty Matiere
 
                 my $sth  = $dbh->prepare( "INSERT OR IGNORE INTO ItemsCavernes VALUES( '$line[0]',     \ 
