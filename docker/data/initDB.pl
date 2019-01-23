@@ -112,7 +112,10 @@ if ( ! -f $sqlite_db )
                                     Type           TEXT,
                                     IdProprietaire TEXT,
                                     architecture   TEXT,
-                                    mobile         TEXT)");
+                                    mobile         TEXT,
+                                    X              INT,
+                                    Y              INT,
+                                    Z              INT)");
 
     $dbh->do("CREATE TABLE Vue  (Id        INT PRIMARY KEY,
                                  Categorie TEXT,
