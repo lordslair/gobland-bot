@@ -307,6 +307,10 @@ sub GetMateriauIcon
     elsif ( $nom eq 'Cuir' )                  { $png = '<img src="/images/stuff/icon_98.png">'   }
     elsif ( $nom eq 'Tissu' )                 { $png = '<img src="/images/stuff/icon_103.png">'  }
     elsif ( $nom eq 'Pierre' )                { $png = '<img src="/images/stuff/icon_1142.png">' }
+    elsif ( $nom eq 'Fleur' )                 { $png = '<img src="/images/stuff/icon_1173.png">' }
+    elsif ( $nom eq 'Champignon' )            { $png = '<img src="/images/stuff/icon_1174.png">' }
+    elsif ( $nom eq 'Composant' )             { $png = '<img src="/images/stuff/icon_102.png">'  }
+    elsif ( $nom eq 'Racine' )                { $png = '<img src="/images/stuff/icon_1155.png">' }
 
     return $png;
 }
@@ -360,6 +364,7 @@ sub GetQualite
     $M_QUALITY{'Materiau'}{'4'} = 'Bonne';
     $M_QUALITY{'Materiau'}{'5'} = '<b>Exceptionnelle</b>';
 
+    $M_QUALITY{'Composant'}{'0'} = ''; # AFAIK only used for non-IdT Plants
     $M_QUALITY{'Composant'}{'1'} = Encode::decode_utf8('Très Mauvaise');
     $M_QUALITY{'Composant'}{'2'} = 'Mauvaise';
     $M_QUALITY{'Composant'}{'3'} = 'Moyenne';

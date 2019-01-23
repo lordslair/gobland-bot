@@ -93,36 +93,60 @@ sub main
 
     print '.';
 
-    my $sth = $dbh->prepare( "SELECT Id,Type,Identifie,Nom,Magie,Desc,Poids,Taille,Qualite,Localisation,Utilise,Prix,Reservation,Matiere \
-                              FROM   ItemsCavernes \
-                              WHERE  Type = 'Composant' \
-                              ORDER  BY Type,Nom;" );
-    $sth->execute();
+    my @composants = ('Composant', 'Fleur', 'Racine', 'Champignon');
+    my %count_composants;
 
-    my $item_png = GLB::functions::GetStuffIcon('Composant', '');
-    print $fh ' ' x 16,'<div style="text-align:center;">'."\n";
-    print $fh ' ' x 18, '<br>'.$item_png.'<br>'."\n";
-    print $fh ' ' x 16,'</div>'."\n";
-
-    while (my @row = $sth->fetchrow_array)
+    foreach my $composant ( sort @composants )
     {
-        my $item_id  = $row[0];
-        my $nom      = Encode::decode_utf8($row[3]);
-        my $min      = ', '.sprintf("%.1f", $row[6]/60) . ' min';
-        my $desc     = GLB::functions::GetQualite('Composant', $row[8]);
+        if ( ! $count_composants{$composant} ) { $count_composants{$composant} = 0 }
+        my $sth = $dbh->prepare( "SELECT Id,Type,Identifie,Nom,Magie,Desc,Poids,Taille,Qualite,Localisation,Utilise,Prix,Reservation,Matiere \
+                                  FROM   ItemsCavernes \
+                                  WHERE  Type = '$composant' \
+                                  ORDER  BY Nom;" );
+        $sth->execute();
 
-        my $item_txt = '['.$item_id.'] '.$nom.' ('.$desc.')'.$min."\n";
+        my $item_png = GLB::functions::GetMateriauIcon($composant);
 
-        print $fh ' ' x 16, '<li class="equipementNonEquipe">'."\n";
-        print $fh ' ' x 18, $item_txt."\n";
-        print $fh ' ' x 16, '</li>'."\n";
+        print $fh ' ' x 16,'<div style="text-align:center;">'."\n";
+        print $fh ' ' x 18, '<br>'.$item_png.'<br>'."\n";
+        print $fh ' ' x 16,'</div>'."\n";
+
+        while (my @row = $sth->fetchrow_array)
+        {
+            my $item_id  = $row[0];
+            my $nom      = Encode::decode_utf8($row[3]);
+            my $min      = ', '.sprintf("%.1f", $row[6]/60) . ' min';
+            my $desc     = GLB::functions::GetQualite('Composant', $row[8]);
+
+            $count_composants{$composant}++;
+
+            my $item_txt = '['.$item_id.'] '.$nom.' ('.$desc.')'.$min."\n";
+
+            print $fh ' ' x 16, '<li class="equipementNonEquipe">'."\n";
+            print $fh ' ' x 18, $item_txt."\n";
+            print $fh ' ' x 16, '</li>'."\n";
+        }
+        $sth->finish();
     }
-    $sth->finish();
 
     print $fh ' ' x14, '</ul>'."\n";
     print $fh ' ' x12, '</td>'."\n";
     print $fh ' ' x10, '</tr>'."\n";
 
+    # Block with count of Composants
+    print $fh ' ' x10, '<tr>'."\n";
+    print $fh ' ' x12, '<td>'."\n";
+    foreach my $composant ( sort @composants )
+    {
+        $composant =~ s/''/\'/g;
+        if ( $count_composants{$composant} )
+        {
+            my $item_png = GLB::functions::GetMateriauIcon($composant);
+            print $fh ' ' x14, $item_png.' ('.$count_composants{$composant}.') '."\n";
+        }
+    }
+    print $fh ' ' x12, '</td>'."\n";
+    print $fh ' ' x10, '</tr>'."\n";
 
     # Matériaux
     print $fh ' ' x10, '<tr class="expanded">'."\n";
