@@ -182,6 +182,38 @@ sub main
     print $fh ' ' x12, '</td>'."\n";
     print $fh ' ' x10, '</tr>'."\n";
 
+    # Block with count of Carats / materiau
+    print $fh ' ' x10, '<tr>'."\n";
+    print $fh ' ' x12, '<td>'."\n";
+
+    foreach my $minerai ( sort @minerais )
+    {
+        $minerai =~ s/''/\'/g;
+        if ( $count{'Minerai'}{$minerai} )
+        {
+            my $item_png = GLB::functions::GetMateriauIcon($minerai);
+            print $fh ' ' x14, $item_png.' ('.$count{'Minerai'}{$minerai}.') '."\n";
+        }
+    }
+    print $fh ' ' x14, '<br>'."\n";
+    foreach my $materiau ( sort @materiaux )
+    {
+        if ( $count{'Matériau'}{$materiau} )
+        {
+            my $item_png = GLB::functions::GetMateriauIcon($materiau);
+            print $fh ' ' x14, $item_png.' ('.$count{'Mat..riau'}{$materiau}.') '."\n";
+        }
+    }
+    print $fh ' ' x14, '<br>'."\n";
+    foreach my $roche ( sort @roches )
+    {
+        if ( $count{'Roche'}{$roche} )
+        {
+            my $item_png = GLB::functions::GetMateriauIcon($roche);
+            print $fh ' ' x14, $item_png.' ('.$count{'Roche'}{$roche}.') '."\n";
+        }
+    }
+
     print $fh ' ' x 8, '</table>'."\n";
 
     my $t_elapsed = sprintf ("%0.3f", tv_interval($t_start));
