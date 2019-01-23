@@ -15,8 +15,7 @@ my $dbh = DBI->connect(
        { RaiseError => 1 },
     ) or die $DBI::errstr;
 
-my $yaml   = $GLB::variables::glyaml;
-my $glyaml = YAML::Tiny->read( $yaml );
+my $glyaml = $GLB::variables::glyaml;
 
 sub main
 {
