@@ -158,6 +158,17 @@ sub main
             my $nbr       = $row[7];
             my $carats    = GLB::functions::GetCarats($row[8],$nbr);;
 
+            if ( ! $count{$item_type}{$nom} ) { $count{$item_type}{$nom} = 0 }
+
+            if ( $item eq 'Rondin' )
+            {
+                $count{$item_type}{$nom} = $count{$item_type}{$nom} + $nbr;
+            }
+            else
+            {
+                $count{$item_type}{$nom} = $count{$item_type}{$nom} + $carats;
+            }
+
             if ( $png_done ne 'DONE' )
             {
                 $png_done    = 'DONE';
