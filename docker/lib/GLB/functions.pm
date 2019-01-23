@@ -295,11 +295,18 @@ sub GetMateriauIcon
     my $nom  = shift;
     my $png  = '';
 
-    if    ( $nom eq 'Rondin'         ) { $png = '<img src="/images/stuff/icon_109.png">'  }
-    elsif ( $nom eq 'Minerai de Fer' ) { $png = '<img src="/images/stuff/icon_104.png">'  }
-    elsif ( $nom eq 'Cuir'           ) { $png = '<img src="/images/stuff/icon_98.png">'   }
-    elsif ( $nom eq 'Tissu'          ) { $png = '<img src="/images/stuff/icon_103.png">'  }
-    elsif ( $nom eq 'Pierre'         ) { $png = '<img src="/images/stuff/icon_1142.png">' }
+    if    ( $nom eq 'Rondin' )                { $png = '<img src="/images/stuff/icon_109.png">'  }
+    elsif ( $nom eq 'Sable' )                 { $png = '<img src="/images/stuff/icon_1054.png">' }
+    elsif ( $nom eq 'Minerai d\'Or' )         { $png = '<img src="/images/stuff/icon_1066.png">' }
+    elsif ( $nom eq 'Minerai de Cuivre' )     { $png = '<img src="/images/stuff/icon_1067.png">' }
+    elsif ( $nom eq 'Minerai d\'Argent' )     { $png = '<img src="/images/stuff/icon_1068.png">' }
+    elsif ( $nom eq 'Minerai d\'Etain' )      { $png = '<img src="/images/stuff/icon_1069.png">' }
+    elsif ( $nom eq 'Minerai de Mithril' )    { $png = '<img src="/images/stuff/icon_1070.png">' }
+    elsif ( $nom eq 'Minerai d\'Adamantium' ) { $png = '<img src="/images/stuff/icon_1071.png">' }
+    elsif ( $nom eq 'Minerai de Fer' )        { $png = '<img src="/images/stuff/icon_1072.png">' }
+    elsif ( $nom eq 'Cuir' )                  { $png = '<img src="/images/stuff/icon_98.png">'   }
+    elsif ( $nom eq 'Tissu' )                 { $png = '<img src="/images/stuff/icon_103.png">'  }
+    elsif ( $nom eq 'Pierre' )                { $png = '<img src="/images/stuff/icon_1142.png">' }
 
     return $png;
 }

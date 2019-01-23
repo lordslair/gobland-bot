@@ -126,36 +126,42 @@ sub main
 
     # Matériaux
     print $fh ' ' x10, '<tr class="expanded">'."\n";
-    print $fh ' ' x12, '<th>Materiaux</th>'."\n";
+    print $fh ' ' x12, '<th>'.Encode::decode_utf8('Matériaux').'</th>'."\n";
     print $fh ' ' x10, '</tr>'."\n";
     print $fh ' ' x10, '<tr>'."\n";
     print $fh ' ' x12, '<td>'."\n";
     print $fh ' ' x14, '<ul class="membreEquipementList">'."\n";
 
-    foreach my $item_type ('Minerai', 'Roche', 'Matériau')
+    my @minerais  = ('Sable', "Minerai d''Or", 'Minerai de Cuivre', "Minerai d''Argent", "Minerai d''Etain", 'Minerai de Mithril', "Minerai d''Adamantium", 'Minerai de Fer');
+    my @materiaux = ('Cuir', 'Tissu', 'Rondin');
+    my @roches    = ('Pierre');
+    my @items     = (@minerais, @materiaux, @roches);
+
+    foreach my $item ( sort @items )
     {
         print '.';
         my $sth = $dbh->prepare( "SELECT Id,Type,Identifie,Nom,Magie,Desc,Poids,Taille,Qualite,Localisation,Utilise,Prix,Reservation,Matiere \
                                   FROM   ItemsCavernes \
-                                  WHERE  Type = '$item_type' \
-                                  ORDER  BY Type,Nom;" );
+                                  WHERE  Nom = '$item' \
+                                  ORDER  BY Nom;" );
         $sth->execute();
 
         my $png_done = 'DOING';
         while (my @row = $sth->fetchrow_array)
         {
-            my $item_id = $row[0];
-            my $nom     = Encode::decode_utf8($row[3]);
-            my $min     = ', '.sprintf("%.1f", $row[6]/60) . ' min';
-            my $desc    = GLB::functions::GetQualite($item_type, $row[8]);
-            my $nbr     = $row[7];
-            my $carats  = GLB::functions::GetCarats($row[8],$nbr);
+            my $item_id   = $row[0];
+            my $item_type = $row[1];
+            my $nom       = Encode::decode_utf8($row[3]);
+            my $min       = ', '.sprintf("%.1f", $row[6]/60) . ' min';
+            my $desc      = GLB::functions::GetQualite($item_type, $row[8]);
+            my $nbr       = $row[7];
+            my $carats    = GLB::functions::GetCarats($row[8],$nbr);;
 
             if ( $png_done ne 'DONE' )
             {
                 $png_done    = 'DONE';
                 my $item_png = GLB::functions::GetMateriauIcon($nom);
-                print $fh ' ' x 16,'<div style="text-align:center; type="'.$item_type.'">'."\n";
+                print $fh ' ' x 16,'<div style="text-align:center; type="'.$nom.'">'."\n";
                 print $fh ' ' x 18, '<br>'.$item_png.'<br>'."\n";
                 print $fh ' ' x 16,'</div>'."\n";
             }
