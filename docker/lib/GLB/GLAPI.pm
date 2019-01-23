@@ -310,6 +310,8 @@ sub getVue
 
     for my $gob_id ( @gob_ids )
     {
+        if ( ! $glyaml->[0]->{clan}{$gob_id} ) { next } # If passwd not set for a gob, GOTO next gob
+
         print '.';
         my $browser = new LWP::UserAgent;
         my $request = new HTTP::Request( GET => "http://ie.gobland.fr/IE_Vue.php?id=$gob_id&passwd=$glyaml->[0]->{clan}{$gob_id}" );
@@ -557,6 +559,8 @@ sub getMPBot
     print "GLB::GLAPI::GetMPBot[";
     foreach my $gob_id (@gob_ids)
     {
+        if ( ! $glyaml->[0]->{clan}{$gob_id} ) { next } # If passwd not set for a gob, GOTO next gob
+
         print '.';
         my $browser = new LWP::UserAgent;
         my $request = new HTTP::Request( GET => "http://ie.gobland.fr/IE_BotMessages.php?id=$gob_id&passwd=$glyaml->[0]->{clan}{$gob_id}" );
