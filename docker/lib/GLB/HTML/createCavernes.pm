@@ -136,6 +136,7 @@ sub main
     my @materiaux = ('Cuir', 'Tissu', 'Rondin');
     my @roches    = ('Pierre');
     my @items     = (@minerais, @materiaux, @roches);
+    my %count;
 
     foreach my $item ( sort @items )
     {
@@ -201,7 +202,7 @@ sub main
         if ( $count{'Matériau'}{$materiau} )
         {
             my $item_png = GLB::functions::GetMateriauIcon($materiau);
-            print $fh ' ' x14, $item_png.' ('.$count{'Mat..riau'}{$materiau}.') '."\n";
+            print $fh ' ' x14, $item_png.' ('.$count{'Matériau'}{$materiau}.') '."\n";
         }
     }
     print $fh ' ' x14, '<br>'."\n";
