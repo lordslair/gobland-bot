@@ -269,6 +269,8 @@ sub GetStuffIcon
     my $type      = shift;
     my $nom       = shift;
 
+    if ( ! $nom ) { $nom = '' } # To avoid errors when $nom if not given
+
     if    ( $type eq 'Armure' )                           { $png = 'icon_04.png' }
     elsif ( $type eq 'Casque' )                           { $png = 'icon_14.png' }
     elsif ( $type eq 'Bottes' )                           { $png = 'icon_24.png' }

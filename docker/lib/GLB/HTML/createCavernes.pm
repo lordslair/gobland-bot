@@ -42,24 +42,30 @@ sub main
     print $fh ' ' x12, '<td>'."\n";
     print $fh ' ' x14, '<ul class="membreEquipementList">'."\n";
 
-    foreach my $item_type ('Arme 1 Main', 'Arme 2 mains', 'Anneau', 'Armure', 'Baguette', 'Bijou', 'Bottes', 'Bouclier', 'Casque', 'Nourriture','Outil', 'Potion', 'Talisman')
+    my @equipements = ('Arme 1 Main', 'Arme 2 mains', 'Anneau', 'Armure', 'Baguette', 'Bijou', 'Bottes', 'Bouclier', 'Casque', 'Nourriture', 'Outil', 'Potion', 'Talisman');
+    my %count_equipements;
+
+    foreach my $equipement ( sort @equipements )
     {
         print '.';
         my $sth = $dbh->prepare( "SELECT Id,Type,Identifie,Nom,Magie,Desc,Poids,Taille,Qualite,Localisation,Utilise,Prix,Reservation,Matiere \
                                   FROM   ItemsCavernes \
-                                  WHERE  Type = '$item_type' \
+                                  WHERE  Type = '$equipement' \
                                   ORDER  BY Type,Nom;" );
         $sth->execute();
 
         my $png_done = 'DOING';
         while (my @row = $sth->fetchrow_array)
         {
-            my $item_id  = $row[0];
-            my $nom      = Encode::decode_utf8($row[3]);
-            my $min      = ', '.sprintf("%.1f", $row[6]/60) . ' min';
-            my $desc     = Encode::decode_utf8($row[5]);
-            my $template = '<b>'.$row[4].'</b>';
-            my $luxe     = GLB::functions::GetLuxe($item_type,$nom,$desc);
+            my $item_id   = $row[0];
+            my $item_type = $row[1];
+            my $nom       = Encode::decode_utf8($row[3]);
+            my $min       = ', '.sprintf("%.1f", $row[6]/60) . ' min';
+            my $desc      = Encode::decode_utf8($row[5]);
+            my $template  = '<b>'.$row[4].'</b>';
+            my $luxe      = GLB::functions::GetLuxe($item_type,$nom,$desc);
+
+            $count_equipements{$equipement}++;
 
             if ( $png_done ne 'DONE' )
             {
@@ -80,6 +86,21 @@ sub main
     }
 
     print $fh ' ' x14, '</ul>'."\n";
+    print $fh ' ' x12, '</td>'."\n";
+    print $fh ' ' x10, '</tr>'."\n";
+
+    # Block with count of pieces of equipement
+    print $fh ' ' x10, '<tr>'."\n";
+    print $fh ' ' x12, '<td>'."\n";
+    foreach my $equipement ( sort @equipements )
+    {
+        $equipement =~ s/''/\'/g;
+        if ( $count_equipements{$equipement} )
+        {
+            my $item_png = GLB::functions::GetStuffIcon($equipement, );
+            print $fh ' ' x14, $item_png.' ('.$count_equipements{$equipement}.') '."\n";
+        }
+    }
     print $fh ' ' x12, '</td>'."\n";
     print $fh ' ' x10, '</tr>'."\n";
 
