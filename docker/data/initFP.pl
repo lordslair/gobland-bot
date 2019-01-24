@@ -85,7 +85,7 @@ if ( -f $sqlite_db )
 
     if ( -f "$path/data/$skills_csv" )
     {
-        open (my $fh, '<:encoding(Latin1)', "$path/data/$skills_csv") or die "Could not open file '$path/data/$skills_csv' $!";
+        open (my $fh, '<:encoding(UTF-8)', "$path/data/$skills_csv") or die "Could not open file '$path/data/$skills_csv' $!";
             while (my $row = <$fh>)
             {
                 $row     =~ s/"//g;
