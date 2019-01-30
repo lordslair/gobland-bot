@@ -71,7 +71,7 @@ sub main
         my %meute       = %GLB::variables::meute;
         my $nom_meute   = '';
         my $id_meute    = '';
-        if ( $meute{$gob_id}{'Id'}  ) { $id_meute  = $meute{$gob_id}{'Id'}  }
+        if ( $meute{$gob_id}{'Id'}  ) { $id_meute  = '('.$meute{$gob_id}{'Id'}.')' }
         if ( $meute{$gob_id}{'Nom'} ) { $nom_meute = $meute{$gob_id}{'Nom'} }
 
         my $pad;
@@ -94,7 +94,7 @@ sub main
         print $fh ' ' x12, '<td>'.$row[1].'</td>'."\n";
         print $fh ' ' x12, '<td>'.$row[3].'</td>'."\n";
         print $fh ' ' x12, '<td>'.$position.'</td>'."\n";
-        print $fh ' ' x12, '<td>'.$nom_meute.' ('.$id_meute.')</td>'."\n";
+        print $fh ' ' x12, '<td>'.$nom_meute.' '.$id_meute.'</td>'."\n";
         print $fh ' ' x12, '<td>'.$row[8].' / '.$row[9].$lifebar.'</td>'."\n";
         print $fh ' ' x12, '<td'.$pad.'>'.$row[7].'</td>'."\n";
         print $fh ' ' x12, '<td><span class="DLA"> DLA : '.$row[11].'</span><br><span class="pDLA">pDLA : [A CODER]</span></td>'."\n";
