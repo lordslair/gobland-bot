@@ -456,11 +456,11 @@ sub getMeuteMembres
                     my @line = split /;/, $line;
                     if ( $line !~ /^#/)
                     {
-                        my $sth  = $dbh->prepare( "INSERT OR IGNORE INTO Meutes VALUES( '$line[2]', \
-                                                                                        '$line[3]', \
-                                                                                        '$line[0]', \
-                                                                                        '$line[1]'  )" );
-
+                        my $meute = Encode::decode_utf8($line[1]);
+                        my $sth   = $dbh->prepare( "INSERT OR REPLACE INTO Meutes VALUES( '$line[2]', \
+                                                                                          '$line[3]', \
+                                                                                          '$line[0]', \
+                                                                                          '$meute'  )" );
                         $sth->execute();
                         $sth->finish();
                     }

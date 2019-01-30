@@ -55,7 +55,7 @@ sub req_meute
    while (my @row = $sth->fetchrow_array)
    {
        $meute{$row[0]}{'Id'}  = $row[1];
-       $meute{$row[0]}{'Nom'} = $row[2];
+       $meute{$row[0]}{'Nom'} = Encode::decode_utf8($row[2]);
    }
 
     $sth->finish();
