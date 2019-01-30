@@ -206,10 +206,10 @@ sub main
             print $fh ' ' x10, '<fieldset>'."\n";
             print $fh ' ' x12, '<legend>Meute : '.$nom_meute.' ('.$id_meute.')</legend>'."\n";
 
-            my $req_meute_compo = $dbh->prepare( "SELECT Gobelins.Id,Nom,Tribu,Niveau \
+            my $req_meute_compo = $dbh->prepare( "SELECT Id,Nom,Tribu,Niveau \
                                                   FROM Meutes \
-                                                  INNER JOIN Gobelins on Gobelins.Id = Meutes.Id \
                                                   WHERE IdMeute = '$id_meute'" );
+
                $req_meute_compo->execute();
             while (my @row = $req_meute_compo->fetchrow_array)
             {
