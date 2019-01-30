@@ -51,7 +51,7 @@ if ( ! -f $sqlite_db )
                                     X       INT,
                                     Y       INT,
                                     N       INT,
-                                    Z       INT,
+                                    Z       TEXT,
                                     DLA     TEXT,
                                     Etat    TEXT,
                                     PA      INT,
