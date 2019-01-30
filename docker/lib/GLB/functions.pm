@@ -479,4 +479,18 @@ sub GetCarats
     return  sprintf("%d", $carats);
 }
 
+sub GetpDLA
+{
+    use Time::Piece;
+
+    my $dla_str = shift; # Ex: 2019-01-30 19:40:16
+    my $duree_s = shift; # DLA duration in seconds
+
+    my $dla      = Time::Piece->strptime($dla_str, "%Y-%m-%d %H:%M:%S");
+    my $pdla     = $dla + $duree_s;
+    my $pdla_str = $pdla->strftime("%Y-%m-%d %H:%M:%S");
+
+    return $pdla_str;
+}
+
 1;

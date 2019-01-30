@@ -57,7 +57,8 @@ sub main
         print '.';
 
         # Request for Profil info with a JOIN for PVTotal
-        my $req_gob = $dbh->prepare( "SELECT Gobelins.Id,Tribu,Gobelin,Niveau,X,Y,N,PA,PV,PVMax,CT,Gobelins.DLA FROM Gobelins \
+        my $req_gob = $dbh->prepare( "SELECT Gobelins.Id,Tribu,Gobelin,Niveau,X,Y,N,PA,PV,PVMax,CT,Gobelins.DLA,Gobelins2.DLA,BPDLA,BMDLA \
+                                      FROM Gobelins \
                                       INNER JOIN Gobelins2 on Gobelins.Id = Gobelins2.Id \
                                       WHERE Gobelins.Id = $gob_id \
                                       ORDER BY Gobelins.Id" );
@@ -86,6 +87,9 @@ sub main
 
         $ct_total += $row[10];
 
+        my $duree_s   = $row[12] + $row[13] + $row[14];
+        my $pdla      = GLB::functions::GetpDLA($row[11], $duree_s);
+
         print $fh ' ' x10, '<tr>'."\n";
         print $fh ' ' x12, '<td>'."\n";
         print $fh ' ' x14, '<a href="http://games.gobland.fr/Profil.php?IdPJ='.$gob_id.'" target="_blank">'.$row[2].'</a>'."\n";
@@ -97,7 +101,7 @@ sub main
         print $fh ' ' x12, '<td>'.$nom_meute.' '.$id_meute.'</td>'."\n";
         print $fh ' ' x12, '<td>'.$row[8].' / '.$row[9].$lifebar.'</td>'."\n";
         print $fh ' ' x12, '<td'.$pad.'>'.$row[7].'</td>'."\n";
-        print $fh ' ' x12, '<td><span class="DLA"> DLA : '.$row[11].'</span><br><span class="pDLA">pDLA : [A CODER]</span></td>'."\n";
+        print $fh ' ' x12, '<td><span class="DLA"> DLA : '.$row[11].'</span><br><span class="pDLA">pDLA : '.$pdla.'</span></td>'."\n";
         print $fh ' ' x12, '<td>'."\n";
         print $fh ' ' x14, '<a href="/gobelins/'.$gob_id.'.html" title="Votre profil">PROFIL</a>'."\n";
         print $fh ' ' x14, '<a href="/vue/'.$gob_id.'.html" title="Votre vue">VUE</a>'."\n";

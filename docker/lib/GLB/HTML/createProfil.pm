@@ -68,6 +68,8 @@ sub main
         my $faim_png  = '<img src="/images/stuff/icon_74.png">';
         my $ct_png    = '<img src="/images/stuff/icon_111.png">';
 
+        my $pdla      = GLB::functions::GetpDLA($row[14], $duree_s);
+
         print $fh ' ' x10, '<fieldset>'."\n";
         print $fh ' ' x12, '<legend>Caracteristiques</legend>'."\n";
         print $fh ' ' x12, '<strong>Tribu</strong> : '.$row[2].'<br/>'."\n";
@@ -90,7 +92,7 @@ sub main
         print $fh ' ' x12, '<strong>Augmentation due aux blessures</strong> : [A CODER]</span><br/>'."\n";
         print $fh ' ' x12, '<strong>Poids des possessions</strong> : '.$duree_p.'</span><br/>'."\n";
         print $fh ' ' x12, '<strong>Duree totale du tour</strong> : '.$duree_t.'</span><br/>'."\n";
-        print $fh ' ' x12, '<strong>Prochaine DLA</strong> : [A CODER]</span><br/>'."\n";
+        print $fh ' ' x12, '<strong>Prochaine DLA</strong> : '.$pdla.'</span><br/>'."\n";
         print $fh ' ' x12, '<br>'."\n";
         print $fh ' ' x12, '<strong>'.$ct_png.'Canines de Trolls</strong> : '.$row[10].' CT<br/>'."\n";
         print $fh ' ' x10, '</fieldset>'."\n";
