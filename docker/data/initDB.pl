@@ -72,7 +72,7 @@ if ( ! -f $sqlite_db )
     $dbh->do("CREATE TABLE Meutes (Id       INT PRIMARY KEY,
                                    Nom      TEXT,
                                    IdMeute  INT,
-                                   NomMeute INT)");
+                                   NomMeute TEXT)");
 
     $dbh->do("CREATE TABLE Cafards (IdCafard   INT PRIMARY KEY,
                                     Id         INT,
