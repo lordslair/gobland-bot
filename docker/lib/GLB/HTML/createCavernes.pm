@@ -65,6 +65,8 @@ sub main
             my $template  = '<b>'.$row[4].'</b>';
             my $luxe      = GLB::functions::GetLuxe($item_type,$nom,$desc);
 
+            if ( $row[13] ) { $nom .= ' en '.$row[13] } # Fix for 'en Pierre' equipements
+
             $count_equipements{$equipement}++;
 
             if ( $png_done ne 'DONE' )

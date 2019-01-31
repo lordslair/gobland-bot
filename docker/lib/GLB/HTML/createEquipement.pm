@@ -69,6 +69,8 @@ sub main
             my $luxe     = GLB::functions::GetLuxe($type,$nom,$desc);
             my $craft    = GLB::functions::GetCraft($type,$nom,$desc,$template);
 
+            if ( $row[11] ) { $nom .= ' en '.$row[11] } # Fix for 'en Pierre' equipements
+
             print $fh ' ' x 16, '<li class="equipementEquipe">'.'['.$item_id.'] '.$type.' : '.$nom.' '.$template.' ('.$desc.'), '.$min.' min'.$luxe.$craft.'</li>'."\n";
         }
 
@@ -92,6 +94,8 @@ sub main
                $template = '<b>'.Encode::decode_utf8($row[5]).'</b>' if ( $row[5] );
             my $luxe     = GLB::functions::GetLuxe($type,$nom,$desc);
             my $craft    = GLB::functions::GetCraft($type,$nom,$desc,$template);
+
+            if ( $row[11] ) { $nom .= ' en '.$row[11] } # Fix for 'en Pierre' equipements
 
             print $fh ' ' x 16, '<li class="equipementNonEquipe">'.'['.$item_id.'] '.$type.' : '.$nom.' '.$template.' ('.$desc.'), '.$min.' min'.$luxe.$craft.'</li>'."\n";
         }

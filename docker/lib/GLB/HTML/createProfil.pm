@@ -298,7 +298,7 @@ sub main
         print $fh ' ' x10, '<fieldset>'."\n";
         print $fh ' ' x12, '<legend>'.Encode::decode_utf8('Equipement Equipé').'</legend>'."\n";
 
-        my $req_stuff_equipe = $dbh->prepare( "SELECT Id,Type,Nom,Magie,Desc \
+        my $req_stuff_equipe = $dbh->prepare( "SELECT Id,Type,Nom,Magie,Desc,Matiere \
                                                FROM ItemsGobelins \
                                                WHERE Utilise = 'VRAI' AND Gobelin = '$gob_id'" );
            $req_stuff_equipe->execute();
@@ -312,6 +312,8 @@ sub main
                    $template = '<b>'.Encode::decode_utf8($row[3]).'</b>' if ( $row[3] );
                 my $luxe     = GLB::functions::GetLuxe($type,$nom,$desc);
                 my $craft    = GLB::functions::GetCraft($type,$nom,$desc,$template);
+
+                if ( $row[5] ) { $nom .= ' en '.$row[5] } # Fix for 'en Pierre' equipements
 
                 my $item_txt = '['.$row[0].'] '.$type.' : '.$nom.' '.$template.' ('.$desc.')'.$luxe.$craft.'<br>';
 
