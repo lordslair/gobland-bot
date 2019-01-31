@@ -52,9 +52,9 @@ sub main
 
         # First request for Equiped stuff
         my $req_comp_1 = $dbh->prepare( "SELECT * FROM ItemsGobelins \
-                                       WHERE Type NOT IN ('Minerai', 'Composant', 'Matériau') \
-                                       AND Utilise  = 'VRAI' \
-                                       AND Gobelin = $gob_id" );
+                                       WHERE Utilise  = 'VRAI' \
+                                       AND Gobelin = $gob_id \
+                                       ORDER BY Type" );
         $req_comp_1->execute();
 
         while (my @row = $req_comp_1->fetchrow_array)
@@ -78,9 +78,10 @@ sub main
 
         # Second request for NonEquiped stuff
         my $req_comp_2 = $dbh->prepare( "SELECT * FROM ItemsGobelins \
-                                       WHERE Type NOT IN ('Minerai', 'Composant', 'Mat..riau') \
+                                       WHERE Type NOT IN ('Minerai', 'Composant', 'Matériau', 'Roche') \
                                        AND Utilise  = 'FAUX' \
-                                       AND Gobelin = $gob_id" );
+                                       AND Gobelin = $gob_id \
+                                       ORDER BY Type" );
         $req_comp_2->execute();
 
         while (my @row = $req_comp_2->fetchrow_array)
