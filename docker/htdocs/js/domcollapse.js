@@ -20,9 +20,9 @@ dc={
 	
 	// pictures and text alternatives
 	closedPic:'/images/js/plus.gif',
-	closedAlt:'Développer',
+	closedAlt:'Expand',
 	openPic:'/images/js/minus.gif',
-	openAlt:'Réduire',
+	openAlt:'Reduce',
 	/* Doesn't work with Safari
 		hoverClass:'hover',
 	*/
