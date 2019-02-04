@@ -64,12 +64,26 @@ sub main
             my $L_count = 0;
             my $G_count = 0;
 
-            my $x_min = $X - $cases;
-            my $x_max = $X + $cases;
-            my $y_min = $Y - $cases;
-            my $y_max = $Y + $cases;
-            my $n_max = sprintf("%d",$N + ($cases / 2));
-            my $n_min = sprintf("%d",$N - ($cases / 2));
+            # Test in case gob view is 0 or less
+            my ($x_min,$x_max,$y_min,$y_max,$n_max,$n_min);
+            if ( $cases > 0 )
+            {
+                $x_min = $X - $cases;
+                $x_max = $X + $cases;
+                $y_min = $Y - $cases;
+                $y_max = $Y + $cases;
+                $n_max = sprintf("%d",$N + ($cases / 2));
+                $n_min = sprintf("%d",$N - ($cases / 2));
+            }
+            else
+            {
+                $x_min = $X;
+                $x_max = $X;
+                $y_min = $Y;
+                $y_max = $Y;
+                $n_max = $N;
+                $n_min = $N;
+            }
 
             # Request for elements in the Gob sight
             my $req_vue = $dbh->prepare( "SELECT Id,Categorie,Nom,Niveau,Type,Clan,X,Y,N,Z \
