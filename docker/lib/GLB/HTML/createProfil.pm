@@ -152,7 +152,8 @@ sub main
         print $fh ' ' x10, '<fieldset>'."\n";
         print $fh ' ' x12, '<legend>Suivants</legend>'."\n";
 
-        my $req_suivants = $dbh->prepare( "SELECT Suivants.Id,Vue.Nom,Vue.Niveau,Vue.X,Vue.Y,Vue.N \
+        my %suivants_links;
+        my $req_suivants = $dbh->prepare( "SELECT Suivants.Id,Suivants.Nom,Vue.Niveau,Vue.X,Vue.Y,Vue.N \
                                            FROM Suivants \
                                            INNER JOIN Vue on Suivants.Id = Vue.Id \
                                            WHERE Suivants.IdGob = '$gob_id' \
@@ -161,7 +162,7 @@ sub main
         while (my @row = $req_suivants->fetchrow_array)
         {
             my $suivant_id  = $row[0];
-            my $suivant_nom = $row[1];
+            my $suivant_nom = Encode::decode_utf8($row[1]);
             my $suivant_niv = $row[2];
             my $X           = $row[3];
             my $Y           = $row[4];
@@ -169,9 +170,35 @@ sub main
             my $title       = '[ X='.$X.' | Y= '.$Y.' | N= '.$N.' ] '.$suivant_nom;
             my $link        = '<a href="/vue/'.$suivant_id.'.html" title="'.$title.'">'.$suivant_nom.'</a>';
 
-            print $fh ' ' x12, '<li>['.$suivant_id.'] '.$link.' (Niv. '.$suivant_niv.')</li>'."\n";
+            $suivants_links{$suivant_id}{'link'}   = $link;
+            $suivants_links{$suivant_id}{'Niveau'} = $suivant_niv;
         }
         $req_suivants->finish();
+
+        my $req_suivants_all = $dbh->prepare( "SELECT Id,IdGob,Nom \
+                                               FROM Suivants \
+                                               WHERE IdGob = '$gob_id' \
+                                               ORDER BY Id" );
+
+        $req_suivants_all->execute();
+        while (my @row = $req_suivants_all->fetchrow_array)
+        {
+            my $suivant_id  = $row[0];
+            my $suivant_nom = Encode::decode_utf8($row[2]);
+
+            # Test to know if Suivant view was available and a view link exists
+            if ( $suivants_links{$suivant_id} )
+            {
+                my $suivant_niv = $suivants_links{$suivant_id}{'Niveau'};
+                my $link        = $suivants_links{$suivant_id}{'link'};
+
+                print $fh ' ' x12, '<li>['.$suivant_id.'] '.$link.' (Niv. '.$suivant_niv.')</li>'."\n";
+            }
+            else
+            {
+                print $fh ' ' x12, '<li>['.$suivant_id.'] '.$suivant_nom.'</li>'."\n";
+            }
+        }
 
         print $fh ' ' x10, '</fieldset>'."\n";
 
