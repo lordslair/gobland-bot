@@ -167,4 +167,39 @@ sub MP2CdM
 
 MP2CdM();
 
+sub MP2Suivants
+{
+    my $dbh = DBI->connect($dsn, '', '', { RaiseError => 1 }) or die $DBI::errstr;
+
+    my $req_mps = $dbh->prepare( "SELECT Id,IdGob,PMDate,PMSubject,PMText \
+                                  FROM MPBot \
+                                  WHERE PMSubject LIKE 'Infos Suivant%' \
+                                  ORDER BY PMDate \
+                                  LIMIT 100;" );
+       $req_mps->execute();
+
+    my %suivants;
+
+    while (my @row = $req_mps->fetchrow_array)
+    {
+        if ( $row[3] =~ /Infos Suivant - (.*) \((\d*)\) - / )
+        {
+            $suivants{$2}{'Nom'}   = $1;
+            $suivants{$2}{'IdGob'} = $row[1];
+        }
+    }
+
+    foreach my $suivant_id ( sort keys %suivants )
+    {
+        $suivants{$suivant_id}{'Nom'} =~ s/\'/\'\'/g;
+        my $sth  = $dbh->prepare( "INSERT OR IGNORE INTO Suivants VALUES( '$suivant_id', \
+                                                                          '$suivants{$suivant_id}{'IdGob'}', \
+                                                                          '$suivants{$suivant_id}{'Nom'}' )" );
+        $sth->execute();
+        $sth->finish();
+    }
+}
+
+MP2Suivants;
+
 1;
