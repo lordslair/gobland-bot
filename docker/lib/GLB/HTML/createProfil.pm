@@ -186,6 +186,7 @@ sub main
             my $suivant_id      = $row[0];
             my $suivant_nom     = Encode::decode_utf8($row[2]);
             my $suivant_actions = GLB::functions::GetSuivantsActions($gob_id,$suivant_id);
+            my $suivant_amelios = GLB::functions::GetSuivantsAmelios($gob_id,$suivant_id);
 
             # Test to know if Suivant view was available and a view link exists
             if ( $suivants_links{$suivant_id} )
@@ -195,6 +196,7 @@ sub main
 
                 print $fh ' ' x12, '<li>'."\n";
                 print $fh ' ' x14, $suivant_actions.' '."\n";
+                print $fh ' ' x14, $suivant_amelios.' '."\n";
                 print $fh ' ' x14, '['.$suivant_id.'] '.$link.' (Niv. '.$suivant_niv.')'."\n";
                 print $fh ' ' x12, '</li>'."\n";
             }
@@ -202,6 +204,7 @@ sub main
             {
                 print $fh ' ' x12, '<li>'."\n";
                 print $fh ' ' x14, $suivant_actions.' '."\n";
+                print $fh ' ' x14, $suivant_amelios.' '."\n";
                 print $fh ' ' x14, '['.$suivant_id.'] '.$suivant_nom."\n";
                 print $fh ' ' x12, '</li>'."\n";
             }

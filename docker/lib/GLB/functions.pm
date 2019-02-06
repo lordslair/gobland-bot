@@ -532,4 +532,43 @@ sub GetSuivantsActions
     return $suivant_actions;
 }
 
+sub GetSuivantsAmelios
+{
+    my $gob_id      = shift;
+    my $suivant_id  = shift;
+    my $suivant_amelios;
+    my $tt;
+    my %amelios;
+
+    my $req_amelios = $dbh->prepare( "SELECT PMDate,PMText \
+                                      FROM MPBot \
+                                      WHERE PMSubject LIKE '%$suivant_id%Entrainement%' \
+                                      ORDER BY PMDate" );
+    $req_amelios->execute();
+
+    $suivant_amelios  = '<div class="tt_r">';
+    $suivant_amelios .= '<img src="/images/stuff/up.png" width="10" height="10">';
+
+    $tt = '<center><b>'.Encode::decode_utf8('Coût des Amélios (actuelles)').'</b></center><br>';
+
+    while (my @row = $req_amelios->fetchrow_array)
+    {
+        if ( $row[1] =~ /(\w*) (\d*) PI$/ )
+        {
+            $amelios{$1} = $2;
+        }
+    }
+    $req_amelios->finish();
+
+    foreach my $carac ( sort keys %amelios )
+    {
+        $tt .= $carac.' : '.$amelios{$carac}.'PI'.'<br>';
+    }
+
+    $suivant_amelios .= '<span class="tt_r_text_suivant" style="width: 15em">'.$tt.'</span>';
+    $suivant_amelios .= '</div>';
+
+    return $suivant_amelios;
+}
+
 1;
