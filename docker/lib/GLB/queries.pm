@@ -167,12 +167,8 @@ sub MP2CdM
     }
 }
 
-MP2CdM();
-
 sub MP2Suivants
 {
-    use POSIX qw(strftime);
-
     my $now     = strftime "%Y-%m-%d", localtime;
     my $dbh     = DBI->connect($dsn, '', '', { RaiseError => 1 }) or die $DBI::errstr;
     my $req_mps = $dbh->prepare( "SELECT Id,IdGob,PMDate,PMSubject,PMText \
@@ -204,6 +200,7 @@ sub MP2Suivants
     }
 }
 
+MP2CdM();
 MP2Suivants;
 
 1;
