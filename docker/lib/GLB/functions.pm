@@ -496,4 +496,40 @@ sub GetpDLA
     return $pdla_str;
 }
 
+sub GetSuivantsActions
+{
+    my $gob_id      = shift;
+    my $suivant_id  = shift;
+    my $suivant_actions;
+    my $tt;
+
+
+    my $req_actions = $dbh->prepare( "SELECT Id,PMDate, PMSubject \
+                                      FROM MPBot \
+                                      WHERE IdGob = '$gob_id' AND PMSubject LIKE '%$suivant_id%' \
+                                      ORDER BY Id DESC \
+                                      LIMIT 5;" );
+    $req_actions->execute();
+
+    $suivant_actions  = '<div class="tt_r">';
+    $suivant_actions .= '<img src="/images/stuff/note.png" width="10" height="10">';
+
+    $tt = '<center><b>Actions récentes</b></center><br>';
+
+    while (my @row = $req_actions->fetchrow_array)
+    {
+
+        $row[2] =~ s/Infos Suivant - //;
+        $row[2] =~ s/Résultat //;
+        $row[1] =~ s/:\d\d$//;
+
+        $tt .= '&nbsp;'.'['.$row[1].'] '.Encode::decode_utf8($row[2]).'<br>';
+    }
+
+    $suivant_actions .= '<span class="tt_r_text_suivant">'.$tt.'</span>';
+    $suivant_actions .= '</div>';
+
+    return $suivant_actions;
+}
+
 1;

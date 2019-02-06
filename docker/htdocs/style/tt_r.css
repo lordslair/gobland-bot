@@ -23,3 +23,24 @@
 .tt_r:hover .tt_r_text {
     visibility: visible;
 }
+
+/* Used for Suivants */
+.tt_r .tt_r_text_suivant {
+    visibility: hidden;
+    width:30em;
+    background-color: grey;
+    color: black;
+    text-align:left;
+    border-radius:5px;
+    padding: 2px 0;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: 2px;
+    left: 105%;
+}
+
+.tt_r:hover .tt_r_text_suivant {
+    visibility: visible;
+}

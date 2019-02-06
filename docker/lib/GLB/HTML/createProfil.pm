@@ -183,8 +183,9 @@ sub main
         $req_suivants_all->execute();
         while (my @row = $req_suivants_all->fetchrow_array)
         {
-            my $suivant_id  = $row[0];
-            my $suivant_nom = Encode::decode_utf8($row[2]);
+            my $suivant_id      = $row[0];
+            my $suivant_nom     = Encode::decode_utf8($row[2]);
+            my $suivant_actions = GLB::functions::GetSuivantsActions($gob_id,$suivant_id);
 
             # Test to know if Suivant view was available and a view link exists
             if ( $suivants_links{$suivant_id} )
@@ -192,11 +193,17 @@ sub main
                 my $suivant_niv = $suivants_links{$suivant_id}{'Niveau'};
                 my $link        = $suivants_links{$suivant_id}{'link'};
 
-                print $fh ' ' x12, '<li>['.$suivant_id.'] '.$link.' (Niv. '.$suivant_niv.')</li>'."\n";
+                print $fh ' ' x12, '<li>'."\n";
+                print $fh ' ' x14, $suivant_actions.' '."\n";
+                print $fh ' ' x14, '['.$suivant_id.'] '.$link.' (Niv. '.$suivant_niv.')'."\n";
+                print $fh ' ' x12, '</li>'."\n";
             }
             else
             {
-                print $fh ' ' x12, '<li>['.$suivant_id.'] '.$suivant_nom.'</li>'."\n";
+                print $fh ' ' x12, '<li>'."\n";
+                print $fh ' ' x14, $suivant_actions.' '."\n";
+                print $fh ' ' x14, '['.$suivant_id.'] '.$suivant_nom."\n";
+                print $fh ' ' x12, '</li>'."\n";
             }
         }
 
