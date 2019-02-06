@@ -169,13 +169,15 @@ MP2CdM();
 
 sub MP2Suivants
 {
-    my $dbh = DBI->connect($dsn, '', '', { RaiseError => 1 }) or die $DBI::errstr;
+    use POSIX qw(strftime);
 
+    my $now     = strftime "%Y-%m-%d", localtime;
+    my $dbh     = DBI->connect($dsn, '', '', { RaiseError => 1 }) or die $DBI::errstr;
     my $req_mps = $dbh->prepare( "SELECT Id,IdGob,PMDate,PMSubject,PMText \
                                   FROM MPBot \
-                                  WHERE PMSubject LIKE 'Infos Suivant%' \
+                                  WHERE PMSubject LIKE 'Infos Suivant%' AND PMDate LIKE '$now%' \
                                   ORDER BY PMDate \
-                                  LIMIT 100;" );
+                                  LIMIT 100;" ); # To avoid a slow SELECT as MPBot can be huge
        $req_mps->execute();
 
     my %suivants;
