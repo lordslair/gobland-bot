@@ -338,6 +338,8 @@ sub getVue
                     $line[5]      =~ s/\'/\'\'/g;
                     if ( $line[5] =~ /Musculeux|Nodef|Trad|Yonnair|Zozo|Mentalo|Gobelin/ ) { $line[0] = 'G' }
 
+                    if ( $line[4] eq '' ) { $line[4] = 0 } # For items, as Niveau is INT in DB
+
                     my $sth       = $dbh->prepare( "INSERT OR REPLACE INTO Vue VALUES( '$line[2]', \
                                                                                        '$line[0]', \
                                                                                        '$line[3]', \
