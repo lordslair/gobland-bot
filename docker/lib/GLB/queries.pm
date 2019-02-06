@@ -4,6 +4,7 @@ use warnings;
 use strict;
 
 use DBI;
+use POSIX qw(strftime);
 
 my $sqlite_db = '/home/gobland-bot/gobland.db';
 my $driver_db = 'SQLite';
@@ -66,12 +67,13 @@ sub req_meute
 
 sub MP2CdM
 {
-    my $dbh = DBI->connect($dsn, '', '', { RaiseError => 1 }) or die $DBI::errstr;
-
+    my $now     = strftime "%Y-%m-%d", localtime;
+    my $dbh     = DBI->connect($dsn, '', '', { RaiseError => 1 }) or die $DBI::errstr;
     my $req_mps = $dbh->prepare( "SELECT Id,IdGob,PMDate,PMSubject,PMText \
                                   FROM MPBot \
-                                  WHERE PMSubject LIKE 'Résultat CdM%' \
-                                  ORDER BY PMDate;" );
+                                  WHERE PMSubject LIKE 'Résultat CdM%' AND PMDate LIKE '$now%' \
+                                  ORDER BY PMDate \
+                                  LIMIT 100;" ); # To avoid a slow SELECT as MPBot can be huge
         $req_mps->execute();
 
     while (my @row = $req_mps->fetchrow_array)
