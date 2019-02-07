@@ -514,7 +514,7 @@ sub GetSuivantsActions
     $suivant_actions  = '<div class="tt_r">';
     $suivant_actions .= '<img src="/images/stuff/note.png" width="10" height="10">';
 
-    $tt = '<center><b>Actions récentes</b></center><br>';
+    $tt = '<center><b>'.Encode::decode_utf8('Actions récentes').'</b></center><br>';
 
     while (my @row = $req_actions->fetchrow_array)
     {
