@@ -41,45 +41,60 @@
         <link href="/style/tt_r.css"  rel="stylesheet" type="text/css"  />
         <link href="/style/equipement.css"  rel="stylesheet" type="text/css"  />
         <h1>Possessions</h1>
-        <h2 class="expanded">Composants Gobelins</h2>
+        <h2 class="expanded">Matériaux Gobelins</h2>
         <table cellspacing="0" id="profilInfos">
 <?php
     include 'queries.php';
+    include 'functions.php';
 
     foreach ($arr_gob_ids as $gob_id)
     {
-
         $db_file = '/db/'.$_ENV["DBNAME"];
         $db      = new SQLite3($db_file);
         if(!$db) { echo $db->lastErrorMsg(); }
 
-        $req_composant_c   = "SELECT COUNT (*) FROM ItemsGobelins WHERE Type = 'Composant' AND Gobelin = $gob_id";
-        $composant_count   = $db->querySingle($req_composant_c);
+        $req_materiaux_c   = "SELECT COUNT (*) FROM ItemsGobelins WHERE ( Type = 'Matériau' OR Type = 'Roche' OR Type = 'Minerai' ) AND Gobelin = '$gob_id'";
+        $materiaux_count   = $db->querySingle($req_materiaux_c);
 
-        $req_gob_nom       = "SELECT Gobelin FROM Gobelins WHERE Id = $gob_id";
+        $req_gob_nom       = "SELECT Gobelin FROM Gobelins WHERE Id = '$gob_id'";
         $gob_nom           = $db->querySingle($req_gob_nom);
 
-        if ( $composant_count > 0 )
+        if ( $materiaux_count > 0 )
         {
             print('<tr class="expanded">'."\n");
-            print('<th>['.$composant_count.'] Composants de '.$gob_nom.' ('.$gob_id.')</th>'."\n");
+            print('<th>['.$materiaux_count.'] Matériaux de '.$gob_nom.' ('.$gob_id.')</th>'."\n");
             print('</tr>'."\n");
             print('</tr>'."\n");
             print('<tr>'."\n");
             print('<td>'."\n");
             print('<ul class="membreEquipementList">'."\n");
 
-            $req_composant   = "SELECT * FROM ItemsGobelins WHERE Type = 'Composant' AND Gobelin = '$gob_id'";
-            $query_composant = $db->query($req_composant);
+            $req_materiaux   = "SELECT * FROM ItemsGobelins
+                                WHERE ( Type = 'Matériau' OR Type = 'Roche' OR Type = 'Minerai' )
+                                AND Gobelin = '$gob_id'
+                                ORDER BY Type,Nom";
+            $query_materiaux = $db->query($req_materiaux);
 
-            while ($row = $query_composant->fetchArray())
+            while ($row = $query_materiaux->fetchArray())
             {
                 $item_id = $row[0];
-                $min     = sprintf("%.1f",$row[7]/60);
+                $type    = $row[2];
                 $nom     = $row[4];
                 $desc    = $row[6];
+                $min     = sprintf("%.1f",$row[7]/60);
+                $nbr     = $row[8];
+                $qualite = $row[9];
 
-                print('                <li class="equipementNonEquipe">'.'['.$item_id.'] '.$nom.' ('.$desc.'), '.$min.' min</li>'."\n");
+                $desc    = GetQualite($type,$qualite);
+                $m_png   = GetMateriauIcon($nom);
+                $carats  = GetCarats($qualite,$nbr);
+
+                print('                <li class="equipementNonEquipe">'."\n");
+                print('                  <div class="tt_r">'."\n");
+                print('                    '.$m_png.'['.$item_id.'] '.$nom.' de taille '.$nbr.' ('.$desc.'), '.$min.' min'."\n");
+                print('                    <span class="tt_r_text">'.$carats.' Carats</span>'."\n");
+                print('                  </div>'."\n");
+                print('                </li>'."\n");
             }
             $db->close;
 

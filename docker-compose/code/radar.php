@@ -20,7 +20,7 @@
             <li><a href="#">Consulter</a>
               <ul>
                 <li><a href="/equipement.html" title="Equipement des Gob' du Clan">Equipement du Clan</a></li>
-                <li><a href="/materiaux.html" title="Materiaux des Gob' du Clan">Materiaux du Clan</a></li>
+                <li><a href="/materiaux.php" title="Matériaux des Gob' du Clan">Matériaux du Clan</a></li>
                 <li><a href="/composants.php" title="Composants des Gob' du Clan">Composants du Clan</a></li>
                 <li><a href="/cavernes.php" title="Cavernes du Clan">Cavernes du Clan</a></li>
               </ul>

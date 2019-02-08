@@ -20,7 +20,7 @@
             <li><a href="#">Consulter</a>
               <ul>
                 <li><a href="/equipement.html" title="Equipement des Gob' du Clan">Equipement du Clan</a></li>
-                <li><a href="/materiaux.html" title="Materiaux des Gob' du Clan">Materiaux du Clan</a></li>
+                <li><a href="/materiaux.php" title="Matériaux des Gob' du Clan">Matériaux du Clan</a></li>
                 <li><a href="/composants.php" title="Composants des Gob' du Clan">Composants du Clan</a></li>
                 <li><a href="/cavernes.php" title="Cavernes du Clan">Cavernes du Clan</a></li>
               </ul>
@@ -180,7 +180,7 @@
           <!-- /Block with count of Composants -->
           <!-- /Composants -->
 
-          <!-- Materiaux -->
+          <!-- Matériaux -->
           <tr class="expanded">
             <th>Matériaux</th>
           </tr>
@@ -248,7 +248,7 @@
             </td>
           </tr>
 
-          <!-- Block with count of Materiaux -->
+          <!-- Block with count of Matériaux -->
           <tr>
             <td>
 <?php
@@ -274,8 +274,8 @@
 ?>
             </td>
           </tr>
-          <!-- /Block with count of Materiaux -->
-          <!-- /Materiaux -->
+          <!-- /Block with count of Matériaux -->
+          <!-- /Matériaux -->
         </table>
       </div> <!-- content -->
     </div> <!-- page -->
