@@ -29,6 +29,7 @@
               <ul>
                 <li><a href="/pxbank.php" title="PX Bank du Clan">PX Bank</a></li>
                 <li><a href="/gps.php" title="GPS">GPS</a></li>
+                <li><a href="/radar.php" title="Radar">Radar</a></li>
                 <li><a href="/CdM.html" title="CdM">CdM Collector</a></li>
               </ul>
             </li>
