@@ -1,7 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
   <head>
-    <title>Gobland-IT</title>
+<?php
+    print ('<title>Gobland-IT ('.$_ENV["CLANID"].') '.$_ENV["CLANNAME"].'</title>');
+?>
     <link rel="stylesheet" type="text/css" href="/style/common.css" />
     <link rel="stylesheet" type="text/css" href="/style/menu.css" />
     <script type="text/javascript" src="/js/common.js"></script>

@@ -14,9 +14,5 @@
         array_push($arr_gob_ids, $row['Id']);
     }
 
-    $clan_name       = '';
-    $req_clan_name   = "SELECT Clan FROM Vue WHERE Id = $arr_gob_ids[0]";
-    $clan_name = $db->querySingle($req_clan_name);
-
     $db->close();
 ?>

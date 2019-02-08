@@ -1,7 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
   <head>
-    <title>Gobland-IT</title>
+<?php
+    print ('<title>Gobland-IT ('.$_ENV["CLANID"].') '.$_ENV["CLANNAME"].'</title>');
+?>
     <link rel="stylesheet" type="text/css" href="/style/common.css" />
     <link rel="stylesheet" type="text/css" href="/style/menu.css" />
     <script type="text/javascript" src="/js/common.js"></script>
@@ -36,8 +38,7 @@
       </div>
       <div id="content">
 <?php
-    include 'queries.php';
-    print ("<br><h1>$clan_name</h1><br>");
+    print ('<br><h1>'.$_ENV["CLANNAME"].'</h1><br>');
 ?>
         <table cellspacing="0" id="trollsList">
           <tr>
