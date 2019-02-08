@@ -41,7 +41,7 @@
         <link href="/style/tt_r.css"  rel="stylesheet" type="text/css"  />
         <link href="/style/equipement.css"  rel="stylesheet" type="text/css"  />
         <h1>Possessions</h1>
-        <h2 class="expanded">Matériaux Gobelins</h2>
+        <h2 class="expanded">Équipements Gobelins</h2>
         <table cellspacing="0" id="profilInfos">
 <?php
     include 'queries.php';
@@ -53,55 +53,57 @@
         $db      = new SQLite3($db_file);
         if(!$db) { echo $db->lastErrorMsg(); }
 
-        $req_materiaux_c   = "SELECT COUNT (*) FROM ItemsGobelins WHERE ( Type = 'Matériau' OR Type = 'Roche' OR Type = 'Minerai' ) AND Gobelin = '$gob_id'";
-        $materiaux_count   = $db->querySingle($req_materiaux_c);
-
         $req_gob_nom       = "SELECT Gobelin FROM Gobelins WHERE Id = '$gob_id'";
         $gob_nom           = $db->querySingle($req_gob_nom);
 
-        if ( $materiaux_count > 0 )
+        print('<tr class="expanded">'."\n");
+        print('<th>Équipements de '.$gob_nom.' ('.$gob_id.')</th>'."\n");
+        print('</tr>'."\n");
+        print('</tr>'."\n");
+        print('<tr>'."\n");
+        print('<td>'."\n");
+        print('<ul class="membreEquipementList">'."\n");
+
+        $req_equipements   = "SELECT * FROM ItemsGobelins 
+                              WHERE Gobelin = '$gob_id'
+                              AND Type NOT IN ('Minerai', 'Composant', 'Matériau', 'Roche')
+                              ORDER BY Utilise DESC";
+        $query_equipements = $db->query($req_equipements);
+
+        $counter = 0;
+
+        while ($row = $query_equipements->fetchArray())
         {
-            print('<tr class="expanded">'."\n");
-            print('<th>['.$materiaux_count.'] Matériaux de '.$gob_nom.' ('.$gob_id.')</th>'."\n");
-            print('</tr>'."\n");
-            print('</tr>'."\n");
-            print('<tr>'."\n");
-            print('<td>'."\n");
-            print('<ul class="membreEquipementList">'."\n");
+            $item_id  = $row[0];
+            $type     = $row[2];
+            $nom      = $row[4];
+            $template = '';
+            $desc     = $row[6];
+            $min      = sprintf("%.1f",$row[7]/60);
+            $equipe   = '';
 
-            $req_materiaux   = "SELECT * FROM ItemsGobelins
-                                WHERE ( Type = 'Matériau' OR Type = 'Roche' OR Type = 'Minerai' )
-                                AND Gobelin = '$gob_id'
-                                ORDER BY Type,Nom";
-            $query_materiaux = $db->query($req_materiaux);
+            if ( $row[5] )  { $template = '<b>'.$row[5].'</b>'; }
+            if ( $row[11] ) { $nom .= ' en '.$row[11]; }
+            if ( $row[10] == 'FAUX' ) { $equipe = 'Non'; }
 
-            while ($row = $query_materiaux->fetchArray())
+            $luxe     = GetLuxe($type,$nom,$desc);
+            #$craft    = GLB::functions::GetCraft($type,$nom,$desc,$template);
+
+            if ( $counter == 0 and $equipe == 'Non' )
             {
-                $item_id = $row[0];
-                $type    = $row[2];
-                $nom     = $row[4];
-                $desc    = $row[6];
-                $min     = sprintf("%.1f",$row[7]/60);
-                $nbr     = $row[8];
-                $qualite = $row[9];
-
-                $desc    = GetQualite($type,$qualite);
-                $m_png   = GetMateriauIcon($nom);
-                $carats  = GetCarats($qualite,$nbr);
-
-                print('                <li class="equipementNonEquipe">'."\n");
-                print('                  <div class="tt_r">'."\n");
-                print('                    '.$m_png.'['.$item_id.'] '.$nom.' de taille '.$nbr.' ('.$desc.'), '.$min.' min'."\n");
-                print('                    <span class="tt_r_text">'.$carats.' Carats</span>'."\n");
-                print('                  </div>'."\n");
-                print('                </li>'."\n");
+                print('                <br>'."\n");
+                $counter++;
             }
-            $db->close;
 
-            print('              </ul>'."\n");
-            print('            </td>'."\n");
-            print('          </tr>'."\n");
+            print('                <li class="equipement'.$equipe.'Equipe">'."\n");
+            print('                    ['.$item_id.'] '.$type.' : '.$nom.' '.$template.' ('.$desc.'), '.$min.' min'.$luxe.$craft."\n");
+            print('                </li>'."\n");
         }
+        $db->close;
+
+        print('              </ul>'."\n");
+        print('            </td>'."\n");
+        print('          </tr>'."\n");
     }
 ?>
         </table>
