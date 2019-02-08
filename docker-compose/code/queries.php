@@ -1,5 +1,5 @@
 <?php
-    $db_file = '/db/31.db';
+    $db_file = '/db/'.$_ENV["DBNAME"];
 
     $db = new SQLite3($db_file);
     if(!$db) {

@@ -14,19 +14,19 @@
         <br><br><br><br><br><br><br><br>
         <div id="nav">
           <ul id="menu">
-            <li><a href="/index.html" title="Page d'accueil">Accueil</a></li>
+            <li><a href="/index.php" title="Page d'accueil">Accueil</a></li>
             <li><a href="#">Consulter</a>
               <ul>
                 <li><a href="/equipement.html" title="Equipement des Gob' du Clan">Equipement du Clan</a></li>
                 <li><a href="/materiaux.html" title="Materiaux des Gob' du Clan">Materiaux du Clan</a></li>
                 <li><a href="/composants.html" title="Composants des Gob' du Clan">Composants du Clan</a></li>
-                <li><a href="/cavernes.html" title="Cavernes du Clan">Cavernes du Clan</a></li>
+                <li><a href="/cavernes.php" title="Cavernes du Clan">Cavernes du Clan</a></li>
               </ul>
             </li>
             <li><a href="" title="">Outils</a>
               <ul>
-                <li><a href="/pxbank.html" title="PX Bank du Clan">PX Bank</a></li>
-                <li><a href="/GPS.html" title="GPS">GPS</a></li>
+                <li><a href="/pxbank.php" title="PX Bank du Clan">PX Bank</a></li>
+                <li><a href="/gps.php" title="GPS">GPS</a></li>
                 <li><a href="/CdM.html" title="CdM">CdM Collector</a></li>
               </ul>
             </li>
@@ -61,7 +61,7 @@
     foreach ($arr_gob_ids as $gob_id)
     {
 
-        $db_file = '/db/31.db';
+        $db_file = '/db/'.$_ENV["DBNAME"];
         $db      = new SQLite3($db_file);
         if(!$db) { echo $db->lastErrorMsg(); }
 
