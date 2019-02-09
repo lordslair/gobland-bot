@@ -61,6 +61,11 @@
         goto end;
     }
 
+    if ( $_GET["niveau"] && ($_GET["niveau"] != 'TRUE') )
+    {
+        goto end;
+    }
+
     $db_file = '/db/'.$_ENV["DBNAME"];
     $db      = new SQLite3($db_file);
     if(!$db) { echo $db->lastErrorMsg(); }
@@ -74,6 +79,19 @@
     $C_emoji = '<img src="/images/1f47f.png" width="16" height="16">'; #👿
     $W_emoji = '<img src="/images/1f6a7.png" width="16" height="16">'; #🚧
     $A_emoji = '<img src="/images/1f333.png" width="16" height="16">'; #🌳
+    $S_emoji = '<img src="/images/1f434.png" width="16" height="16">'; #🐴
+    $M_emoji = '<img src="/images/1f344.png" width="16" height="16">'; #🍄
+    $F_emoji = '<img src="/images/1f33a.png" width="16" height="16">'; #🌺
+    $R_emoji = '<img src="/images/1f331.png" width="16" height="16">'; #🌱
+
+
+    $arr_suivants      = [];
+    $req_suivants_full = "SELECT Id FROM Suivants";
+    $query_suivants    = $db->query($req_suivants_full);
+    while ($row = $query_suivants->fetchArray())
+    {
+        $arr_suivants[] = $row[0];
+    }
 
     $req_gob_full      = "SELECT PER,BMPER,BPPER,X,Y,N,Nom FROM Gobelins
                           INNER JOIN Gobelins2 on Gobelins.Id = Gobelins2.Id
@@ -109,6 +127,9 @@
     $C_count = 0;
     $L_count = 0;
     $G_count = 0;
+
+    # We use $_GET["niveau"] to restrict the view
+    if ( $_GET["niveau"] ) { $n_min = $n_max = $N;}
 
     $req_vue = "SELECT Id,Categorie,Nom,Niveau,Type,Clan,X,Y,N,Z
                 FROM Vue
@@ -156,6 +177,10 @@
         {
             $ITEMS[$x][$y]['td'] .= $A_emoji;
         }
+        elseif ( $cat == 'C' && !preg_match('/1f434/', $ITEMS[$x][$y]['td']) && in_array($id,$arr_suivants) )
+        {
+            $ITEMS[$x][$y]['td'] .= $S_emoji;
+        }
         elseif ( $cat == 'C' && !preg_match('/1f47f/', $ITEMS[$x][$y]['td']) )
         {
             $ITEMS[$x][$y]['td'] .= $C_emoji;
@@ -163,6 +188,18 @@
         elseif ( $cat == 'G' && !preg_match('/1f60e/', $ITEMS[$x][$y]['td']) )
         {
             $ITEMS[$x][$y]['td'] .= $G_emoji;
+        }
+        elseif ( $cat == 'P' && $nom == 'Champignon' && !preg_match('/1f344/', $ITEMS[$x][$y]['td']) )
+        {
+            $ITEMS[$x][$y]['td'] .= $M_emoji;
+        }
+        elseif ( $cat == 'P' && $nom == 'Racine' && !preg_match('/1f331/', $ITEMS[$x][$y]['td']) )
+        {
+            $ITEMS[$x][$y]['td'] .= $R_emoji;
+        }
+        elseif ( $cat == 'P' && $nom == 'Fleur' && !preg_match('/1f33a/', $ITEMS[$x][$y]['td']) )
+        {
+            $ITEMS[$x][$y]['td'] .= $F_emoji;
         }
 
         if ( !preg_match("/N = $n/", $ITEMS[$x][$y]['tt']) )
@@ -187,6 +224,10 @@
 
     print('        <h1>Vue de ['.$gob_id.'] '.$gob_nom.' ('.$cases.' cases)'.'</h1>'."\n");
     print('        <h3>Centrée sur [ X='.$X.' | Y= '.$Y.' | N= '.$N.' ]'.'</h3>'."\n");
+    print('        <center>'."\n");
+    print('          <a href="/vue.php?id='.$gob_id.'&niveau=TRUE" title="Vue Restreinte">[Restreindre au niveau courant (N='.$N.')]</a>'."\n");
+    print('          <a href="/vue.php?id='.$gob_id.'" title="Vue Normale">[🚫]</a>'."\n");
+    print('        <center>'."\n");
     print('        <table cellspacing="0" id="GobVue">'."\n");
     print('          <caption>'."\n");
     print('            <br>'.$T_emoji.'Tresors ('.$T_count.') | '."\n");
