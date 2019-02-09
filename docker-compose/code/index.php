@@ -80,6 +80,7 @@
 
             $req_meute_id    = "SELECT IdMeute  FROM Meutes WHERE Id = $gob_id";
             $meute_id  = $db->querySingle($req_meute_id);
+            if ( $meute_id ) { $meute_id = '('.$meute_id.')'; }
 
             $req_meute_nom   = "SELECT NomMeute FROM Meutes WHERE Id = $gob_id";
             $meute_nom = $db->querySingle($req_meute_nom);
@@ -107,12 +108,12 @@
             print('            <td>'.$row[1].'</td>'."\n");
             print('            <td>'.$row[3].'</td>'."\n");
             print('            <td>'.$position.'</td>'."\n");
-            print('            <td>'.$nom_meute.' '.$id_meute.'</td>'."\n");
+            print('            <td>'.$meute_nom.' '.$meute_id.'</td>'."\n");
             print('            <td>'.$row[8].' / '.$row[9].$lifebar.'</td>'."\n");
             print('            <td'.$pad.'>'.$row[7].'</td>'."\n");
             print('            <td><span class="DLA"> DLA : '.$row[11].'</span><br><span class="pDLA">pDLA : '.$pdla.'</span></td>'."\n");
             print('            <td>'."\n");
-            print('            <a href="/gobelins/'.$gob_id.'.html" title="Votre profil">PROFIL</a>'."\n");
+            print('            <a href="/gobelins.php?id='.$gob_id.'" title="Votre profil">PROFIL</a>'."\n");
             print('            <a href="/vue/'.$gob_id.'.html" title="Votre vue">VUE</a>'."\n");
             print('            </td>'."\n");
             print('            </tr>'."\n");
