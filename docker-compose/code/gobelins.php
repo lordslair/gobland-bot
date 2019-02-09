@@ -43,7 +43,23 @@
     include 'functions.php';
     include 'queries.php';
 
-    $gob_id = $_GET["id"];
+    if ( preg_match('/^\d*$/', $_GET["id"]) )
+    {
+        if ( in_array($_GET["id"], $arr_gob_ids) )
+        {
+            $gob_id = $_GET["id"];
+        }
+        else
+        {
+            print("<center>Cet ID n'est pas présent en DB</center>"."\n");
+            goto end;
+        }
+    }
+    else
+    {
+        print("<center>Cet ID n'est pas valide</center>"."\n");
+        goto end;
+    }
 
     $db_file = '/db/'.$_ENV["DBNAME"];
     $db      = new SQLite3($db_file);
@@ -370,6 +386,8 @@
     $db->close;
 
     print('        </fieldset>'."\n");
+
+end:
 ?>
         </div> <!-- profilInfos -->
       </div> <!-- content -->
