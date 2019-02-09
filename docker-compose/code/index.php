@@ -114,7 +114,7 @@
             print('            <td><span class="DLA"> DLA : '.$row[11].'</span><br><span class="pDLA">pDLA : '.$pdla.'</span></td>'."\n");
             print('            <td>'."\n");
             print('            <a href="/gobelins.php?id='.$gob_id.'" title="Votre profil">PROFIL</a>'."\n");
-            print('            <a href="/vue/'.$gob_id.'.html" title="Votre vue">VUE</a>'."\n");
+            print('            <a href="/vue.php?id='.$gob_id.'" title="Votre vue">VUE</a>'."\n");
             print('            </td>'."\n");
             print('            </tr>'."\n");
         }
