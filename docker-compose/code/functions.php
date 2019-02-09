@@ -39,6 +39,40 @@ function GetpDLA($dla_str,$duree_s)
     return $pdla;
 }
 
+function GetDureeDLA($sec)
+{
+    $arr_dla = [];
+    $DLA     = '';
+
+    if ( $sec <= 60 )
+    {
+        $arr_dla = [($sec/(60*60))%24,$sec/60,$sec%60];
+    }
+    else
+    {
+        $arr_dla = [($sec/(60*60))%24,($sec/60)%60,$sec%60];
+    }
+
+    if ( $sec == abs($sec) )
+    {
+        $DLA = sprintf("%02d",$arr_dla[0]).'h'.sprintf("%02d",$arr_dla[1]);
+    }
+    else
+    {
+        if ( abs($arr_dla[1]) >= 60 )
+        {
+            $hour = abs($arr_dla[1]/60)%24;
+            $min  = abs($arr_dla[1])%60;
+            $DLA     = '-'.sprintf("%02d",$hour).'h'.sprintf("%02d",$min);
+        }
+        else
+        {
+            $DLA = '-'.sprintf("%02d",$arr_dla[0]).'h'.sprintf("%02d",abs($arr_dla[1]));
+        }
+    }
+    return $DLA;
+}
+
 function GetStuffIcon($type,$nom)
 {
     $png       = '';
@@ -198,6 +232,28 @@ function GetLuxe($type,$nom,$desc)
         if ( preg_match('/ESQ:[-]3 . R.:[+]100/', $desc ))                      { return $ok; }
 
         if ( preg_match('/ESQ:[-]6 . R.:[+]200/', $desc ))                      { return $ok; } # Armures Lourdes
+    }
+}
+
+function GetCraft($type,$nom,$desc,$template)
+{
+    $craft     = ' <img height="10px" width="10px" src="/images/stuff/craft.png">';
+
+    if ( $template )
+    {
+        if ( preg_match('/de Maître/', $template) ) { return $craft; }
+    }
+    else
+    {
+        if    ( $desc != '<b>Non Identifié</b>' )
+        {
+            if     ( ($nom == 'Bottes')           && ($desc != 'ESQ:+2') )         { return $craft; }
+            elseif ( ($nom == 'Sandales')         && ($desc != 'ESQ:+1') )         { return $craft; }
+            elseif ( ($nom == 'Gorgeron en cuir') && ($desc != 'Arm:+1') )         { return $craft; }
+            elseif ( ($nom == 'Targe')            && ($desc != 'ESQ:+1') )         { return $craft; }
+
+            if     ( ($type == 'Armure') && (preg_match('/Temps:-5min/', $desc)) ) { return $craft; }
+        }
     }
 }
 
