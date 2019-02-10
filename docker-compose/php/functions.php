@@ -247,12 +247,14 @@ function GetCraft($type,$nom,$desc,$template)
     {
         if    ( $desc != '<b>Non Identifié</b>' )
         {
-            if     ( ($nom == 'Bottes')           && ($desc != 'ESQ:+2') )         { return $craft; }
-            elseif ( ($nom == 'Sandales')         && ($desc != 'ESQ:+1') )         { return $craft; }
-            elseif ( ($nom == 'Gorgeron en cuir') && ($desc != 'Arm:+1') )         { return $craft; }
-            elseif ( ($nom == 'Targe')            && ($desc != 'ESQ:+1') )         { return $craft; }
+            if     ( ($nom == 'Bottes')            && ($desc != 'ESQ:+2') )                   { return $craft; }
+            elseif ( ($nom == 'Sandales')          && ($desc != 'ESQ:+1') )                   { return $craft; }
+            elseif ( ($nom == 'Gorgeron en cuir')  && ($desc != 'Arm:+1') )                   { return $craft; }
+            elseif ( ($nom == 'Gorgeron en métal') && ($desc != 'Arm:+2 | REG:-1') )          { return $craft; }
+            elseif ( ($nom == 'Collier à pointes') && ($desc != 'Arm:+1 | DEG:+1 | ESQ:-1') ) { return $craft; }
+            elseif ( ($nom == 'Targe')             && ($desc != 'ESQ:+1') )                   { return $craft; }
 
-            if     ( ($type == 'Armure') && (preg_match('/Temps:-5min/', $desc)) ) { return $craft; }
+            if     ( ($type == 'Armure') && (preg_match('/Temps:-5min/', $desc)) )            { return $craft; }
         }
     }
 }

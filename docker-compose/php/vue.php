@@ -31,10 +31,14 @@
                 <li><a href="/pxbank.php" title="PX Bank du Clan">PX Bank</a></li>
                 <li><a href="/gps.php" title="GPS">GPS</a></li>
                 <li><a href="/radar.php" title="Radar">Radar</a></li>
-                <li><a href="/CdM.html" title="CdM">CdM Collector</a></li>
+                <li><a href="/cdm.php" title="CdM">CdM Collector</a></li>
               </ul>
             </li>
-            <li><a href="" title="">Liens</a></li>
+            <li><a href="" title="">Liens</a>
+              <ul>
+                <li><a href="/admin.php" title="Admin">Admin</a></li>
+              </ul>
+            </li>
           </ul>
         </div>
       </div>

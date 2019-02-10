@@ -30,66 +30,62 @@
                 <li><a href="/pxbank.php" title="PX Bank du Clan">PX Bank</a></li>
                 <li><a href="/gps.php" title="GPS">GPS</a></li>
                 <li><a href="/radar.php" title="Radar">Radar</a></li>
-                <li><a href="/CdM.html" title="CdM">CdM Collector</a></li>
+                <li><a href="/cdm.php" title="CdM">CdM Collector</a></li>
               </ul>
             </li>
-            <li><a href="" title="">Liens</a></li>
+            <li><a href="" title="">Liens</a>
+              <ul>
+                <li><a href="/admin.php" title="Admin">Admin</a></li>
+              </ul>
+            </li>
           </ul>
         </div>
       </div>
       <div id="content">
-        <link href="/style/tt_r.css"  rel="stylesheet" type="text/css"  />
-        <link href="/style/equipement.css"  rel="stylesheet" type="text/css"  />
-        <h1>Possessions</h1>
-        <h2 class="expanded">Composants Gobelins</h2>
-        <table cellspacing="0" id="profilInfos">
+        <h1>Banque PI/PX</h1>
+        <h3>(Alias: Qui a la plus grosse ...)</h3>
+        <table cellspacing="0" id="trollsList">
+          <tr>
+            <th onclick="sortTable(0)">Pseudo</th>
+            <th onclick="sortTable(1)">Num</th>
+            <th onclick="sortTable(2)">Niv.</th>
+            <th onclick="sortTable(3)">PX Perso</th>
+            <th onclick="sortTable(4)">PX</th>
+            <th onclick="sortTable(5)">PI</th>
+            <th onclick="sortTable(6)">PI Totaux</th>
+            <th onclick="sortTable(7)">PX+PI Totaux</th>
+          </tr>
 <?php
-    include 'queries.php';
-
-    foreach ($arr_gob_ids as $gob_id)
-    {
-
         $db_file = '/db/'.$_ENV["DBNAME"];
         $db      = new SQLite3($db_file);
         if(!$db) { echo $db->lastErrorMsg(); }
 
-        $req_composant_c   = "SELECT COUNT (*) FROM ItemsGobelins WHERE Type = 'Composant' AND Gobelin = $gob_id";
-        $composant_count   = $db->querySingle($req_composant_c);
+        $req_pxbank    = "SELECT Gobelins.Id,PX,PXPerso,PI,Gobelin,Niveau,PITotal
+                          FROM Gobelins
+                          INNER JOIN Gobelins2 on Gobelins.Id = Gobelins2.Id
+                          ORDER BY Gobelins.Id";
+        $query_pxbank = $db->query($req_pxbank);
 
-        $req_gob_nom       = "SELECT Gobelin FROM Gobelins WHERE Id = $gob_id";
-        $gob_nom           = $db->querySingle($req_gob_nom);
-
-        if ( $composant_count > 0 )
+        while ($row = $query_pxbank->fetchArray())
         {
-            print('<tr class="expanded">'."\n");
-            print('<th>['.$composant_count.'] Composants de '.$gob_nom.' ('.$gob_id.')</th>'."\n");
-            print('</tr>'."\n");
-            print('</tr>'."\n");
-            print('<tr>'."\n");
-            print('<td>'."\n");
-            print('<ul class="membreEquipementList">'."\n");
+            $total = $row[1] + $row[2] + $row[6];
 
-            $req_composant   = "SELECT * FROM ItemsGobelins WHERE Type = 'Composant' AND Gobelin = '$gob_id'";
-            $query_composant = $db->query($req_composant);
-
-            while ($row = $query_composant->fetchArray())
-            {
-                $item_id = $row[0];
-                $min     = sprintf("%.1f",$row[7]/60);
-                $nom     = $row[4];
-                $desc    = $row[6];
-
-                print('                <li class="equipementNonEquipe">'.'['.$item_id.'] '.$nom.' ('.$desc.'), '.$min.' min</li>'."\n");
-            }
-            $db->close;
-
-            print('              </ul>'."\n");
-            print('            </td>'."\n");
+            print('          <tr>'."\n");
+            print('            <td>'.$row[4].'</td>'."\n");
+            print('            <td>'.$row[0].'</td>'."\n");
+            print('            <td>'.$row[5].'</td>'."\n");
+            print('            <td>'.$row[2].'</td>'."\n");
+            print('            <td>'.$row[1].'</td>'."\n");
+            print('            <td>'.$row[3].'</td>'."\n");
+            print('            <td>'.$row[6].'</td>'."\n");
+            print('            <td>'.$total.'</td>'."\n");
             print('          </tr>'."\n");
         }
-    }
+        $db->close;
+
+    print('        </table>'."\n");
 ?>
-        </table>
+        <script type="text/javascript" src="/js/sort-px.js"></script>
       </div> <!-- content -->
     </div> <!-- page -->
   </body>
