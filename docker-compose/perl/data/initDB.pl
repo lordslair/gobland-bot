@@ -3,17 +3,30 @@ use strict;
 use warnings;
 
 use DBI;
+use YAML::Tiny;
+use Data::Dumper;
 
-my $sqlite_db  = '/home/gobland-bot/gobland.db';
+my $yaml_file = 'master.yaml';
+my $yaml      = YAML::Tiny->read( $yaml_file );
+my @db_list   = @{$yaml->[0]{db_list}};
+my $db_path   = '/db';
 
-if ( ! -f $sqlite_db )
+foreach my $db (@db_list)
+{
+    print "DB: $db | PATH: $db_path$db\n";
+    
+if ( ! -f "$db_path/$db" )
 {
     my $dbh = DBI->connect(
-        "dbi:SQLite:dbname=$sqlite_db",
+        "dbi:SQLite:dbname=$db_path/$db",
         "",
         "",
         { RaiseError => 1 },
     ) or die $DBI::errstr;
+
+    $dbh->do("CREATE TABLE Credentials(Hash TEXT PRIMARY KEY,
+                                       Id   INT,
+                                       Type TEXT)");
 
     $dbh->do("CREATE TABLE ItemsCavernes(Id INT PRIMARY KEY,
                                  Type TEXT,
@@ -235,4 +248,5 @@ if ( ! -f $sqlite_db )
 else
 {
     print "DB already exists, doin' nothin'\n";
+}
 }
