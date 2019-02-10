@@ -1,0 +1,43 @@
+version: '2'
+
+services:
+    nginx:
+        container_name: gobland-it-nginx
+        image: nginx:stable-alpine
+        ports:
+            - "8888:80"
+        volumes:
+            - ./php:/code
+            - ./nginx:/etc/nginx/conf.d/
+        networks:
+            - code-network
+    perl:
+        container_name: gobland-it-perl
+        volumes:
+            - sqlite-db:/db
+            - ./perl:/code
+        networks:
+            - code-network
+        build: 
+          context: .
+          dockerfile: Dockerfile-perl
+        image: lordslair/gobland-it-perl
+        entrypoint: /code/gobland-it
+    php-XX:
+        container_name: gobland-it-php-XX
+        image: php:fpm-alpine
+        volumes:
+            - ./php:/code
+            - sqlite-db:/db
+        networks:
+            - code-network
+        environment:
+            - DBNAME=XX.db
+            - CLANNAME=<Clan Name>
+            - CLANID=XX
+networks:
+    code-network:
+        driver: bridge
+volumes:
+    sqlite-db:
+        external: true
