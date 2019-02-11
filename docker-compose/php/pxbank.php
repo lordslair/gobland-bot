@@ -45,17 +45,20 @@
       <div id="content">
         <h1>Banque PI/PX</h1>
         <h3>(Alias: Qui a la plus grosse ...)</h3>
-        <table cellspacing="0" id="trollsList">
+        <table cellspacing="0" id="px">
+        <thread>
           <tr>
-            <th onclick="sortTable(0)">Pseudo</th>
-            <th onclick="sortTable(1)">Num</th>
-            <th onclick="sortTable(2)">Niv.</th>
-            <th onclick="sortTable(3)">PX Perso</th>
-            <th onclick="sortTable(4)">PX</th>
-            <th onclick="sortTable(5)">PI</th>
-            <th onclick="sortTable(6)">PI Totaux</th>
-            <th onclick="sortTable(7)">PX+PI Totaux</th>
+            <th style="cursor: pointer;" data-sort-method='default'>Pseudo</th>
+            <th style="cursor: pointer;" data-sort-method='number'>Num</th>
+            <th style="cursor: pointer;" data-sort-method='number'>Niv.</th>
+            <th style="cursor: pointer;" data-sort-method='number'>PX Perso</th>
+            <th style="cursor: pointer;" data-sort-method='number'>PX</th>
+            <th style="cursor: pointer;" data-sort-method='number'>PI</th>
+            <th style="cursor: pointer;" data-sort-method='number'>PI Totaux</th>
+            <th style="cursor: pointer;" data-sort-method='number'>PX+PI Totaux</th>
           </tr>
+        </thread>
+        <tbody>
 <?php
         $db_file = '/db/'.$_ENV["DBNAME"];
         $db      = new SQLite3($db_file);
@@ -83,10 +86,12 @@
             print('          </tr>'."\n");
         }
         $db->close;
-
-    print('        </table>'."\n");
 ?>
-        <script type="text/javascript" src="/js/sort-px.js"></script>
+        </tbody>
+        </table>
+        <script type="text/javascript" src="/js/tristen-tablesort.js"></script>
+        <script type="text/javascript" src="/js/tristen-tablesort.number.js"></script>
+        <script>new Tablesort(document.getElementById('px'));</script>
       </div> <!-- content -->
     </div> <!-- page -->
   </body>
