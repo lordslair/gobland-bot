@@ -37,6 +37,7 @@
             <li><a href="" title="">Liens</a>
               <ul>
                 <li><a href="/admin.php" title="Admin">Admin</a></li>
+                <li><a href="/locator.php" title="Locator">Locator</a></li>
               </ul>
             </li>
           </ul>
