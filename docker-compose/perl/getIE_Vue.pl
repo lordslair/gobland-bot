@@ -60,6 +60,16 @@ foreach my $db (@db_list)
                         $line[3]      =~ s/\'/\'\'/g;
                         $line[5]      =~ s/\'/\'\'/g;
                         if ( $line[4] eq '' ) { $line[4] = 0 }
+                        $line[3] =~ s/Ã©/é/g;
+                        $line[3] =~ s/Ã¯/ï/g;
+                        $line[3] =~ s/Ã´/ô/g;
+                        $line[3] =~ s/Ã¢/â/g;
+                        $line[3] =~ s/Ãµ/ö/g;
+                        $line[5] =~ s/Ã©/é/g;
+                        $line[5] =~ s/Ã¯/ï/g;
+                        $line[5] =~ s/Ã´/ô/g;
+                        $line[5] =~ s/Ã¢/â/g;
+                        $line[5] =~ s/Ãµ/ö/g;
                         if ( $line[5] =~ /Musculeux|Nodef|Trad|Yonnair|Zozo|Mentalo|Gobelin/ ) { $line[0] = 'G' }
 
                         # First query to UPDATE the line if not exists, or IGNORE
