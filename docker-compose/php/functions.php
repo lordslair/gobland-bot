@@ -255,6 +255,7 @@ function GetCraft($type,$nom,$desc,$template)
             elseif ( ($nom == 'Targe')             && ($desc != 'ESQ:+1') )                   { return $craft; }
 
             if     ( ($type == 'Armure') && (preg_match('/Temps:-5min/', $desc)) )            { return $craft; }
+            if     ( $desc  == 'En cours de fabrication' )                                    { return $craft; }
         }
     }
 }
