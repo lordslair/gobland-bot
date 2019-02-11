@@ -114,8 +114,8 @@
     print('          <br>'."\n");
     print('          <strong>ATT</strong> : '.$row['ATT'].'D '.sprintf("%+d",$row['BPATT']).' '.sprintf("%+d",$row['BMATT']).'<br/>'."\n");
     print('          <strong>ESQ</strong> : '.$row['ESQ'].'D '.sprintf("%+d",$row['BPESQ']).' '.sprintf("%+d",$row['BMESQ']).'<br/>'."\n");
-    print('          <strong>DEG</strong> : '.$row['DEG'].'D '.sprintf("%+d",$row['BPDEG']).' '.sprintf("%+d",$row['BPDEG']).'<br/>'."\n");
-    print('          <strong>REG</strong> : '.$row['REG'].'D '.sprintf("%+d",$row['BPREG']).' '.sprintf("%+d",$row['BPREG']).'<br/>'."\n");
+    print('          <strong>DEG</strong> : '.$row['DEG'].'D '.sprintf("%+d",$row['BPDEG']).' '.sprintf("%+d",$row['BMDEG']).'<br/>'."\n");
+    print('          <strong>REG</strong> : '.$row['REG'].'D '.sprintf("%+d",$row['BPREG']).' '.sprintf("%+d",$row['BMREG']).'<br/>'."\n");
     print('          <strong>PER</strong> : '.$row['PER'].' ' .sprintf("%+d",$row['BPPER']).' '.sprintf("%+d",$row['BMPER']).'<br/>'."\n");
     print('          <strong>ARM</strong> : '.$row['BPArm'].' ' .sprintf("%+d",$row['BMArm']).'<br/>'."\n");
     print('          <strong>PVs</strong> : '.$row['PV'].' / '.$row['PVMax'].'<br/>'."\n");
