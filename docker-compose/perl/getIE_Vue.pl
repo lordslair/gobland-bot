@@ -62,16 +62,26 @@ foreach my $db (@db_list)
                         if ( $line[4] eq '' ) { $line[4] = 0 }
                         if ( $line[5] =~ /Musculeux|Nodef|Trad|Yonnair|Zozo|Mentalo|Gobelin/ ) { $line[0] = 'G' }
 
-                        my $sth       = $dbh->prepare( "INSERT OR REPLACE INTO Vue VALUES( '$line[2]', \
-                                                                                           '$line[0]', \
-                                                                                           '$line[3]', \
-                                                                                           '$line[4]', \
-                                                                                           '$line[5]', \
-                                                                                           '$line[6]', \
-                                                                                           '$line[7]', \
-                                                                                           '$line[8]', \
-                                                                                           '$line[9]', \
-                                                                                           '$line[10]'  ) ");
+                        # First query to UPDATE the line if not exists, or IGNORE
+                        my $sth       = $dbh->prepare( "INSERT OR IGNORE INTO Vue VALUES( '$line[2]', \
+                                                                                          '$line[0]', \
+                                                                                          '$line[3]', \
+                                                                                          '$line[4]', \
+                                                                                          '$line[5]', \
+                                                                                          '$line[6]', \
+                                                                                          '$line[7]', \
+                                                                                          '$line[8]', \
+                                                                                          '$line[9]', \
+                                                                                          '$line[10]'  ) ");
+                        $sth->execute();
+
+                        # Second query to UPDATE data if the line exists
+                        $sth       = $dbh->prepare( "UPDATE Vue SET Niveau = '$line[4]', \
+                                                                         X = '$line[7]', \
+                                                                         Y = '$line[8]', \
+                                                                         N = '$line[9]'  \
+                                                        WHERE Id = '$line[2]' ");
+
                         $sth->execute();
                         $sth->finish();
                         push @vue_ids_live, $line[2];
