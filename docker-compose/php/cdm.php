@@ -46,13 +46,33 @@
         <link href="/style/tt_r.css"  rel="stylesheet" type="text/css"  />
         <link href="/style/equipement.css"  rel="stylesheet" type="text/css"  />
         <h1>Historique des CdM du Clan</h1>
-        <table cellspacing="0" id="profilInfos">
+        <h3>(30 derniers monstres affichés)</h3>
+        <table cellspacing="0" id="cdm">
+        <thread>
+          <tr>
+            <th style="cursor: pointer;" data-sort-method='number'>ID</th>
+            <th style="cursor: pointer;" data-sort-method='default'>Nom</th>
+            <th style="cursor: pointer;" data-sort-method='number'>Niv.</th>
+            <th style="cursor: pointer;" data-sort-method='number'>Bless.</th>
+            <th style="cursor: pointer;" data-sort-method='number'>PV</th>
+            <th style="cursor: pointer;" data-sort-method='number'>ATT</th>
+            <th style="cursor: pointer;" data-sort-method='number'>ESQ</th>
+            <th style="cursor: pointer;" data-sort-method='number'>DEG</th>
+            <th style="cursor: pointer;" data-sort-method='number'>REG</th>
+            <th style="cursor: pointer;" data-sort-method='number'>Arm</th>
+            <th style="cursor: pointer;" data-sort-method='number'>PER</th>
+            <th style="cursor: pointer;" data-sort-method='date'>Update</th>
+          </tr>
+        </thread>
+        <tbody id="cdm">
 <?php
+    include 'functions.php';
+
         $db_file = '/db/'.$_ENV["DBNAME"];
         $db      = new SQLite3($db_file);
         if(!$db) { echo $db->lastErrorMsg(); }
 
-        $req_cdm_ids    = "SELECT DISTINCT IdMob,Name FROM CdM ORDER BY Date DESC;";
+        $req_cdm_ids    = "SELECT DISTINCT IdMob,Name FROM CdM ORDER BY Date DESC LIMIT 30;";
         $query_cdm_ids = $db->query($req_cdm_ids);
 
         while ($cdm_ids = $query_cdm_ids->fetchArray())
@@ -76,10 +96,6 @@
             $mob_arm_max = 99;
             $mob_per_min =  1;
             $mob_per_max = 99;
-
-            print('          <tr class="trigger">'."\n");
-            print('            <th>['.$mob_id.'] '.$mob_name.'</th>'."\n");
-            print('          </tr>'."\n");
 
             $req_cdm    = "SELECT * FROM CdM WHERE IdMob = '$cdm_ids[0]' ORDER BY Date ASC;";
             $query_cdm  = $db->query($req_cdm);
@@ -109,49 +125,32 @@
                 $update++;
             }
 
-            print('          <tr>'."\n");
-            print('            <td>'."\n");
-            print('              <ul class="membreEquipementList">'."\n");
-            print('                <li class="equipementNonEquipe">'."\n");
-            print('                  Niveau : '.$mob_niv."\n");
-            print('                </li>'."\n");
-            print('                <li class="equipementNonEquipe">'."\n");
-            print('                  Blessure : '.$mob_bless.'%'."\n");
-            print('                </li>'."\n");
-            print('                <li class="equipementNonEquipe">'."\n");
-            print('                  Points de Vie : '.$mob_pv_min.'-'.$mob_pv_max."\n");
-            print('                </li>'."\n");
-            print('                <li class="equipementNonEquipe">'."\n");
-            print('                  Attaque : '.$mob_att_min.'-'.$mob_att_max."\n");
-            print('                </li>'."\n");
-            print('                <li class="equipementNonEquipe">'."\n");
-            print('                  Esquive : '.$mob_esq_min.'-'.$mob_esq_max."\n");
-            print('                </li>'."\n");
-            print('                <li class="equipementNonEquipe">'."\n");
-            print('                  Degats : '.$mob_deg_min.'-'.$mob_deg_max."\n");
-            print('                </li>'."\n");
-            print('                <li class="equipementNonEquipe">'."\n");
-            print('                  Regeneration : '.$mob_reg_min.'-'.$mob_reg_max."\n");
-            print('                </li>'."\n");
-            print('                <li class="equipementNonEquipe">'."\n");
-            print('                  Armure : '.$mob_arm_min.'-'.$mob_arm_max."\n");
-            print('                </li>'."\n");
-            print('                <li class="equipementNonEquipe">'."\n");
-            print('                  Perception : '.$mob_per_min.'-'.$mob_per_max."\n");
-            print('                </li>'."\n");
-            print('                <li class="equipementNonEquipe">'."\n");
-            print('                  Update ('.$update.') : '.$mob_date."\n");
-            print('                </li>'."\n");
-            print('              </ul>'."\n");
-            print('            </td>'."\n");
-            print('          </tr>'."\n");
+            $color   = GetColor(100-$mob_bless,100);
+            $lifebar = '<br><div class="vieContainer"><div style="background-color:'.$color.'; width: '.(100-$mob_bless).'%"></div></div>';
 
+            print('          <tr>'."\n");
+            print('            <td>'.$cdm_ids[0].'</td>'."\n");
+            print('            <td>'.$mob_name.'</td>'."\n");
+            print('            <td>'.$mob_niv.'</td>'."\n");
+            print('            <td style="height: 25px">'.$mob_bless.'%'.$lifebar.'</td>'."\n");
+            print('            <td>'.$mob_pv_min.'-'.$mob_pv_max.'</td>'."\n");
+            print('            <td>'.$mob_att_min.'-'.$mob_att_max.'</td>'."\n");
+            print('            <td>'.$mob_esq_min.'-'.$mob_esq_max.'</td>'."\n");
+            print('            <td>'.$mob_deg_min.'-'.$mob_deg_max.'</td>'."\n");
+            print('            <td>'.$mob_reg_min.'-'.$mob_reg_max.'</td>'."\n");
+            print('            <td>'.$mob_arm_min.'-'.$mob_arm_max.'</td>'."\n");
+            print('            <td>'.$mob_per_min.'-'.$mob_per_max.'</td>'."\n");
+            print('            <td>'.$mob_date.' (<b>'.$update.'</b>)</td>'."\n");
+            print('          </tr>'."\n");
         }
         $db->close;
 
+    print('      </tbody>'."\n");
     print('        </table>'."\n");
 ?>
-        <script type="text/javascript" src="/js/sort-px.js"></script>
+        <script type="text/javascript" src="/js/tristen-tablesort.js"></script>
+        <script type="text/javascript" src="/js/tristen-tablesort.number.js"></script>
+        <script>new Tablesort(document.getElementById('cdm'));</script>
       </div> <!-- content -->
     </div> <!-- page -->
   </body>
