@@ -50,7 +50,7 @@
         <table cellspacing="0" id="profilInfos">
           <!-- Équipement -->
           <tr class="expanded">
-            <th>Equipements</th>
+            <th>Équipements</th>
           </tr>
           <tr>
             <td>
