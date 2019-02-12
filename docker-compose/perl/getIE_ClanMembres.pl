@@ -55,6 +55,7 @@ foreach my $db (@db_list)
                     if ( $line !~ /^#/ )
                     {
                         my $nom  = Encode::decode_utf8($line[1]);
+                        my $etat = Encode::decode_utf8($line[10]);
                         my $sth  = $dbh->prepare( "INSERT OR REPLACE INTO Gobelins VALUES( '$line[0]',  \
                                                                                            '$nom',      \
                                                                                            '$line[2]',  \
@@ -65,7 +66,7 @@ foreach my $db (@db_list)
                                                                                            '$line[7]',  \
                                                                                            '$line[8]',  \
                                                                                            '$line[9]',  \
-                                                                                           '$line[10]', \
+                                                                                           '$etat', \
                                                                                            '$line[11]', \
                                                                                            '$line[12]', \
                                                                                            '$line[13]', \
