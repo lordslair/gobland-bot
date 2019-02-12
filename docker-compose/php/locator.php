@@ -134,9 +134,14 @@
         {
             $req_locator = "SELECT Id,Type,Nom,Niveau,X,Y,N,Z FROM Vue WHERE ".$clause;
         }
-        #print($req_locator."<br>");
+
+        # DEBUG selector
+        if     ( preg_match('/[!]debug[!]/', $_POST['search'], $matches) )
+        {
+            print($req_locator."<br>");
+            print_r( $_POST);
+        }
     }
-    #print_r( $_POST);
 
     if ($req_locator)
     {
@@ -178,7 +183,7 @@
           - Tu cherches un Monstre de niveau 6 -> <input type="text" size="20" value="niv=6:6!"><br>
           - Tu cherches un Monstre de type Strige ET d'un niveau 6 à 8 -> <input type="text" size="20" value="mob=Strige! niv=6:8!"><br>
           - Tu cherches un Objet de type Anneau -> <input type="text" size="20" value="objet=Anneau!"><br>
-          - Tu cherches un Objet de type Anneau avec zone ( 0 < X < 20; 0 < Y < 20; -20 < N < -10 ) -> <input type="text" size="50" value="objet=Anneau! x=0:20! y=0:20! n=-20:-10!"><br>
+          - Tu cherches un Objet de type Anneau avec zone ( 0 < X < 20; 0 < Y < 20; -20 < N < -10 ) -> <input type="text" size="40" value="objet=Anneau! x=0:20! y=0:20! n=-20:-10!"><br>
           - Tu cherches un Lieu de type Mine -> <input type="text" size="20" value="lieu=Mine!"><br>
           - Tu n'oublies pas de terminer chaque champ de requête par un <b>!</b> ⚠️ 
         </fieldset>
