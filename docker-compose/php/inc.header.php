@@ -1,4 +1,3 @@
-      <div id="header">
         <br><br><br><br><br><br><br><br>
         <div id="nav">
           <ul id="menu">
@@ -28,4 +27,3 @@
             </li>
           </ul>
         </div>
-      </div>
