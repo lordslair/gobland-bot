@@ -17,6 +17,7 @@
                 <li><a href="/gps.php" title="GPS">GPS</a></li>
                 <li><a href="/radar.php" title="Radar">Radar</a></li>
                 <li><a href="/cdm.php" title="CdM">CdM Collector</a></li>
+                <li><a href="/bestiaire.php" title="Bestiaire">Bestiaire</a></li>
               </ul>
             </li>
             <li><a href="" title="">Liens</a>
