@@ -93,12 +93,17 @@
 
             $color   = GetColor(100-$mob_bless,100);
             $lifebar = '<br><div class="vieContainer"><div style="background-color:'.$color.'; width: '.(100-$mob_bless).'%"></div></div>';
+            $bless   = $mob_bless.'%'.$lifebar;
+
+            $req_kill   = "SELECT COUNT (*) FROM 'MPBot' WHERE PMSubject LIKE '%$mob_id%' AND PMText LIKE '%débarrassé%'";
+            $kill       = $db->querySingle($req_kill);
+            if ( $kill == 1 ) { $bless = '<font size="3,5">☠️</font>'; }
 
             print('          <tr>'."\n");
             print('            <td>'.$cdm_ids[0].'</td>'."\n");
             print('            <td>'.$mob_name.'</td>'."\n");
             print('            <td>'.$mob_niv.'</td>'."\n");
-            print('            <td style="height: 25px">'.$mob_bless.'%'.$lifebar.'</td>'."\n");
+            print('            <td style="height: 25px">'.$bless.'</td>'."\n");
             print('            <td>'.$mob_pv_min.'-'.$mob_pv_max.'</td>'."\n");
             print('            <td>'.$mob_att_min.'-'.$mob_att_max.'</td>'."\n");
             print('            <td>'.$mob_esq_min.'-'.$mob_esq_max.'</td>'."\n");
