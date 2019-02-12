@@ -46,6 +46,11 @@ foreach my $db (@db_list)
 
             if ($response->is_success)
             {
+                my @gobs_ids_db;
+                my @gobs_ids_live;
+                my %count;
+                my $meute_id;
+
                 foreach my $line (split(/\n/,$response->content))
                 {
                     chomp ($line);
@@ -63,6 +68,31 @@ foreach my $db (@db_list)
                                                                                           '$line[6]'  )" );
                         $sth->execute();
                         $sth->finish();
+                        push @gobs_ids_live, $line[2];
+                        $meute_id = $line[0];
+                    }
+                }
+
+                # Find gobelins stored in DB
+                my $req_gobs_ids = $dbh->prepare( "SELECT Id FROM Meutes WHERE IdMeute = '$meute_id'" );
+                $req_gobs_ids->execute();
+
+                while (my $lastline = $req_gobs_ids->fetchrow_array)
+                {
+                    push @gobs_ids_db, $lastline;
+                }
+                $req_gobs_ids->finish();
+
+                # Find gobs stored in db which are no more into Meutes
+                for my $gob_id (@gobs_ids_db, @gobs_ids_live) { $count{$gob_id}++ }
+                for my $gob_id (keys %count)
+                {
+                    if ( $count{$gob_id} == 1 )
+                    {
+                        print "MeutesCleaner:$gob_id:$count{$gob_id}\n";
+                        my $sth  = $dbh->prepare( "DELETE FROM Meutes WHERE Id IS '$gob_id'" );
+                           $sth->execute();
+                           $sth->finish();
                     }
                 }
             }
