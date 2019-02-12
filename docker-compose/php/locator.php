@@ -75,7 +75,7 @@
             }
             $count++;
         }
-        if ( preg_match('/(gob|mob)=([\w\s]*)[!]/', $_POST['search'], $matches) )
+        if ( preg_match('/(gob|mob)=([\w\s]*)[!]/u', $_POST['search'], $matches) )
         {
             if ($count == 0)
             {
@@ -99,7 +99,7 @@
             }
             $count++;
         }
-        if ( preg_match('/(objet|lieu)=([\w\s]*)[!]/', $_POST['search'], $matches) )
+        if ( preg_match('/(objet|lieu)=([\w\s]*)[!]/u', $_POST['search'], $matches) )
         {
             if ($count == 0)
             {
