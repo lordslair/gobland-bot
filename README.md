@@ -1,10 +1,10 @@
 # gobland-bot, the project :
 
-This project is mainly a Tactical Interface (IT) for the game Gobland (GL).
-Its purpose is to parse data from GL from its API (Interface Externe - IE)
-It's done by a Perl backend to INSERT in SQLite, and a PHP frontend for the web intercace, served by an nginx.
-
-All of this inside Docker containers for portable purposes.
+This project is mainly a Tactical Interface (IT) for the game Gobland (GL).  
+Its purpose is to parse data from GL from its API (Interface Externe - IE).  
+It's done by a Perl backend to INSERT in SQLite, and a PHP frontend for the web intercace, served by an nginx.  
+  
+All of this inside Docker containers for portable purposes.  
 
 Actually, as 3.0, it works this way :
 
