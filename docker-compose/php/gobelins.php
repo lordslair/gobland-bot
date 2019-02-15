@@ -9,6 +9,7 @@
 <?php include 'inc.header.php'; ?>
       </div>
       <div id="content">
+      <link href="/style/tt_r.css"  rel="stylesheet" type="text/css"  />
 <?php
     include 'functions.php';
     include 'queries.php';
