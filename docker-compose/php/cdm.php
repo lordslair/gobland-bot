@@ -28,6 +28,7 @@
             <th style="cursor: pointer;" data-sort-method='number'>Arm</th>
             <th style="cursor: pointer;" data-sort-method='number'>PER</th>
             <th style="cursor: pointer;" data-sort-method='date'>Update</th>
+            <th style="cursor: pointer;" data-sort-method='date'>Action</th>
           </tr>
         </thread>
         <tbody id="cdm">
@@ -37,6 +38,23 @@
         $db_file = '/db/'.$_ENV["DBNAME"];
         $db      = new SQLite3($db_file);
         if(!$db) { echo $db->lastErrorMsg(); }
+
+    if ( $_GET['kill'] && (preg_match('/^\d*$/', $_GET['kill'])) )
+    {
+        $mob_id      = $_GET['kill'];
+        $req_mp_id   = "SELECT Id FROM CdM WHERE IdMob = '$mob_id' ORDER BY Date DESC LIMIT 1;";
+        $mp_id       = $db->querySingle($req_mp_id);
+        $mp_kill_id  = $mp_id + 1;
+
+        $req_check_kill_id = "SELECT COUNT (*) FROM 'MPBot' WHERE Id = '$mp_kill_id'";
+        $check_kill_id = $db->querySingle($req_check_kill_id);
+        if ( $check_kill_id > 0 ) { $mp_kill_id++; }
+
+        $req_mp_kill = "INSERT OR IGNORE INTO 'MPBot' 
+                        VALUES ('$mp_kill_id', '999', 'Gobland-IT Kill - $mob_id', 'DATE', 'Lu', 'Gobland-IT', 'débarrassé');";
+        $res_mp_kill = $db->exec($req_mp_kill); 
+    }
+
 
         $req_cdm_ids    = "SELECT DISTINCT IdMob,Name FROM CdM ORDER BY Date DESC LIMIT 30;";
         $query_cdm_ids = $db->query($req_cdm_ids);
@@ -112,6 +130,7 @@
             print('            <td>'.$mob_arm_min.'-'.$mob_arm_max.'</td>'."\n");
             print('            <td>'.$mob_per_min.'-'.$mob_per_max.'</td>'."\n");
             print('            <td>'.$mob_date.' (<b>'.$update.'</b>)</td>'."\n");
+            print('            <td><a href="/cdm.php?kill='.$cdm_ids[0].'" title="Kill monstre">[🚫]</a></td>'."\n");
             print('          </tr>'."\n");
         }
         $db->close;
