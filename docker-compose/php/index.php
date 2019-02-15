@@ -21,6 +21,7 @@
             <th>Position</th>
             <th>Meute</th>
             <th>PV</th>
+            <th>État</th>
             <th>PA</th>
             <th>Dates</th>
             <th>Action</th>
@@ -38,7 +39,8 @@
         $db      = new SQLite3($db_file);
         if(!$db) { echo $db->lastErrorMsg(); }
 
-        $req_profile   = "SELECT Gobelins.Id,Tribu,Gobelin,Niveau,X,Y,N,PA,PV,PVMax,CT,Gobelins.DLA,Gobelins2.DLA,BPDLA,BMDLA
+        $req_profile   = "SELECT Gobelins.Id,Tribu,Gobelin,Niveau,X,Y,N,PA,PV,PVMax,CT,
+                                 Gobelins.DLA,Gobelins2.DLA,BPDLA,BMDLA,Gobelins.Etat
                           FROM Gobelins
                           INNER JOIN Gobelins2 on Gobelins.Id = Gobelins2.Id
                           WHERE Gobelins.Id = $gob_id
@@ -70,7 +72,10 @@
 
             $duree_s   = $row[12] + $row[13] + $row[14];
             $pdla      = GetpDLA($row[11], $duree_s);
-            
+ 
+            $etat      = '';
+            if ( $row[15] == 'Camouflé' ) { $etat = '👻'; }
+
             print('          <tr>'."\n");
             print('            <td>'."\n");
             print('              <a href="http://games.gobland.fr/Profil.php?IdPJ='.$gob_id.'" target="_blank">'.$row[2].'</a>'."\n");
@@ -81,6 +86,7 @@
             print('            <td>'.$position.'</td>'."\n");
             print('            <td>'.$meute_nom.' '.$meute_id.'</td>'."\n");
             print('            <td>'.$row[8].' / '.$row[9].$lifebar.'</td>'."\n");
+            print('            <td><font size="4">'.$etat.'</font></td>'."\n");
             print('            <td'.$pad.'>'.$row[7].'</td>'."\n");
             print('            <td><span class="DLA"> DLA : '.$row[11].'</span><br><span class="pDLA">pDLA : '.$pdla.'</span></td>'."\n");
             print('            <td>'."\n");
