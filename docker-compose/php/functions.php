@@ -156,6 +156,11 @@ function GetCarats($quali_id,$quantite)
     elseif ( $quali_id == 3 ) { $carats = $quantite * 3.5;  }
     elseif ( $quali_id == 4 ) { $carats = $quantite * 4.25; }
     elseif ( $quali_id == 5 ) { $carats = $quantite * 5;    }
+    elseif ( $quali_id == 'Médiocre'       ) { $carats = $quantite * 2;    }
+    elseif ( $quali_id == 'Moyenne'        ) { $carats = $quantite * 2.75; }
+    elseif ( $quali_id == 'Normale'        ) { $carats = $quantite * 3.5;  }
+    elseif ( $quali_id == 'Bonne'          ) { $carats = $quantite * 4.25; }
+    elseif ( $quali_id == 'Exceptionnelle' ) { $carats = $quantite * 5;    }
     else   { $carats = 0; }
 
     return  sprintf("%d", $carats);
@@ -247,15 +252,17 @@ function GetCraft($type,$nom,$desc,$template)
     {
         if    ( $desc != '<b>Non Identifié</b>' )
         {
-            if     ( ($nom == 'Bottes')            && ($desc != 'ESQ:+2') )                   { return $craft; }
-            elseif ( ($nom == 'Sandales')          && ($desc != 'ESQ:+1') )                   { return $craft; }
-            elseif ( ($nom == 'Gorgeron en cuir')  && ($desc != 'Arm:+1') )                   { return $craft; }
-            elseif ( ($nom == 'Gorgeron en métal') && ($desc != 'Arm:+2 | REG:-1') )          { return $craft; }
-            elseif ( ($nom == 'Collier à pointes') && ($desc != 'Arm:+1 | DEG:+1 | ESQ:-1') ) { return $craft; }
-            elseif ( ($nom == 'Targe')             && ($desc != 'ESQ:+1') )                   { return $craft; }
+            if     ( ($nom == 'Bottes')             && ($desc != 'ESQ:+2') )                            { return $craft; }
+            elseif ( ($nom == 'Sandales')           && ($desc != 'ESQ:+1') )                            { return $craft; }
+            elseif ( ($nom == 'Gorgeron en cuir')   && ($desc != 'Arm:+1') )                            { return $craft; }
+            elseif ( ($nom == 'Gorgeron en métal')  && ($desc != 'Arm:+2 | REG:-1') )                   { return $craft; }
+            elseif ( ($nom == 'Collier à pointes')  && ($desc != 'Arm:+1 | DEG:+1 | ESQ:-1') )          { return $craft; }
+            elseif ( ($nom == 'Casque à pointes')   && ($desc != 'ATT:+1 | Arm:+3 | DEG:+1 | PER:-1') ) { return $craft; }
+            elseif ( ($nom == 'Bouclier à pointes') && ($desc != 'ATT:+1 | Arm:+4 | DEG:+1 | ESQ:-1') ) { return $craft; }
+            elseif ( ($nom == 'Targe')              && ($desc != 'ESQ:+1') )                            { return $craft; }
 
-            if     ( ($type == 'Armure') && (preg_match('/Temps:-5min/', $desc)) )            { return $craft; }
-            if     ( $desc  == 'En cours de fabrication' )                                    { return $craft; }
+            if     ( ($type == 'Armure') && (preg_match('/Temps:-5min/', $desc)) )                      { return $craft; }
+            if     ( $desc  == 'En cours de fabrication' )                                              { return $craft; }
         }
     }
 }
