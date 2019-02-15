@@ -103,9 +103,22 @@
 
     $req_vue = "SELECT Id,Categorie,Nom,Niveau,Type,Clan,X,Y,N,Z
                 FROM Vue
-                WHERE X BETWEEN '$x_min' AND '$x_max'
-                AND   Y BETWEEN '$y_min' AND '$y_max'
-                AND   N BETWEEN '$n_min' AND '$n_max'";
+                WHERE X      BETWEEN '$x_min'   AND '$x_max'
+                AND   Y      BETWEEN '$y_min'   AND '$y_max'
+                AND   N      BETWEEN '$n_min'   AND '$n_max'";
+
+    # We use $_GET["lvl"] to restrict the view
+    $niv_min     = 1;
+    $niv_max     = 99;
+    if ( preg_match('/^\d*-\d*$/', $_GET['lvl']) )
+    {
+        $niveau      = $_GET['lvl'];
+        $niv_min     = preg_replace('/-\d*$/', '', $niveau);
+        $niv_max     = preg_replace('/^\d*-/', '', $niveau);
+        $req_vue    .= " AND   (( Categorie = 'C' AND Niveau BETWEEN '$niv_min' AND '$niv_max') OR ( Categorie = 'G' ) OR ( Categorie = 'L' ))";
+    }
+
+#print_r($req_vue);
     $query_vue = $db->query($req_vue);
 
     $ITEMS = [];
@@ -194,6 +207,17 @@
 
     print('        <h1>Vue de ['.$gob_id.'] '.$gob_nom.' ('.$cases.' cases)'.'</h1>'."\n");
     print('        <h3>Centrée sur [ X='.$X.' | Y= '.$Y.' | N= '.$N.' ]'.'</h3>'."\n");
+
+    print('        <center>'."\n");
+    print('          Niveau :'."\n");
+    print('          <a href="/vue.php?id='.$gob_id.'&lvl=1-5"   title="Niveau 1-5">[<b>1-5</b>]</a>'."\n");
+    print('          <a href="/vue.php?id='.$gob_id.'&lvl=5-10"  title="Niveau5-10">[<b>5-10</b>]</a>'."\n");
+    print('          <a href="/vue.php?id='.$gob_id.'&lvl=10-15" title="Niveau 10-15">[<b>10-15</b>]</a>'."\n");
+    print('          <a href="/vue.php?id='.$gob_id.'&lvl=15-20" title="Niveau15-20">[<b>15-20</b>]</a>'."\n");
+    print('          <a href="/vue.php?id='.$gob_id.'&lvl=20-99" title="Niveau 20+">[<b>20+</b>]</a>'."\n");
+    print('          <a href="/vue.php?id='.$gob_id.'"           title="NoFiltre">[<b>ALL</b>]</a>'."\n");
+    print('        </center>'."\n");
+    print('        <br>'."\n");
     print('        <center>'."\n");
     print('          <a href="/vue.php?id='.$gob_id.'&niveau=TRUE" title="Vue Restreinte">[Restreindre au niveau courant (N='.$N.')]</a>'."\n");
     print('          <a href="/vue.php?id='.$gob_id.'" title="Vue Normale">[🚫]</a>'."\n");
