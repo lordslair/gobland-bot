@@ -116,14 +116,14 @@
                 $mob_att_max = min($mob_att_max,$cdm[9]);
                 $mob_esq_min = max($mob_esq_min,$cdm[10]);
                 $mob_esq_max = min($mob_esq_max,$cdm[11]);
-                $mob_deg_min = max($mob_deg_min,$cdm[10]);
-                $mob_deg_max = min($mob_deg_max,$cdm[11]);
-                $mob_reg_min = max($mob_reg_min,$cdm[10]);
-                $mob_reg_max = min($mob_reg_max,$cdm[11]);
-                $mob_arm_min = max($mob_arm_min,$cdm[10]);
-                $mob_arm_max = min($mob_arm_max,$cdm[11]);
-                $mob_per_min = max($mob_per_min,$cdm[10]);
-                $mob_per_max = min($mob_per_max,$cdm[11]);
+                $mob_deg_min = max($mob_deg_min,$cdm[12]);
+                $mob_deg_max = min($mob_deg_max,$cdm[13]);
+                $mob_reg_min = max($mob_reg_min,$cdm[14]);
+                $mob_reg_max = min($mob_reg_max,$cdm[15]);
+                $mob_arm_min = max($mob_arm_min,$cdm[16]);
+                $mob_arm_max = min($mob_arm_max,$cdm[17]);
+                $mob_per_min = max($mob_per_min,$cdm[18]);
+                $mob_per_max = min($mob_per_max,$cdm[19]);
 
                 $update++;
             }
