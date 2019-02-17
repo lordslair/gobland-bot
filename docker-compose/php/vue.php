@@ -15,15 +15,7 @@
 
     if ( preg_match('/^\d*$/', $_GET["id"]) )
     {
-        if ( in_array($_GET["id"], $arr_gob_ids) )
-        {
-            $gob_id = $_GET["id"];
-        }
-        else
-        {
-            print("<center>Cet ID n'est pas présent en DB</center>"."\n");
-            goto end;
-        }
+        $gob_id = $_GET["id"];
     }
     else
     {
@@ -63,16 +55,43 @@
         $arr_suivants[] = $row[0];
     }
 
-    $req_gob_full      = "SELECT PER,BMPER,BPPER,X,Y,N,Nom FROM Gobelins
+    if ( $_GET["id"] && $_GET["suivant"] && ($_GET["suivant"] = 'TRUE') )
+    {
+        $req_full = "SELECT Suivants.Id,Vue.Nom,Vue.X,Vue.Y,Vue.N
+                     FROM Suivants
+                     INNER JOIN Vue on Suivants.Id = Vue.Id
+                     WHERE Suivants.Id = '$gob_id'";
+
+        $row = $db->querySingle($req_full, true);
+        $db->close;
+
+        $X       = $row['X'];
+        $Y       = $row['Y'];
+        $N       = $row['N'];
+        $cases   = 4;       # Hardcoded for now
+
+        $req_gob_nom       = "SELECT Nom FROM Suivants WHERE Id = '$gob_id'";
+        $gob_nom           = $db->querySingle($req_gob_nom);
+        $getsuiv           = '&suivant=TRUE';
+    }
+    else
+    {
+        $req_full      = "SELECT PER,BMPER,BPPER,X,Y,N,Nom FROM Gobelins
                           INNER JOIN Gobelins2 on Gobelins.Id = Gobelins2.Id
                           WHERE Gobelins.Id = $gob_id";
-    $row = $db->querySingle($req_gob_full, true);
-    $db->close;
 
-    $cases   = $row['PER'] + $row['BMPER'] + $row['BPPER'];
-    $X       = $row['X'];
-    $Y       = $row['Y'];
-    $N       = $row['N'];
+        $row = $db->querySingle($req_full, true);
+        $db->close;
+
+        $X       = $row['X'];
+        $Y       = $row['Y'];
+        $N       = $row['N'];
+        $cases   = $row['PER'] + $row['BMPER'] + $row['BPPER'];
+
+        $req_gob_nom       = "SELECT Gobelin FROM Gobelins WHERE Id = '$gob_id'";
+        $gob_nom           = $db->querySingle($req_gob_nom);
+        $getsuiv           = '';
+    }
 
     if ( $cases > 0 )
     {
@@ -210,17 +229,17 @@
 
     print('        <center>'."\n");
     print('          Niveau :'."\n");
-    print('          <a href="/vue.php?id='.$gob_id.'&lvl=1-5"   title="Niveau 1-5">[<b>1-5</b>]</a>'."\n");
-    print('          <a href="/vue.php?id='.$gob_id.'&lvl=5-10"  title="Niveau5-10">[<b>5-10</b>]</a>'."\n");
-    print('          <a href="/vue.php?id='.$gob_id.'&lvl=10-15" title="Niveau 10-15">[<b>10-15</b>]</a>'."\n");
-    print('          <a href="/vue.php?id='.$gob_id.'&lvl=15-20" title="Niveau15-20">[<b>15-20</b>]</a>'."\n");
-    print('          <a href="/vue.php?id='.$gob_id.'&lvl=20-99" title="Niveau 20+">[<b>20+</b>]</a>'."\n");
-    print('          <a href="/vue.php?id='.$gob_id.'"           title="NoFiltre">[<b>ALL</b>]</a>'."\n");
+    print('          <a href="/vue.php?id='.$gob_id.'&lvl=1-5'.$getsuiv.'"   title="Niveau 1-5">[<b>1-5</b>]</a>'."\n");
+    print('          <a href="/vue.php?id='.$gob_id.'&lvl=5-10'.$getsuiv.'"  title="Niveau5-10">[<b>5-10</b>]</a>'."\n");
+    print('          <a href="/vue.php?id='.$gob_id.'&lvl=10-15'.$getsuiv.'" title="Niveau 10-15">[<b>10-15</b>]</a>'."\n");
+    print('          <a href="/vue.php?id='.$gob_id.'&lvl=15-20'.$getsuiv.'" title="Niveau15-20">[<b>15-20</b>]</a>'."\n");
+    print('          <a href="/vue.php?id='.$gob_id.'&lvl=20-99'.$getsuiv.'" title="Niveau 20+">[<b>20+</b>]</a>'."\n");
+    print('          <a href="/vue.php?id='.$gob_id.$getsuiv.'"              title="NoFiltre">[<b>ALL</b>]</a>'."\n");
     print('        </center>'."\n");
     print('        <br>'."\n");
     print('        <center>'."\n");
-    print('          <a href="/vue.php?id='.$gob_id.'&niveau=TRUE" title="Vue Restreinte">[Restreindre au niveau courant (N='.$N.')]</a>'."\n");
-    print('          <a href="/vue.php?id='.$gob_id.'" title="Vue Normale">[🚫]</a>'."\n");
+    print('          <a href="/vue.php?id='.$gob_id.'&niveau=TRUE'.$getsuiv.'" title="Vue Restreinte">[Restreindre au niveau courant (N='.$N.')]</a>'."\n");
+    print('          <a href="/vue.php?id='.$gob_id.$getsuiv.'" title="Vue Normale">[🚫]</a>'."\n");
     print('        <center>'."\n");
     print('        <table cellspacing="0" id="GobVue">'."\n");
     print('          <caption>'."\n");

@@ -169,7 +169,7 @@
         $Y           = $row[4];
         $N           = $row[5];
         $title       = '[ X='.$X.' | Y= '.$Y.' | N= '.$N.' ] '.$suivant_nom;
-        $link        = '<a href="/vue/'.$suivant_id.'.html" title="'.$title.'">'.$suivant_nom.'</a>';
+        $link        = '<a href="/vue.php?id='.$suivant_id.'&suivant=TRUE" title="'.$title.'">'.$suivant_nom.'</a>';
 
         $arr_links[$suivant_id] = $link;
         $arr_nivs[$suivant_id]  = $suivant_niv;
