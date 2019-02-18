@@ -113,8 +113,11 @@
             $lifebar = '<br><div class="vieContainer"><div style="background-color:'.$color.'; width: '.(100-$mob_bless).'%"></div></div>';
             $bless   = $mob_bless.'%'.$lifebar;
 
-            $req_kill   = "SELECT COUNT (*) FROM 'MPBot' WHERE PMSubject LIKE '%$mob_id%' AND PMText LIKE '%débarrassé%'";
-            $kill       = $db->querySingle($req_kill);
+            $req_kill    = "SELECT COUNT (*)
+                            FROM 'MPBot'
+                            WHERE ( PMSubject LIKE '%$mob_id%' AND PMText LIKE '%débarrassé%' )
+                            OR ( PMSubject = 'Résultat Potion' AND PMText LIKE '%$mob_id%Son cadavre%')";
+            $kill        = $db->querySingle($req_kill);
             if ( $kill == 1 ) { $bless = '<font size="3,5">☠️</font>'; }
 
             print('          <tr>'."\n");
