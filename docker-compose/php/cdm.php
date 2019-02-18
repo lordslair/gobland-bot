@@ -55,7 +55,6 @@
         $res_mp_kill = $db->exec($req_mp_kill); 
     }
 
-
         $req_cdm_ids    = "SELECT DISTINCT IdMob,Name FROM CdM ORDER BY Date DESC LIMIT 30;";
         $query_cdm_ids = $db->query($req_cdm_ids);
 
@@ -109,20 +108,60 @@
                 $update++;
             }
 
-            $color   = GetColor(100-$mob_bless,100);
-            $lifebar = '<br><div class="vieContainer"><div style="background-color:'.$color.'; width: '.(100-$mob_bless).'%"></div></div>';
-            $bless   = $mob_bless.'%'.$lifebar;
+            $color       = GetColor(100-$mob_bless,100);
+            $lifebar     = '<br><div class="vieContainer"><div style="background-color:'.$color.'; width: '.(100-$mob_bless).'%"></div></div>';
+            $bless       = $mob_bless.'%'.$lifebar;
+            $baratin_png = '';
 
             $req_kill    = "SELECT COUNT (*)
                             FROM 'MPBot'
                             WHERE ( PMSubject LIKE '%$mob_id%' AND PMText LIKE '%débarrassé%' )
                             OR ( PMSubject = 'Résultat Potion' AND PMText LIKE '%$mob_id%Son cadavre%')";
             $kill        = $db->querySingle($req_kill);
-            if ( $kill == 1 ) { $bless = '<font size="3,5">☠️</font>'; }
+
+            if ( $kill >= 1 )
+            {
+                # The mob is dead, print a skull emoji
+                $bless = '<font size="3,5">☠️</font>';
+            }
+            else
+            {
+                # If the mob not dead, let's look if he has some Malus
+                $today = date('Y-m-d');
+                # Date restriction, to work only on fresh mobs
+                if ( preg_match("/^$today/",$mob_date) )
+                {
+                    # Check if a Baratin is still active
+                    $req_baratin    = "SELECT IdGob,PMSubject,PMDate,PMText
+                                       FROM 'MPBot'
+                                       WHERE PMSubject = \"Résultat Baratin - $mob_name ($mob_id)\"
+                                       AND   PMDate LIKE '$today%'
+                                       LIMIT 1;";
+                    $arr_baratin    = $db->querySingle($req_baratin, true);
+                    if ( $arr_baratin )
+                    {
+                        $baratin_gob  = $arr_baratin['IdGob'];
+
+                        $req_gob_name = "SELECT Gobelin FROM Gobelins WHERE Id = '$baratin_gob'";
+                        $baratin_name = $db->querySingle($req_gob_name);
+
+                        $baratin_date = $arr_baratin['PMDate'];
+                        $png_title    = 'Baratineur: '.$baratin_name.' ('.$baratin_gob.') Date: '.$baratin_date;
+                        $baratin_png  = '<font size="3,5" title="'.$png_title.'">🌀</font>';
+
+                        # Here we check if the mob played AFTER the Baratin, making it useless
+                        $baratin_time     = strtotime(date($baratin_date));
+                        $baratin_time_max = $baratin_time + ( 2 * 60 * 60 );
+                        $now              = time();
+                        if ( $now > $baratin_time_max ) { $baratin_png = ''; }
+                    }
+                }
+                else { $baratin_png = ''; }
+            }
 
             print('          <tr>'."\n");
             print('            <td>'.$cdm_ids[0].'</td>'."\n");
-            print('            <td>'.$mob_name.'</td>'."\n");
+            print('            <td>'.$mob_name.$baratin_png.'</td>'."\n");
             print('            <td>'.$mob_niv.'</td>'."\n");
             print('            <td style="height: 25px">'.$bless.'</td>'."\n");
             print('            <td>'.$mob_pv_min.'-'.$mob_pv_max.'</td>'."\n");
