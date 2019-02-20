@@ -54,6 +54,7 @@ until ($dieNow)
 
     `perl ./setMP2Suivants.pl`;
     `perl ./setMP2CdM.pl`;
+    `perl ./setMP2Kills.pl`;
     `perl ./setCompTT.pl`;
 
     sleep($sleepMainLoop);

@@ -244,6 +244,14 @@ if ( ! -f "$db_path/$db" )
                                      IdGob     INT,
                                      Nom       TEXT)");
 
+    $dbh->do("CREATE TABLE Kills (Id         INT PRIMARY KEY,
+                                  Date       TEXT,
+                                  IdMob      INT,
+                                  NomMob     TEXT,
+                                  IdGob      INT,
+                                  NomGob     TEXT,
+                                  PMSubject  TEXT,
+                                  PMText     TEXT)");
 }
 else
 {
