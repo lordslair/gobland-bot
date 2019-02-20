@@ -46,12 +46,12 @@
         $mp_id       = $db->querySingle($req_mp_id);
         $mp_kill_id  = $mp_id + 1;
 
-        $req_check_kill_id = "SELECT COUNT (*) FROM 'MPBot' WHERE Id = '$mp_kill_id'";
+        $req_check_kill_id = "SELECT COUNT (*) FROM 'Kills' WHERE Id = '$mp_kill_id'";
         $check_kill_id = $db->querySingle($req_check_kill_id);
         if ( $check_kill_id > 0 ) { $mp_kill_id++; }
 
-        $req_mp_kill = "INSERT OR IGNORE INTO 'MPBot' 
-                        VALUES ('$mp_kill_id', '999', 'Gobland-IT Kill - $mob_id', 'DATE', 'Lu', 'Gobland-IT', 'débarrassé');";
+        $req_mp_kill = "INSERT OR IGNORE INTO 'Kills'
+                        VALUES ('$mp_kill_id', '', '$mob_id', '', '000', 'Gobland-IT', 'Gobland-IT ($mob_id)', 'débarrassé');";
         $res_mp_kill = $db->exec($req_mp_kill); 
     }
 
@@ -114,7 +114,7 @@
             $baratin_png = '';
 
             $req_kill    = "SELECT COUNT (*)
-                            FROM 'MPBot'
+                            FROM 'Kills'
                             WHERE ( PMSubject LIKE '%$mob_id%' AND PMText LIKE '%débarrassé%' )
                             OR ( PMSubject = 'Résultat Potion' AND PMText LIKE '%$mob_id%Son cadavre%')";
             $kill        = $db->querySingle($req_kill);
@@ -122,7 +122,14 @@
             if ( $kill >= 1 )
             {
                 # The mob is dead, print a skull emoji
-                $bless = '<font size="3,5">☠️</font>';
+                $req_kill_id   = "SELECT IdGob,NomGob,Date
+                                  FROM 'Kills'
+                                  WHERE ( PMSubject LIKE '%$mob_id%' AND PMText LIKE '%débarrassé%' )
+                                  OR ( PMSubject = 'Résultat Potion' AND PMText LIKE '%$mob_id%Son cadavre%')
+                                  LIMIT 1";
+                $kill_id       = $db->querySingle($req_kill_id, true);
+                $kill_title    = 'Tueur: '.$kill_id['NomGob'].' ('.$kill_id['IdGob'].') Date: '.$kill_id['Date'];
+                $bless = '<font size="3,5" title="'.$kill_title.'">☠️</font>';
             }
             else
             {
