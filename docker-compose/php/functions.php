@@ -262,6 +262,7 @@ function GetCraft($type,$nom,$desc,$template)
             elseif ( ($nom == 'Bouclier à pointes') && ($desc != 'ATT:+1 | Arm:+4 | DEG:+1 | ESQ:-1') )          { return $craft; }
             elseif ( ($nom == 'Gantelet')           && ($desc != 'ATT:-2 | Arm:+2 | DEG:+1 | ESQ:+1') )          { return $craft; }
             elseif ( ($nom == 'Casque à cornes')    && ($desc != 'ATT:+1 | Arm:+3 | DEG:+1 | ESQ:-1 | PER:-1') ) { return $craft; }
+            elseif ( ($nom == 'Chapeau pointu')     && ( !preg_match('/DEG:-1 | PER:+1 | MM:+\d\d?/', $desc) ) ) { return $craft; }
 
             if     ( preg_match('/Temps:-5min/', $desc) )                                                        { return $craft; }
             if     ( $desc  == 'En cours de fabrication' )                                                       { return $craft; }
