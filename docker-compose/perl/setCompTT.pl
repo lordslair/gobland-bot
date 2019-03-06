@@ -57,8 +57,8 @@ foreach my $db (@db_list)
                     my $proba;
                     if    ( $niveau == 1 ) { $proba = 10 }
                     elsif ( $niveau == 2 ) { $proba = 12 }
-                    elsif ( $niveau == 2 ) { $proba = 14 }
-                    elsif ( $niveau == 2 ) { $proba = 16 }
+                    elsif ( $niveau == 3 ) { $proba = 14 }
+                    elsif ( $niveau == 4 ) { $proba = 16 }
                     $tt = 'Proba. : '.$proba.'%';
                 }
                 elsif ( $c_id == 9 )
