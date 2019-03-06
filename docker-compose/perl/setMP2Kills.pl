@@ -46,6 +46,7 @@ foreach my $db (@db_list)
             my $mob_name;
 
             # DATA: Résultat Attaque - Orque (305855)
+            # DATA: Résultat Attaque Suivant - Chauve-souris Géante (303448)
             if ( $mp_subject =~ / - ([-\P{Latin}\w\s\']*) \((\d*)\)/ )
             {
                 $mob_name = $1;
@@ -61,6 +62,11 @@ foreach my $db (@db_list)
                     $mob_id   = $1;
                     $mob_name = $2;
                 }
+            }
+            elsif ( $mp_subject eq 'Résultat Eclair' )
+            {
+                # Too complicated to parse for now
+                next;
             }
 
 print("$mp_id:$gob_id:$gob_name:$mob_id:$mob_name\n");
