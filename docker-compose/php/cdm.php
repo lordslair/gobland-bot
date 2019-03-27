@@ -55,7 +55,11 @@
         $res_mp_kill = $db->exec($req_mp_kill); 
     }
 
-        $req_cdm_ids    = "SELECT DISTINCT IdMob,Name FROM CdM ORDER BY Date DESC LIMIT 30;";
+        $req_cdm_ids    = "SELECT IdMob,Name
+                           FROM CdM
+                           GROUP BY IdMob
+                           ORDER BY MAX(Date)
+                           DESC LIMIT 30;";
         $query_cdm_ids = $db->query($req_cdm_ids);
 
         while ($cdm_ids = $query_cdm_ids->fetchArray())
