@@ -223,6 +223,7 @@ if ( ! -f "$db_path/$db" )
                                  Date     TEXT,
                                  IdMob    INT,
                                  Name     TEXT,
+                                 Type     TEXT,
                                  Niveau   INT,
                                  PVMin    INT,
                                  PVMax    INT,
@@ -238,7 +239,10 @@ if ( ! -f "$db_path/$db" )
                                  ARMMin   INT,
                                  ARMmax   INT,
                                  PERMin   INT,
-                                 PERMax   INT)");
+                                 PERMax   INT,
+                                 Volante  TEXT,
+                                 Pouvoir  TEXT,
+                                 ATTDist  TEXT)");
 
     $dbh->do("CREATE TABLE Suivants (Id        INT PRIMARY KEY,
                                      IdGob     INT,

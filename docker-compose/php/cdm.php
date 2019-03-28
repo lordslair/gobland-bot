@@ -56,10 +56,10 @@
     }
 
         $req_cdm_ids    = "SELECT IdMob,Name
-                           FROM CdM
+                           FROM CdM 
                            GROUP BY IdMob
-                           ORDER BY MAX(Date)
-                           DESC LIMIT 30;";
+                           ORDER BY MAX(Date) 
+                           DESC LIMIT 50;";
         $query_cdm_ids = $db->query($req_cdm_ids);
 
         while ($cdm_ids = $query_cdm_ids->fetchArray())
@@ -90,24 +90,25 @@
             $update     = 0; # To count how many CdM we have of each IdMonstre
             while ($cdm = $query_cdm->fetchArray())
             {
-                $mob_niv   = $cdm[4];
-                $mob_bless = $cdm[7];
                 $mob_date  = $cdm[1];
+                $mob_type  = $cdm[4];
+                $mob_niv   = $cdm[5];
+                $mob_bless = $cdm[8];
 
-                $mob_pv_min  = max($mob_pv_min ,$cdm[5]);
-                $mob_pv_max  = min($mob_pv_max ,$cdm[6]);
-                $mob_att_min = max($mob_att_min,$cdm[8]);
-                $mob_att_max = min($mob_att_max,$cdm[9]);
-                $mob_esq_min = max($mob_esq_min,$cdm[10]);
-                $mob_esq_max = min($mob_esq_max,$cdm[11]);
-                $mob_deg_min = max($mob_deg_min,$cdm[12]);
-                $mob_deg_max = min($mob_deg_max,$cdm[13]);
-                $mob_reg_min = max($mob_reg_min,$cdm[14]);
-                $mob_reg_max = min($mob_reg_max,$cdm[15]);
-                $mob_arm_min = max($mob_arm_min,$cdm[16]);
-                $mob_arm_max = min($mob_arm_max,$cdm[17]);
-                $mob_per_min = max($mob_per_min,$cdm[18]);
-                $mob_per_max = min($mob_per_max,$cdm[19]);
+                $mob_pv_min  = max($mob_pv_min ,$cdm[6]);
+                $mob_pv_max  = min($mob_pv_max ,$cdm[7]);
+                $mob_att_min = max($mob_att_min,$cdm[9]);
+                $mob_att_max = min($mob_att_max,$cdm[10]);
+                $mob_esq_min = max($mob_esq_min,$cdm[11]);
+                $mob_esq_max = min($mob_esq_max,$cdm[12]);
+                $mob_deg_min = max($mob_deg_min,$cdm[13]);
+                $mob_deg_max = min($mob_deg_max,$cdm[14]);
+                $mob_reg_min = max($mob_reg_min,$cdm[15]);
+                $mob_reg_max = min($mob_reg_max,$cdm[16]);
+                $mob_arm_min = max($mob_arm_min,$cdm[17]);
+                $mob_arm_max = min($mob_arm_max,$cdm[18]);
+                $mob_per_min = max($mob_per_min,$cdm[19]);
+                $mob_per_max = min($mob_per_max,$cdm[20]);
 
                 $update++;
             }

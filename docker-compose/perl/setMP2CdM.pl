@@ -13,7 +13,7 @@ my $db_path   = '/db';
     
 foreach my $db (@db_list)
 {
-    print "DB: $db | setMP2Suivants\n";
+    print "DB: $db | setMP2CdM\n";
     
     if ( -f "$db_path/$db" )
     {
@@ -28,7 +28,7 @@ foreach my $db (@db_list)
 
         my $req_mps = $dbh->prepare( "SELECT Id,IdGob,PMDate,PMSubject,PMText \
                                       FROM MPBot \
-                                      WHERE PMSubject LIKE 'Résultat CdM%'  AND PMDate LIKE '$now%'\
+                                      WHERE PMSubject LIKE 'Résultat CdM%'  AND PMDate LIKE '2019-03%'\
                                       ORDER BY PMDate LIMIT 100;" );
         $req_mps->execute();
 
@@ -48,6 +48,9 @@ foreach my $db (@db_list)
                 $mob_name = $2;
                 $mob_name =~ s/\'/\'\'/g;
             }
+
+            my $mob_type;
+            if ( $mp_text =~ /partie des : ([-\P{Latin}\w\']*) \($2/ ) { $mob_type = $1}
 
             my $mob_niv;
             if ( $mp_text =~ /Niveau : (\d*)</ ) { $mob_niv = $1}
@@ -97,10 +100,20 @@ foreach my $db (@db_list)
             if ( $mp_text =~ /Perception : supérieur ou égal à (\d*)</  ) { $mob_per_min = $1;$mob_per_max = 20 }
             if ( $mp_text =~ /Perception : entre (\d*) et (\d*)</       ) { $mob_per_min = $1;$mob_per_max = $2 }
 
+            my $mob_volant;
+            if ( $mp_text =~ /volante : (Oui|Non)</ ) { $mob_volant = $1}
+
+            my $mob_pouvoir = '';
+            if ( $mp_text =~ /Pouvoir : ([-\P{Latin}\w]*)<BR>A/ ) { $mob_pouvoir = $1}
+
+            my $mob_distance = '';
+            if ( $mp_text =~ /Attaque à distance : (\w*)/ ) { $mob_distance = $1}
+
             my $sth  = $dbh->prepare( "INSERT OR IGNORE INTO CdM VALUES( '$mp_id'      , \
                                                                          '$mp_date'    , \
                                                                          '$mob_id'     , \
                                                                          '$mob_name'   , \
+                                                                         '$mob_type'   , \
                                                                          '$mob_niv'    , \
                                                                          '$mob_pv_min' , \
                                                                          '$mob_pv_max' , \
@@ -116,7 +129,10 @@ foreach my $db (@db_list)
                                                                          '$mob_arm_min', \
                                                                          '$mob_arm_max', \
                                                                          '$mob_per_min', \
-                                                                         '$mob_per_max'  )" );
+                                                                         '$mob_per_max', \
+                                                                         '$mob_volant',  \
+                                                                         '$mob_pouvoir', \
+                                                                         '$mob_distance' )" );
 
             $sth->execute();
             $sth->finish();
