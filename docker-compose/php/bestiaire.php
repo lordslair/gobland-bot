@@ -69,7 +69,7 @@
         $db      = new SQLite3($db_file);
         if(!$db) { echo $db->lastErrorMsg(); }
 
-        $req_cdm_ids    = "SELECT DISTINCT Name,Niveau FROM CdM;";
+        $req_cdm_ids    = "SELECT DISTINCT Name,Niveau FROM CdM ORDER BY Name;";
 
         if ( preg_match('/^\w$/', $_GET['filter']) )
         {
