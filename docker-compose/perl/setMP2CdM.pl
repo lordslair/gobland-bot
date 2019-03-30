@@ -28,7 +28,7 @@ foreach my $db (@db_list)
 
         my $req_mps = $dbh->prepare( "SELECT Id,IdGob,PMDate,PMSubject,PMText \
                                       FROM MPBot \
-                                      WHERE PMSubject LIKE 'Résultat CdM%'  AND PMDate LIKE '2019-03%'\
+                                      WHERE PMSubject LIKE 'Résultat CdM%'  AND PMDate LIKE '$now%'\
                                       ORDER BY PMDate LIMIT 100;" );
         $req_mps->execute();
 
