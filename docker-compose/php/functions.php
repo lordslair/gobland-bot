@@ -257,6 +257,7 @@ function GetCraft($type,$nom,$desc,$template)
             elseif ( ($nom == 'Targe')              && ($desc != 'ESQ:+1') )                                     { return $craft; }
             elseif ( ($nom == 'Gorgeron en cuir')   && ($desc != 'Arm:+1') )                                     { return $craft; }
             elseif ( ($nom == 'Gorgeron en métal')  && ($desc != 'Arm:+2 | REG:-1') )                            { return $craft; }
+            elseif ( ($nom == 'Turban')             && ( !preg_match('/Arm:[+]1 | RM:[+]\d\d?/', $desc) ) )      { return $craft; }
             elseif ( ($nom == 'Collier à pointes')  && ($desc != 'Arm:+1 | DEG:+1 | ESQ:-1') )                   { return $craft; }
             elseif ( ($nom == 'Casque à pointes')   && ($desc != 'ATT:+1 | Arm:+3 | DEG:+1 | PER:-1') )          { return $craft; }
             elseif ( ($nom == 'Bouclier à pointes') && ($desc != 'ATT:+1 | Arm:+4 | DEG:+1 | ESQ:-1') )          { return $craft; }
