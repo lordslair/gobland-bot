@@ -5,6 +5,7 @@ use warnings;
 use LWP;
 use DBI;
 use YAML::Tiny;
+use POSIX qw(strftime);
 
 my $yaml_file = 'master.yaml';
 my $yaml      = YAML::Tiny->read( $yaml_file );
@@ -49,6 +50,8 @@ foreach my $db (@db_list)
 
             if ($response->is_success)
             {
+                my $now     = strftime "%Y-%m-%d %H:%M:%S", localtime;
+                my $time    = time;
                 foreach my $line (split(/\n/,$response->content))
                 {
                     chomp ($line);
@@ -59,6 +62,7 @@ foreach my $db (@db_list)
                     {
                         $line[3]      =~ s/\'/\'\'/g;
                         $line[5]      =~ s/\'/\'\'/g;
+                        $line[6]      =~ s/\'/\'\'/g;
                         if ( $line[4] eq '' ) { $line[4] = 0 }
                         $line[3] =~ s/Ã©/é/g;
                         $line[3] =~ s/Ã¯/ï/g;
@@ -93,6 +97,32 @@ foreach my $db (@db_list)
                                                         WHERE Id = '$line[2]' ");
 
                         $sth->execute();
+
+                        # INSERT to keep the Vue into Carte
+                        # Location won't be cleaned if no more in Vue
+                        $sth       = $dbh->prepare( "INSERT OR IGNORE INTO Carte VALUES( '$line[2]', \
+                                                                                         '$line[0]', \
+                                                                                         '$line[3]', \
+                                                                                         '$line[4]', \
+                                                                                         '$line[5]', \
+                                                                                         '$line[6]', \
+                                                                                         '$line[7]', \
+                                                                                         '$line[8]', \
+                                                                                         '$line[9]', \
+                                                                                         '$line[10]',\
+                                                                                         '$time',    \
+                                                                                         '$now'      ) ");
+                        $sth->execute();
+                        $sth       = $dbh->prepare( "UPDATE Carte SET Niveau = '$line[4]', \
+                                                                           X = '$line[7]', \
+                                                                           Y = '$line[8]', \
+                                                                           N = '$line[9]', \
+                                                                           Time = '$time', \
+                                                                           Date = '$now'   \
+                                                     WHERE Id = '$line[2]' ");
+
+                        $sth->execute();
+
                         $sth->finish();
                         push @vue_ids_live, $line[2];
                     }
