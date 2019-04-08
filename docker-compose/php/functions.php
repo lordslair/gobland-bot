@@ -271,4 +271,27 @@ function GetCraft($type,$nom,$desc,$template)
     }
 }
 
+function GetSumCaracs($string,$hash)
+{
+    if ( preg_match('/ATT:[+](\d*)/',       $string, $arr_att ))   { $hash['ATT']           += $arr_att[1];}
+    if ( preg_match('/ATT:[-](\d*)/',       $string, $arr_att ))   { $hash['ATT']           -= $arr_att[1];}
+    if ( preg_match('/Armure:[+](\d*)/',    $string, $arr_arm ))   { $hash['Armure']        += $arr_arm[1];}
+    if ( preg_match('/Armure:[-](\d*)/',    $string, $arr_arm ))   { $hash['Armure']        -= $arr_arm[1];}
+    if ( preg_match('/DEG:[+](\d*)/',       $string, $arr_deg ))   { $hash['DEG']           += $arr_deg[1];}
+    if ( preg_match('/DEG:[-](\d*)/',       $string, $arr_deg ))   { $hash['DEG']           -= $arr_deg[1];}
+    if ( preg_match('/ESQ:[+](\d*)/',       $string, $arr_esq ))   { $hash['ESQ']           += $arr_esq[1];}
+    if ( preg_match('/ESQ:[-](\d*)/',       $string, $arr_esq ))   { $hash['ESQ']           -= $arr_esq[1];}
+    if ( preg_match('/PER:[+](\d*)/',       $string, $arr_per ))   { $hash['PER']           += $arr_per[1];}
+    if ( preg_match('/PER:[-](\d*)/',       $string, $arr_per ))   { $hash['PER']           -= $arr_per[1];}
+    if ( preg_match('/REG:[+](\d*)/',       $string, $arr_reg ))   { $hash['REG']           += $arr_reg[1];}
+    if ( preg_match('/REG:[-](\d*)/',       $string, $arr_reg ))   { $hash['REG']           -= $arr_reg[1];}
+    if ( preg_match('/Tour:[+](\d*)min/',   $string, $arr_tour ))  { $hash['Tour']          += $arr_tour[1];}
+    if ( preg_match('/Tour:[-](\d*)min/',   $string, $arr_tour ))  { $hash['Tour']          -= $arr_tour[1];}
+
+    if ( preg_match('/([R|M]\w):[+](\d*)/', $string, $arr_magie )) { $hash["$arr_magie[1]"] += $arr_magie[2];}
+    if ( preg_match('/([R|M]\w):[-](\d*)/', $string, $arr_magie )) { $hash["$arr_magie[1]"] -= $arr_magie[2];}
+
+    return $hash;
+}
+
 ?>

@@ -213,6 +213,7 @@
     print('        </fieldset>'."\n");
 
     # Cafards
+    $CARACS = [];
     print('        <fieldset>'."\n");
     print('          <legend>Cafards</legend>'."\n");
 
@@ -224,8 +225,18 @@
     while ($row = $query_cafards->fetchArray())
     {
         print('          <li><img src="'.$row[3].'"> ['.$row[0].'] '.$row[1].' ('.$row[2].')</li>'."\n");
+        $CARACS = GetSumCaracs($row[2],$CARACS);
     }
     $db->close;
+
+    print('          </br>'."\n");
+    print('          </br>'."\n");
+    print('          <li style="border: 0px;float: left;margin: 0px;font-family: courier;font-size: 12px;"> Total: | ');
+    foreach ( $CARACS as $carac => $value )
+    {
+        printf ("<b>%s</b>:%+d | ", $carac,$value);
+    }
+    print('</li>'."\n");
     print('        </fieldset>'."\n");
 
     # Meute
@@ -330,6 +341,7 @@
     print('        </fieldset>'."\n");
 
     # Equipement
+    $CARACS = [];
     print('        <fieldset>'."\n");
     print('          <legend>Equipement Porté</legend>'."\n");
 
@@ -353,8 +365,19 @@
 
         $item_txt = '['.$row[0].'] '.$type.' : '.$nom.' '.$template.' ('.$desc.')'.$luxe.$craft.'<br>';
         print('              '.$item_png.$item_txt."\n");
+        $CARACS = GetSumCaracs($desc,$CARACS);
     }
     $db->close;
+
+    asort($CARACS);
+    print('          </br>'."\n");
+    print('          </br>'."\n");
+    print('          <li style="border: 0px;float: left;margin: 0px;font-family: courier;font-size: 12px;"> Total: | ');
+    foreach ( $CARACS as $carac => $value )
+    {
+        printf ("<b>%s</b>:%+d | ", $carac,$value);
+    }
+    print('</li>'."\n");
 
     print('        </fieldset>'."\n");
 
