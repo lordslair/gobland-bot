@@ -59,11 +59,12 @@ foreach my $db (@db_list)
                     my @line = split /;/, $line;
                     if ( $line !~ /^#/)
                     {
-                        my $meute = Encode::decode_utf8($line[1]);
+                        $line[1]  = Encode::decode_utf8($line[1]);
+                        $line[3]  = Encode::decode_utf8($line[3]);
                         my $sth   = $dbh->prepare( "INSERT OR REPLACE INTO Meutes VALUES( '$line[2]', \
                                                                                           '$line[3]', \
                                                                                           '$line[0]', \
-                                                                                          '$meute',   \
+                                                                                          '$line[1]', \
                                                                                           '$line[5]', \
                                                                                           '$line[6]'  )" );
                         $sth->execute();
