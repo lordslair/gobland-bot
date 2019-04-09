@@ -275,8 +275,8 @@ function GetSumCaracs($string,$hash)
 {
     if ( preg_match('/ATT:[+](\d*)/',       $string, $arr_att ))   { $hash['ATT']           += $arr_att[1];}
     if ( preg_match('/ATT:[-](\d*)/',       $string, $arr_att ))   { $hash['ATT']           -= $arr_att[1];}
-    if ( preg_match('/Armure:[+](\d*)/',    $string, $arr_arm ))   { $hash['Armure']        += $arr_arm[1];}
-    if ( preg_match('/Armure:[-](\d*)/',    $string, $arr_arm ))   { $hash['Armure']        -= $arr_arm[1];}
+    if ( preg_match('/Arm\w*?:[+](\d*)/',   $string, $arr_arm ))   { $hash['Arm']           += $arr_arm[1];}
+    if ( preg_match('/Arm\w*?:[-](\d*)/',   $string, $arr_arm ))   { $hash['Arm']           -= $arr_arm[1];}
     if ( preg_match('/DEG:[+](\d*)/',       $string, $arr_deg ))   { $hash['DEG']           += $arr_deg[1];}
     if ( preg_match('/DEG:[-](\d*)/',       $string, $arr_deg ))   { $hash['DEG']           -= $arr_deg[1];}
     if ( preg_match('/ESQ:[+](\d*)/',       $string, $arr_esq ))   { $hash['ESQ']           += $arr_esq[1];}
