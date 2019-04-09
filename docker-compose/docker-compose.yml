@@ -23,6 +23,18 @@ services:
           dockerfile: Dockerfile-perl
         image: lordslair/gobland-it-perl
         entrypoint: /code/gobland-it
+    backup:
+        container_name: gobland-it-backup
+        image: alpine
+        volumes:
+            - sqlite-db:/db
+            - sqlite-backup:/backup
+        networks:
+            - code-network
+        build:
+          context: .
+          dockerfile: Dockerfile-backup
+        image: lordslair/gobland-it-backup
     php-XX:
         container_name: gobland-it-php-XX
         image: php:fpm-alpine
@@ -40,4 +52,6 @@ networks:
         driver: bridge
 volumes:
     sqlite-db:
+        external: true
+    sqlite-backup:
         external: true

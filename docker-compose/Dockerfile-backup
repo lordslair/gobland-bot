@@ -1,0 +1,10 @@
+FROM alpine
+MAINTAINER @Lordslair
+
+RUN apk update && apk add --no-cache bzip2 bash sqlite
+
+COPY backup/cron-backup-sh.hourly  /etc/periodic/hourly/cron-backup-sh
+COPY backup/cron-backup-sh.daily   /etc/periodic/daily/cron-backup-sh
+COPY backup/cron-backup-sh.monthly /etc/periodic/monthly/cron-backup-sh
+
+ENTRYPOINT ["crond", "-l2", "-f"]
