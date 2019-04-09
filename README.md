@@ -2,22 +2,25 @@
 
 This project is mainly a Tactical Interface (IT) for the game Gobland (GL).  
 Its purpose is to parse data from GL from its API (Interface Externe - IE).  
-It's done by a Perl backend to INSERT in SQLite, and a PHP frontend for the web intercace, served by an nginx.  
+It's done by a Perl backend to INSERT in SQLite, and a PHP frontend for the web interface, served by nginx.  
   
 All of this inside Docker containers for portable purposes.  
 
 Actually, as 3.0, it works this way :
 
- - (docker-perl) sequests GL IE every 3600s to fatch new data
+ - (docker-perl) requests GL IE every 3600s to fetch new data
  - (volume-db) stores the SQLite DB 
  - (docker-php) requests the DB
  - (docker-nginx) redirect visitors to their own docker-php (one container /clan)
+ - (docker-backup) run hourly/daily/monthly crons for backup
+ - (volume-backup) stores the backups
 
 ### Which script does what ?
 
 ```
 ├── docker-compose.yml                |  To start the project
 ├── Dockerfile-perl                   |  To build the gobland-it-perl
+├── Dockerfile-backup                 |  To build the gobland-it-backup
 ├── perl
 │   ├── data
 │   |    ├── initDB.pl                |  DB creation if needed
@@ -88,6 +91,7 @@ $ docker-compose up --build
 # docker images
 REPOSITORY                    TAG                         SIZE
 lordslair/gobland-it-perl     latest                      44.7MB
+lordslair/gobland-it-backup   latest                      12.1MB
 php                           fpm-alpine                  79.8MB
 nginx                         stable-alpine               16MB
 alpine                        latest                      5.53MB
@@ -97,6 +101,7 @@ alpine                        latest                      5.53MB
 $ docker-compose ps
       Name                     Command              State         Ports
 ------------------------------------------------------------------------------
+gobland-it-backup   crond -l2 -f                    Up
 gobland-it-nginx    nginx -g daemon off;            Up      0.0.0.0:80->80/tcp
 gobland-it-perl     /code/gobland-it                Up
 gobland-it-php-31   docker-php-entrypoint php-fpm   Up      9000/tcp
@@ -108,7 +113,9 @@ $ docker-compose up
 Starting gobland-it-php-32
 Starting gobland-it-php-31
 Starting gobland-it-perl
-Attaching to gobland-it-php-31, gobland-it-php-32, gobland-it-perl, gobland-it-nginx
+Starting gobland-it-nginx
+Starting gobland-it-backup
+Attaching to gobland-it-php-31, gobland-it-php-32, gobland-it-perl, gobland-it-nginx, gobland-it-backup
 gobland-it-php-31 | [14-Feb-2019 12:58:52] NOTICE: fpm is running, pid 1
 gobland-it-php-31 | [14-Feb-2019 12:58:52] NOTICE: ready to handle connections
 gobland-it-php-32 | [14-Feb-2019 12:58:52] NOTICE: fpm is running, pid 1
@@ -119,20 +126,22 @@ gobland-it-perl   | 2019-02-14 13:58:53 exec: initFP
 gobland-it-perl   | 2019-02-14 13:59:05 :o) Entering loop 1
 gobland-it-php-32 | 172.19.0.4 - User 14/Feb/2019:12:59:34 +0000 "GET /index.php" 200
 gobland-it-nginx  | 109.190.254.56 - User [14/Feb/2019:12:59:34 +0000] "GET /index.php HTTP/1.1" 200
-2017-10-06 09:40:00 Stopping daemon
+gobland-it-backup | Dumping : /db/32.db
+gobland-it-backup | Dumping : /db/31.db
+gobland-it-perl   | 2017-10-06 09:40:00 Stopping daemon
 ```
 
 #### Disclaimer/Reminder
 
->The project is not mono-container, it requires at least 3 (perl/php/nginx) + one volume.  
+>The project is not mono-container, it requires at least 4 (perl/php/nginx/backup) + two volumes.  
 >Each GL Clan has to be provisionned in its own container and DB for privacy reasons.
 
 >Meaning that on a long term it could have to deal with dozens of -php containers,
->but still using one -nginx and one -perl. No need to scale tham.
+>but still using one -nginx, one -perl and one -backup. No need to scale them.
 
 ### Todos
 
- - Add a container for backups
+ - ~~Add a container for backups~~
  - Add a container php-public with consolidated DB for CdM/Locator purposes
  - Add a container for Discord integration
  - PHP Error logs accessible from outside the container (docker logs stuff)
