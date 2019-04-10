@@ -56,6 +56,8 @@ foreach my $db (@db_list)
                     {
                         my $nom  = Encode::decode_utf8($line[1]);
                         my $etat = Encode::decode_utf8($line[10]);
+                        $line[2] =~ s/\'/\'\'/g; # Patch for Dieux only
+
                         my $sth  = $dbh->prepare( "INSERT OR REPLACE INTO Gobelins VALUES( '$line[0]',  \
                                                                                            '$nom',      \
                                                                                            '$line[2]',  \
