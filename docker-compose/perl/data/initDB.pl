@@ -256,6 +256,19 @@ if ( ! -f "$db_path/$db" )
                                   NomGob     TEXT,
                                   PMSubject  TEXT,
                                   PMText     TEXT)");
+
+    $dbh->do("CREATE TABLE Carte (Id        INT PRIMARY KEY,
+                                  Categorie TEXT,
+                                  Nom       TEXT,
+                                  Niveau    INT,
+                                  Type      TEXT,
+                                  Clan      TEXT,
+                                  X         INT,
+                                  Y         INT,
+                                  N         INT,
+                                  Z         TEXT,
+                                  Time      INT,
+                                  Date      TEXT)");
 }
 else
 {
