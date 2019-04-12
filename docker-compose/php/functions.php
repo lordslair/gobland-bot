@@ -168,7 +168,7 @@ function GetCarats($quali_id,$quantite)
 
 function GetLuxe($type,$nom,$desc)
 {
-    $ok = ' <img height="10px" width="10px" src="/images/stuff/OK.png">';
+    $ok = ' <img height="10px" width="10px" src="/images/stuff/OK.png" title="Item de Luxe">';
 
     if ( $type == 'Talisman' )
     {
@@ -242,7 +242,7 @@ function GetLuxe($type,$nom,$desc)
 
 function GetCraft($type,$nom,$desc,$template)
 {
-    $craft     = ' <img height="10px" width="10px" src="/images/stuff/craft.png">';
+    $craft     = ' <img height="10px" width="10px" src="/images/stuff/craft.png" title="Item d\'Artisanat (Forgé)">';
 
     if ( $template )
     {
