@@ -103,22 +103,22 @@ function GetMateriauIcon($nom)
 {
     $png  = '';
 
-    if     ( $nom == 'Rondin' )                { $png = '<img src="/images/stuff/icon_109.png">';  }
-    elseif ( $nom == 'Sable' )                 { $png = '<img src="/images/stuff/icon_1054.png">'; }
-    elseif ( $nom == 'Minerai d\'Or' )         { $png = '<img src="/images/stuff/icon_1066.png">'; }
-    elseif ( $nom == 'Minerai de Cuivre' )     { $png = '<img src="/images/stuff/icon_1067.png">'; }
-    elseif ( $nom == 'Minerai d\'Argent' )     { $png = '<img src="/images/stuff/icon_1068.png">'; }
-    elseif ( $nom == 'Minerai d\'Etain' )      { $png = '<img src="/images/stuff/icon_1069.png">'; }
-    elseif ( $nom == 'Minerai de Mithril' )    { $png = '<img src="/images/stuff/icon_1070.png">'; }
-    elseif ( $nom == 'Minerai d\'Adamantium' ) { $png = '<img src="/images/stuff/icon_1071.png">'; }
-    elseif ( $nom == 'Minerai de Fer' )        { $png = '<img src="/images/stuff/icon_1072.png">'; }
-    elseif ( $nom == 'Cuir' )                  { $png = '<img src="/images/stuff/icon_98.png">';   }
-    elseif ( $nom == 'Tissu' )                 { $png = '<img src="/images/stuff/icon_103.png">';  }
-    elseif ( $nom == 'Pierre' )                { $png = '<img src="/images/stuff/icon_1142.png">'; }
-    elseif ( $nom == 'Fleur' )                 { $png = '<img src="/images/stuff/icon_1173.png">'; }
-    elseif ( $nom == 'Champignon' )            { $png = '<img src="/images/stuff/icon_1174.png">'; }
-    elseif ( $nom == 'Composant' )             { $png = '<img src="/images/stuff/icon_102.png">';  }
-    elseif ( $nom == 'Racine' )                { $png = '<img src="/images/stuff/icon_1155.png">'; }
+    if     ( $nom == 'Rondin' )                { $png = '<img src="/images/stuff/icon_109.png"  title="'.$nom.'">'; }
+    elseif ( $nom == 'Sable' )                 { $png = '<img src="/images/stuff/icon_1054.png" title="'.$nom.'">'; }
+    elseif ( $nom == 'Minerai d\'Or' )         { $png = '<img src="/images/stuff/icon_1066.png" title="'.$nom.'">'; }
+    elseif ( $nom == 'Minerai de Cuivre' )     { $png = '<img src="/images/stuff/icon_1067.png" title="'.$nom.'">'; }
+    elseif ( $nom == 'Minerai d\'Argent' )     { $png = '<img src="/images/stuff/icon_1068.png" title="'.$nom.'">'; }
+    elseif ( $nom == 'Minerai d\'Etain' )      { $png = '<img src="/images/stuff/icon_1069.png" title="'.$nom.'">'; }
+    elseif ( $nom == 'Minerai de Mithril' )    { $png = '<img src="/images/stuff/icon_1070.png" title="'.$nom.'">'; }
+    elseif ( $nom == 'Minerai d\'Adamantium' ) { $png = '<img src="/images/stuff/icon_1071.png" title="'.$nom.'">'; }
+    elseif ( $nom == 'Minerai de Fer' )        { $png = '<img src="/images/stuff/icon_1072.png" title="'.$nom.'">'; }
+    elseif ( $nom == 'Cuir' )                  { $png = '<img src="/images/stuff/icon_98.png"   title="'.$nom.'">'; }
+    elseif ( $nom == 'Tissu' )                 { $png = '<img src="/images/stuff/icon_103.png"  title="'.$nom.'">'; }
+    elseif ( $nom == 'Pierre' )                { $png = '<img src="/images/stuff/icon_1142.png" title="'.$nom.'">'; }
+    elseif ( $nom == 'Fleur' )                 { $png = '<img src="/images/stuff/icon_1173.png" title="'.$nom.'">'; }
+    elseif ( $nom == 'Champignon' )            { $png = '<img src="/images/stuff/icon_1174.png" title="'.$nom.'">'; }
+    elseif ( $nom == 'Composant' )             { $png = '<img src="/images/stuff/icon_102.png"  title="'.$nom.'">'; }
+    elseif ( $nom == 'Racine' )                { $png = '<img src="/images/stuff/icon_1155.png" title="'.$nom.'">'; }
 
     return $png;
 }
