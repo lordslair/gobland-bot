@@ -104,8 +104,8 @@
 
             $pouvoir_png = '<img src="/images/stuff/icon_127.png">';
 
-            $distance_png = '<img src="/images/stuff/icon_67.png">';
-            $contact_png  = '<img src="/images/stuff/icon_35.png">';
+            $distance_png = '<img src="/images/stuff/icon_67.png" title="Attaque: Distance">';
+            $contact_png  = '<img src="/images/stuff/icon_35.png" title="Attaque: Corps à Corps">';
 
             $req_cdm    = "SELECT * FROM CdM WHERE Name = '$mob_name' AND Niveau = '$mob_niv'";
             $query_cdm  = $db->query($req_cdm);
