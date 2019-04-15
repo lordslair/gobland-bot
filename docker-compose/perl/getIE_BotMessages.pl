@@ -52,8 +52,11 @@ foreach my $db (@db_list)
                     my @line = split /;/, $line;
                     if ( $line !~ /^#/)
                     {
-                        if ( $line[1] =~ /'/    ) { $line[1]     =~ s/\'/\'\'/g};
-                        if ( $line[5] =~ /'/    ) { $line[5]     =~ s/\'/\'\'/g}
+                        if ( $line[1] =~ /'/ ) { $line[1] =~ s/\'/\'\'/g};
+                        if ( $line[5] and $line[5] =~ /'/ )
+                        {
+                            $line[5]     =~ s/\'/\'\'/g;
+                        } else { $line[5] = '' } # To force in case of "Résultat Parchemin" MPBot
 
                         my $sth  = $dbh->prepare( "INSERT OR IGNORE INTO MPBot VALUES( '$line[0]', \
                                                                                        '$gob_id' , \
