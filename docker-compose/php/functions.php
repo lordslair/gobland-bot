@@ -294,4 +294,54 @@ function GetSumCaracs($string,$hash)
     return $hash;
 }
 
+function GetCompo($type,$nom,$qualite)
+{
+    $db_file = '/db/'.$_ENV["DBNAME"];
+    $db      = new SQLite3($db_file);
+    if(!$db) { echo $db->lastErrorMsg(); }
+
+    $ok = ' ✅';
+    $ko = ' 🔴';
+
+    $nom = preg_replace('/\'/', '\'\'', $nom);
+
+    if ( $type == 'Plante' )
+    {
+        if     ( $qualite == 'Amer' ) { $q_nbr = 1; }
+        elseif ( $qualite == 'Acide' ) { $q_nbr = 2; }
+        elseif ( $qualite == 'Plip'  ) { $q_nbr = 3; }
+        elseif ( $qualite == 'Plop'  ) { $q_nbr = 4; }
+        elseif ( $qualite == 'Sucré' ) { $q_nbr = 5; }
+    }
+    elseif ( $type == 'Composant' )
+    {
+        if     ( $qualite == 'Très Mauvaise' ) { $q_nbr = 1; }
+        elseif ( $qualite == 'Mauvaise'      ) { $q_nbr = 2; }
+        elseif ( $qualite == 'Moyenne'       ) { $q_nbr = 3; }
+        elseif ( $qualite == 'Bonne'         ) { $q_nbr = 4; }
+        elseif ( $qualite == 'Très Bonne'    ) { $q_nbr = 5; }
+    }
+
+    # Check if compo present in Cavernes
+    $req_stock = "SELECT COUNT (*)
+                  FROM ItemsCavernes
+                  WHERE ( Nom = '$nom' AND Qualite = '$q_nbr' )";
+    $res_stock = $db->querySingle($req_stock);
+
+    # Check if compo present in Equipement
+    $req_equip = "SELECT COUNT (*)
+                  FROM ItemsGobelins
+                  WHERE ( Nom = '$nom' AND Qualite = '$q_nbr' )";
+    $res_equip = $db->querySingle($req_equip);
+
+    if ( $res_stock > 0 || $res_equip > 0 )
+    {
+        return $ok; # Composant found in either Cavernes or Equipement
+    }
+    else
+    {
+        return $ko; # Composant not found
+    }
+}
+
 ?>

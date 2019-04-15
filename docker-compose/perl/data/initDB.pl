@@ -269,6 +269,17 @@ if ( ! -f "$db_path/$db" )
                                   Z         TEXT,
                                   Time      INT,
                                   Date      TEXT)");
+
+    $dbh->do("CREATE TABLE Enchantements (Id        INT PRIMARY KEY,
+                                          Item      TEXT,
+                                          Plante    TEXT,
+                                          PlanteQ   TEXT,
+                                          Compo1    TEXT,
+                                          Compo1Q   TEXT,
+                                          Compo2    TEXT,
+                                          Compo2Q   TEXT,
+                                          Status    TEXT)");
+
 }
 else
 {
