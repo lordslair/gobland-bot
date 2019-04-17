@@ -119,6 +119,13 @@ function GetMateriauIcon($nom)
     elseif ( $nom == 'Champignon' )            { $png = '<img src="/images/stuff/icon_1174.png" title="'.$nom.'">'; }
     elseif ( $nom == 'Composant' )             { $png = '<img src="/images/stuff/icon_102.png"  title="'.$nom.'">'; }
     elseif ( $nom == 'Racine' )                { $png = '<img src="/images/stuff/icon_1155.png" title="'.$nom.'">'; }
+    elseif ( $nom == 'Tas de Terre' )          { $png = '<img src="/images/stuff/icon_126.png"  title="'.$nom.'">'; }
+    elseif ( $nom == 'Diamant' )               { $png = '<img src="/images/stuff/icon_1045.png" title="'.$nom.'">'; }
+    elseif ( $nom == 'Emeraude' )              { $png = '<img src="/images/stuff/icon_1042.png" title="'.$nom.'">'; }
+    elseif ( $nom == 'Obsidienne' )            { $png = '<img src="/images/stuff/icon_1040.png" title="'.$nom.'">'; }
+    elseif ( $nom == 'Opale' )                 { $png = '<img src="/images/stuff/icon_1046.png" title="'.$nom.'">'; }
+    elseif ( $nom == 'Rubis' )                 { $png = '<img src="/images/stuff/icon_1043.png" title="'.$nom.'">'; }
+    elseif ( $nom == 'Saphir' )                { $png = '<img src="/images/stuff/icon_1041.png" title="'.$nom.'">'; }
 
     return $png;
 }

@@ -161,8 +161,9 @@
 <?php
     $arr_minerais  = ['Sable', "Minerai d''Or", 'Minerai de Cuivre', "Minerai d''Argent", "Minerai d''Etain", 'Minerai de Mithril', "Minerai d''Adamantium", 'Minerai de Fer'];
     $arr_materiaux = ['Cuir', 'Tissu', 'Rondin'];
-    $arr_roches    = ['Pierre'];
-    $arr_items     = array_merge($arr_minerais, $arr_materiaux, $arr_roches);
+    $arr_roches    = ['Pierre', 'Tas de Terre'];
+    $arr_pierres   = ['Diamant', 'Emeraude', 'Obsidienne', 'Opale', 'Rubis', 'Saphir'];
+    $arr_items     = array_merge($arr_minerais, $arr_materiaux, $arr_roches, $arr_pierres);
     $arr_count_i   = [];
 
     foreach ($arr_items as $item)
@@ -241,6 +242,12 @@
     {
         $item_png = GetMateriauIcon($roche);
         print('              '.$item_png.' ('.$arr_count_i["$roche"].') '."\n");
+    }
+    print('            <br>'."\n");
+    foreach ($arr_pierres as $pierre)
+    {
+        $item_png = GetMateriauIcon($pierre);
+        print('              '.$item_png.' ('.$arr_count_i["$pierre"].') '."\n");
     }
 ?>
             </td>
