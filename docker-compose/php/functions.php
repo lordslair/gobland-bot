@@ -134,7 +134,7 @@ function GetQualite($type,$quali_id)
 {
     $quali_str = '';
 
-    if ( $type == 'Matériau' or $type == 'Minerai' or $type == 'Roche' )
+    if ( $type == 'Matériau' or $type == 'Minerai' or $type == 'Roche' or $type == 'Pierre Précieuse' )
     {
         if     ( $quali_id == 0 ) { $quali_str = ''; } # AFAIK only used for Rondins
         elseif ( $quali_id == 1 ) { $quali_str = 'Médiocre'; }
