@@ -27,6 +27,14 @@
     {
         goto end;
     }
+    if ( $_GET["small"] && ($_GET["small"] != 'TRUE') )
+    {
+        goto end;
+    }
+    if ( $_GET["medium"] && ($_GET["medium"] != 'TRUE') )
+    {
+        goto end;
+    }
 
     $db_file = '/db/'.$_ENV["DBNAME"];
     $db      = new SQLite3($db_file);
@@ -91,6 +99,12 @@
         $req_gob_nom       = "SELECT Gobelin FROM Gobelins WHERE Id = '$gob_id'";
         $gob_nom           = $db->querySingle($req_gob_nom);
         $getsuiv           = '';
+
+        # We use $_GET["small"] to restrict the view
+        if ( $_GET["small"] ) { $cases = 5;}
+        # We use $_GET["medium"] to restrict the view
+        if ( $_GET["medium"] ) { $cases = 10;}
+
     }
 
     if ( $cases > 0 )
@@ -238,8 +252,11 @@
     print('        </center>'."\n");
     print('        <br>'."\n");
     print('        <center>'."\n");
-    print('          <a href="/vue.php?id='.$gob_id.'&niveau=TRUE'.$getsuiv.'" title="Vue Restreinte">[Restreindre au niveau courant (N='.$N.')]</a>'."\n");
-    print('          <a href="/vue.php?id='.$gob_id.$getsuiv.'" title="Vue Normale">[🚫]</a>'."\n");
+    print('          Restreindre: '."\n");
+    print('          [<a href="/vue.php?id='.$gob_id.'&niveau=TRUE'.$getsuiv.'" title="Vue Restreinte">(Niveau courant N='.$N.')</a> | '."\n");
+    print('          <a href="/vue.php?id='.$gob_id.'&small=TRUE'.$getsuiv.'"   title="Vue Restreinte">(<b>5</b> cases)</a> | '."\n");
+    print('          <a href="/vue.php?id='.$gob_id.'&medium=TRUE'.$getsuiv.'"  title="Vue Restreinte">(<b>10</b> cases)</a>]'."\n");
+    print('          <a href="/vue.php?id='.$gob_id.$getsuiv.'"                 title="Vue Normale">[🚫 ]</a>'."\n");
     print('        <center>'."\n");
     print('        <table cellspacing="0" id="GobVue">'."\n");
     print('          <caption>'."\n");
