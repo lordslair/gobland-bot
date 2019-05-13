@@ -76,7 +76,7 @@ foreach my $db (@db_list)
                         $line[5] =~ s/Ãµ/ö/g;
                         if ( $line[5] =~ /Musculeux|Nodef|Trad|Yonnair|Zozo|Mentalo|Gobelin/ ) { $line[0] = 'G' }
 
-                        # First query to UPDATE the line if not exists, or IGNORE
+                        # First query to INSERT the line if not exists, or IGNORE
                         my $sth       = $dbh->prepare( "INSERT OR IGNORE INTO Vue VALUES( '$line[2]', \
                                                                                           '$line[0]', \
                                                                                           '$line[3]', \
