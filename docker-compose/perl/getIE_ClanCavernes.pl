@@ -67,6 +67,7 @@ foreach my $db (@db_list)
                         if ( $line[9] =~ /'/    ) { $line[9]     =~ s/\'/\'\'/g}
                         if ( !$line[12]         ) { $line[12]    = '' } # Patch for Empty Matiere
 
+                        # First query to INSERT the line if not exists, or IGNORE
                         my $sth  = $dbh->prepare( "INSERT OR IGNORE INTO ItemsCavernes VALUES( '$line[0]',     \
                                                                                                '$line[1]',     \
                                                                                                '$line[2]',     \
@@ -82,6 +83,13 @@ foreach my $db (@db_list)
                                                                                                '$line[11]',    \
                                                                                                '$line[12]')"   );
                         $sth->execute();
+
+                        # Second query to UPDATE data if the line exists
+                        $sth       = $dbh->prepare( "UPDATE ItemsCavernes SET Reservation = '$line[11]' \
+                                                     WHERE  Id = '$line[0]' ");
+
+                        $sth->execute();
+
                         $sth->finish();
                         push @item_ids_live, $line[0];
                     }
