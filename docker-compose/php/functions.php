@@ -29,6 +29,34 @@ function GetColor($pv_now,$pv_max)
     return $color;
 }
 
+function GetColorFaim($faim)
+{
+    $green  = '#77EE77';
+    $jaune  = '#EEEE77';
+    $orange = '#EEAA77';
+    $red    = '#B22222';
+
+    $color  = '#FFFFFF';
+
+    if    ( $faim < 15 )
+    {
+        $color = $green;
+    }
+    elseif ( $faim < 20 )
+    {
+        $color = $jaune;
+    }
+    elseif ( $faim < 30 )
+    {
+        $color = $orange;
+    }
+    else
+    {
+        $color = $red;
+    }
+    return $color;
+}
+
 function GetpDLA($dla_str,$duree_s)
 {
     # $dla_str = 2019-01-30 19:40:16
@@ -175,7 +203,7 @@ function GetCarats($quali_id,$quantite)
 
 function GetLuxe($type,$nom,$desc)
 {
-    $ok = ' <img height="10px" width="10px" src="/images/stuff/OK.png" title="Item de Luxe">';
+    $ok = '✅';
 
     if ( $type == 'Talisman' )
     {
@@ -249,7 +277,7 @@ function GetLuxe($type,$nom,$desc)
 
 function GetCraft($type,$nom,$desc,$template)
 {
-    $craft     = ' <img height="10px" width="10px" src="/images/stuff/craft.png" title="Item d\'Artisanat (Forgé)">';
+    $craft     = '⚒️';
 
     if ( $template )
     {

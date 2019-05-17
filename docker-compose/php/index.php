@@ -21,6 +21,7 @@
             <th>Position</th>
             <th>Meute</th>
             <th>PV</th>
+            <th>Faim</th>
             <th>État</th>
             <th>PA</th>
             <th>Dates</th>
@@ -40,7 +41,7 @@
         if(!$db) { echo $db->lastErrorMsg(); }
 
         $req_profile   = "SELECT Gobelins.Id,Tribu,Gobelin,Niveau,X,Y,N,PA,PV,PVMax,CT,
-                                 Gobelins.DLA,Gobelins2.DLA,BPDLA,BMDLA,Gobelins.Etat
+                                 Gobelins.DLA,Gobelins2.DLA,BPDLA,BMDLA,Gobelins.Etat,Faim
                           FROM Gobelins
                           INNER JOIN Gobelins2 on Gobelins.Id = Gobelins2.Id
                           WHERE Gobelins.Id = $gob_id
@@ -68,6 +69,9 @@
             $percent = ($row[8] / $row[9]) * 100;
             $lifebar = '<br><div class="vieContainer"><div style="background-color:'.$color.'; width: '.$percent.'%">&nbsp;</div></div>';
 
+            $faimcolor = GetColorFaim($row[16]);
+            $faimbar   = '<br><div class="faimContainer"><div style="background-color:'.$faimcolor.'; width: 100%">&nbsp;</div></div>';
+
             $ct_total += $row[10];
 
             $duree_s   = $row[12] + $row[13] + $row[14];
@@ -86,6 +90,7 @@
             print('            <td>'.$position.'</td>'."\n");
             print('            <td>'.$meute_nom.' '.$meute_id.'</td>'."\n");
             print('            <td>'.$row[8].' / '.$row[9].$lifebar.'</td>'."\n");
+            print('            <td>'.$row[16].$faimbar.'</td>'."\n");
             print('            <td><font size="4">'.$etat.'</font></td>'."\n");
             print('            <td'.$pad.'>'.$row[7].'</td>'."\n");
             print('            <td><span class="DLA"> DLA : '.$row[11].'</span><br><span class="pDLA">pDLA : '.$pdla.'</span></td>'."\n");
