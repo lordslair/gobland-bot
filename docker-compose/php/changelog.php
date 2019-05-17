@@ -16,6 +16,13 @@
             <ul>
               <li>2019-05-17 : Ajout de la page de Changelog (<b>@Omnivore</b>)
               <li>2019-05-17 : Ajout d'une colonne 'Faim' sur /index.php (<b>@Le Kipu</b>)
+              <br>
+              <li>2019-04-19 : Ajout d'une restriction dans /vue.php (<b>@Globulus</b>)
+              <li>2019-04-17 : Ajout des Pierres Précieuses (<b>@Le Kipu</b>)
+              <li>2019-04-15 : Ajout de la page d'enchantements (<b>@Le Kipu</b>)
+              <li>2019-04-12 : Ajout d'un title pour les icônes (<b>@Omnivore</b>)
+              <li>2019-04-12 : Modification d'affichage mineur pour les Dieux (<b>@Pachavor</b>)
+              <li>2019-04-08 : Ajout des caracs totales (Cafards, Equipement) (<b>@DeathMetal</b>)
             </ul>
           </fieldset>
         </div> <!-- profilInfos -->
