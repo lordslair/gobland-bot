@@ -9,23 +9,43 @@
 <?php include 'inc.header.php'; ?>
       </div>
       <div id="content">
-        <link href="/style/tt_r.css"  rel="stylesheet" type="text/css"  />
-        <link href="/style/equipement.css"  rel="stylesheet" type="text/css"  />
-        <h1>Possessions</h1>
-        <h2 class="expanded">Équipements Gobelins dans les Cavernes</h2>
-        <table cellspacing="0" id="profilInfos">
+        <link href="/style/cavernes.css"  rel="stylesheet" type="text/css"  />
+        <h1>Possessions des Cavernes du Clan</h1>
+<?php
+    print('        <center>'."\n");
+    print('          Afficher les Non Identifiés : '."\n");
+    print('          <a href="/beta-cavernes.php?IdT=TRUE" title="Afficher les non-IdT">[🔎]</a>'."\n");
+    print('          <br>'."\n");
+    print('          Retirer les Non Identifiés : '."\n");
+    print('          <a href="/beta-cavernes.php"          title="Retirer les non-IdT">[🚫]</a>'."\n");
+    print('        <center>'."\n");
+?>
+        <table cellspacing="0" id="profilInfos" style="border-style:none;">
           <!-- Équipement -->
           <tr class="expanded">
-            <th>Équipements</th>
+            <th style="border-style:none;">Équipements</th>
           </tr>
-          <tr>
-            <td>
-              <ul class="membreEquipementList">
+          <tr style="border-style:none;">
+            <td style="border-style:none;">
 <?php
     include 'functions.php';
 
     $arr_equipements = ['Arme 1 Main', 'Arme 2 mains', 'Anneau', 'Armure', 'Baguette', 'Bijou', 'Bottes', 'Bouclier', 'Casque', 'Nourriture','Outil', 'Potion', 'Talisman'];
     $arr_count_e     = [];
+
+    print('              <table cellspacing="0" id="stuff">'."\n");
+    print('                <thread>'."\n");
+    print('                  <tr>'."\n");
+    print('                    <th style="cursor: pointer;" data-sort-method="default">Type</th>'."\n");
+    print('                    <th style="cursor: pointer;" data-sort-method="number">ID</th>'."\n");
+    print('                    <th style="cursor: pointer;" data-sort-method="default">Nom (Description)</th>'."\n");
+    print('                    <th style="cursor: pointer;" data-sort-method="number">Poids</th>'."\n");
+    print('                    <th style="cursor: pointer;" data-sort-method="default">Infos</th>'."\n");
+    print('                    <th style="cursor: pointer;" data-sort-method="default">Reservé</th>'."\n");
+    print('                    <th style="cursor: pointer;" data-sort-method="number">Prix</th>'."\n");
+    print('                  </tr>'."\n");
+    print('                </thread>'."\n");
+    print('                <tbody id="stuff">'."\n");
 
     foreach ($arr_equipements as $equipement)
     {
@@ -40,34 +60,45 @@
         $query_equipement = $db->query($req_equipement);
 
         $item_png = GetStuffIcon($equipement,$nom);
-        print('                <div style="text-align:center; type="'.$equipement.'">'."\n");
-        print('                  <br>'.$item_png.'<br>'."\n");
-        print('                </div>'."\n");
 
         while ($row = $query_equipement->fetchArray())
         {
             $item_id   = $row[0];
             $item_type = $row[1];
             $nom       = $row[3];
-            $min       = ', '.sprintf("%.1f", $row[6]/60) . ' min';
-            $desc      = $row[5];
             $template  = '<b>'.$row[4].'</b>';
+            $desc      = $row[5];
+            $min       = sprintf("%.1f", $row[6]/60).' min';
             $luxe      = GetLuxe($item_type,$nom,$desc);
+            $craft     = GetCraft($item_type,$nom,$desc,$row[4]);
+            $prix      = '';
+            $reserve   = '';
+            $info      = $luxe.' '.$craft;
 
-            if ( $row[13] ) { $nom .= ' en '.$row[13]; } # Fix for 'en Pierre' equipements
+            if ( $row[11] > 0                ) { $prix      = $row[11]; }
+            if ( $row[12] != 'Tout le monde' ) { $reserve   = $row[12]; }
+            if ( $row[13]                    ) { $nom .= ' en '.$row[13]; } # Fix for 'en Pierre' equipements
 
             $arr_count_e["$equipement"]++;
 
-            $item_txt = '['.$item_id.'] '.$item_type.' : '.$nom.' '.$template.' ('.$desc.')'.$min.$luxe.'<br>';
-
-            print('                <li class="equipementNonEquipe">'."\n");
-            print('                  '.$item_txt."\n");
-            print('                </li>'."\n");
+            if ( $desc != '<b>Non identifié</b>' or $_GET["IdT"] == 'TRUE' )
+            {
+                print('                  <tr>'."\n");
+                print('                   <td>'.$item_png.'</td>'."\n");
+                print('                   <td>['.$item_id.']</td>'."\n");
+                print('                   <td>'.$nom.' '.$template.' ('.$desc.')</td>'."\n");
+                print('                   <td>'.$min.'</td>'."\n");
+                print('                   <td>'.$info.'</td>'."\n");
+                print('                   <td>'.$reserve.'</td>'."\n");
+                print('                   <td>'.$prix.'</td>'."\n");
+                print('                  </tr>'."\n");
+            }
         }
         $db->close;
     }
+        print('                </tbody>'."\n");
+        print('              </table>'."\n");
 ?>
-              </ul>
             </td>
           </tr>
 
@@ -88,14 +119,27 @@
 
           <!-- Composants -->
           <tr class="expanded">
-            <th>Composants</th>
-          </tr>
-          <tr>
-            <td>
-              <ul class="membreEquipementList">
+            <th style="border-style:none;">Composants</th>
+          <tr style="border-style:none;">
+            <td style="border-style:none;">
+
 <?php
     $arr_composants = ['Composant', 'Fleur', 'Racine', 'Champignon'];
     $arr_count_c    = [];
+
+    print('              <table cellspacing="0" id="composants">'."\n");
+    print('                <thread>'."\n");
+    print('                  <tr>'."\n");
+    print('                    <th style="cursor: pointer;" data-sort-method="default">Type</th>'."\n");
+    print('                    <th style="cursor: pointer;" data-sort-method="number">ID</th>'."\n");
+    print('                    <th style="cursor: pointer;" data-sort-method="default">Nom (Description)</th>'."\n");
+    print('                    <th style="cursor: pointer;" data-sort-method="number">Poids</th>'."\n");
+    print('                    <th style="cursor: pointer;" data-sort-method="default">Infos</th>'."\n");
+    print('                    <th style="cursor: pointer;" data-sort-method="default">Reservé</th>'."\n");
+    print('                    <th style="cursor: pointer;" data-sort-method="number">Prix</th>'."\n");
+    print('                  </tr>'."\n");
+    print('                </thread>'."\n");
+    print('                <tbody id="composants">'."\n");
 
     foreach ($arr_composants as $composant)
     {
@@ -110,29 +154,41 @@
         $query_composant = $db->query($req_composant);
 
         $item_png = GetMateriauIcon($composant);
-        print('                <div style="text-align:center; type="'.$composant.'">'."\n");
-        print('                  <br>'.$item_png.'<br>'."\n");
-        print('                </div>'."\n");
 
         while ($row = $query_composant->fetchArray())
         {
             $item_id  = $row[0];
             $nom      = $row[3];
-            $min      = ', '.sprintf("%.1f", $row[6]/60) . ' min';
+            $min      = sprintf("%.1f", $row[6]/60).' min';
             $desc     = GetQualite('Composant', $row[8]);
+            $prix     = '';
+            $reserve  = '';
+
+            if ( $row[11] > 0                ) { $prix      = $row[11]; }
+            if ( $row[12] != 'Tout le monde' ) { $reserve   = $row[12]; }
 
             $arr_count_c["$composant"]++;
 
-            $item_txt = '['.$item_id.'] '.$nom.' ('.$desc.')'.$min."\n";
+            if ( $desc != '<b>Non identifié</b>')
+            {
+                print('                  <tr>'."\n");
+                print('                   <td>'.$item_png.'</td>'."\n");
+                print('                   <td>['.$item_id.']</td>'."\n");
+                print('                   <td>'.$nom.' ('.$desc.')</td>'."\n");
+                print('                   <td>'.$min.'</td>'."\n");
+                print('                   <td></td>'."\n");
+                print('                   <td>'.$reserve.'</td>'."\n");
+                print('                   <td>'.$prix.'</td>'."\n");
+                print('                  </tr>'."\n");
+            }
 
-            print('                <li class="equipementNonEquipe">'."\n");
-            print('                  '.$item_txt."\n");
-            print('                </li>'."\n");
         }
         $db->close;
     }
+
+    print('                </tbody>'."\n");
+    print('              </table>'."\n");
 ?>
-              </ul>
             </td>
           </tr>
 
@@ -153,11 +209,11 @@
 
           <!-- Matériaux -->
           <tr class="expanded">
-            <th>Matériaux</th>
+            <th style="border-style:none;">Matériaux</th>
           </tr>
-          <tr>
-            <td>
-              <ul class="membreEquipementList">
+          <tr style="border-style:none;">
+            <td style="border-style:none;">
+
 <?php
     $arr_minerais  = ['Sable', "Minerai d''Or", 'Minerai de Cuivre', "Minerai d''Argent", "Minerai d''Etain", 'Minerai de Mithril', "Minerai d''Adamantium", 'Minerai de Fer'];
     $arr_materiaux = ['Cuir', 'Tissu', 'Rondin'];
@@ -165,6 +221,21 @@
     $arr_pierres   = ['Diamant', 'Emeraude', 'Obsidienne', 'Opale', 'Rubis', 'Saphir'];
     $arr_items     = array_merge($arr_minerais, $arr_materiaux, $arr_roches, $arr_pierres);
     $arr_count_i   = [];
+
+    print('              <table cellspacing="0" id="materiaux">'."\n");
+    print('                <thread>'."\n");
+    print('                  <tr>'."\n");
+    print('                    <th style="cursor: pointer;" data-sort-method="default">Type</th>'."\n");
+    print('                    <th style="cursor: pointer;" data-sort-method="number">ID</th>'."\n");
+    print('                    <th style="cursor: pointer;" data-sort-method="default">Nom (Description)</th>'."\n");
+    print('                    <th style="cursor: pointer;" data-sort-method="number">Carats</th>'."\n");
+    print('                    <th style="cursor: pointer;" data-sort-method="number">Poids</th>'."\n");
+    print('                    <th style="cursor: pointer;" data-sort-method="default">Infos</th>'."\n");
+    print('                    <th style="cursor: pointer;" data-sort-method="default">Reservé</th>'."\n");
+    print('                    <th style="cursor: pointer;" data-sort-method="number">Prix</th>'."\n");
+    print('                  </tr>'."\n");
+    print('                </thread>'."\n");
+    print('                <tbody id="materiaux">'."\n");
 
     foreach ($arr_items as $item)
     {
@@ -180,20 +251,21 @@
 
         $item     = preg_replace('/\'\'/', '\'', $item);
         $item_png = GetMateriauIcon($item);
-        print('                <div style="text-align:center; type="'.$item.'">'."\n");
-        print('                  <br>'.$item_png.'<br>'."\n");
-        print('                </div>'."\n");
 
         while ($row = $query_items->fetchArray())
         {
             $item_id   = $row[0];
             $item_type = $row[1];
             $nom       = $row[3];
-            $min       = ', '.sprintf("%.1f", $row[6]/60) . ' min';
+            $min       = sprintf("%.1f", $row[6]/60).' min';
             $desc      = GetQualite($item_type, $row[8]);
             $nbr       = $row[7];
             $carats    = GetCarats($row[8],$nbr);
-            #$carats    = 0;
+            $prix      = '';
+            $reserve   = '';
+
+            if ( $row[11] > 0                ) { $prix      = $row[11]; }
+            if ( $row[12] != 'Tout le monde' ) { $reserve   = $row[12]; }
 
             $arr_count_i["$item"]++;
 
@@ -206,17 +278,27 @@
                 $arr_count_i["$item"] = $arr_count_i["$item"] + $carats;
             }
 
-            print('                <li class="equipementNonEquipe">'."\n");
-            print('                  <div class="tt_r">'."\n");
-            print('                    ['.$item_id.'] '.$nom.' de taille '.$nbr.' ('.$desc.')'.$min."\n");
-            print('                    <span class="tt_r_text">'.$carats.' Carats</span>'."\n");
-            print('                  </div>'."\n");
-            print('                </li>'."\n");
+            if ( $desc != '<b>Non identifié</b>')
+            {
+                print('                  <tr>'."\n");
+                print('                   <td>'.$item_png.'</td>'."\n");
+                print('                   <td>['.$item_id.']</td>'."\n");
+                print('                   <td>'.$nom.' ('.$desc.')</td>'."\n");
+                print('                   <td>'.$carats.'</td>'."\n");
+                print('                   <td>'.$min.'</td>'."\n");
+                print('                   <td></td>'."\n");
+                print('                   <td>'.$reserve.'</td>'."\n");
+                print('                   <td>'.$prix.'</td>'."\n");
+                print('                  </tr>'."\n");
+            }
+
         }
         $db->close;
     }
+
+    print('                </tbody>'."\n");
+    print('              </table>'."\n");
 ?>
-              </ul>
             </td>
           </tr>
 
@@ -255,6 +337,11 @@
           <!-- /Block with count of Matériaux -->
           <!-- /Matériaux -->
         </table>
+        <script type="text/javascript" src="/js/tristen-tablesort.js"></script>
+        <script type="text/javascript" src="/js/tristen-tablesort.number.js"></script>
+        <script>new Tablesort(document.getElementById('stuff'));</script>
+        <script>new Tablesort(document.getElementById('composants'));</script>
+        <script>new Tablesort(document.getElementById('materiaux'));</script>
       </div> <!-- content -->
     </div> <!-- page -->
   </body>

@@ -14,6 +14,8 @@
           <fieldset>
           <legend>Gobland-IT Version 3</legend>
             <ul>
+              <li>2019-06-04 : Relooking de la page /cavernes.php (<b>@all</b>)
+              <br>
               <li>2019-05-17 : Ajout de la page de Changelog (<b>@Omnivore</b>)
               <li>2019-05-17 : Ajout d'une colonne 'Faim' sur /index.php (<b>@Le Kipu</b>)
               <br>
