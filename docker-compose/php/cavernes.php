@@ -272,6 +272,7 @@
             if ( $item == 'Rondin' )
             {
                 $arr_count_i["$item"] = $arr_count_i["$item"] + $nbr;
+                $carats = $row[7];
             }
             else
             {
