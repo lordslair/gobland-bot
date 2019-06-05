@@ -14,6 +14,7 @@
           <fieldset>
           <legend>Gobland-IT Version 3</legend>
             <ul>
+              <li>2019-06-05 : Amélioration de l'affichage des crafts 'nobles' (<b>@Le Kipu</b>)
               <li>2019-06-04 : Relooking de la page /cavernes.php (<b>@all</b>)
               <br>
               <li>2019-05-17 : Ajout de la page de Changelog (<b>@Omnivore</b>)

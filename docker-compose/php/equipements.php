@@ -66,8 +66,17 @@
                 $counter++;
             }
 
+            if ( preg_match('/Diamant|Obsidienne|Opale|Saphir|Emeraude|Rubis/', $nom, $matches) )
+            {
+                $nom = preg_replace("/en $matches[0]/", "<b> en $matches[0]</b>", $nom);
+            }
+            if ( preg_match('/Adamantium|Argent|Or|Cuivre|Mithril|Etain/', $nom, $matches) )
+            {
+                $nom = preg_replace("/en $matches[0]/", "<b> en $matches[0]</b>", $nom);
+            }
+
             print('                <li class="equipement'.$equipe.'Equipe">'."\n");
-            print('                    ['.$item_id.'] '.$type.' : '.$nom.' '.$template.' ('.$desc.'), '.$min.' min'.$luxe.$craft."\n");
+            print('                    ['.$item_id.'] '.$type.' : '.$nom.' '.$template.' ('.$desc.'), '.$min.' min '.$luxe.' '.$craft."\n");
             print('                </li>'."\n");
         }
         $db->close;

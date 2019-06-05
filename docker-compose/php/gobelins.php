@@ -252,14 +252,15 @@
         $meute_nom     = $db->querySingle($req_meute_nom);
         print('          <legend>Meute ['.$meute_id.'] '.$meute_nom.'</legend>'."\n");
 
-        $req_meute   = "SELECT Id,Nom,Tribu,Niveau
+        $req_meute   = "SELECT Id,Nom,Tribu,Niveau,X,Y,N,PV
                         FROM Meutes
                         WHERE IdMeute = '$meute_id'";
         $query_meute = $db->query($req_meute);
 
         while ($row = $query_meute->fetchArray())
         {
-            print('            <li>'.$row[1].' ('.$row[0].') ['.$row[2].'] (lvl '.$row[3].')'."\n");
+            $position = "[<b>X</b> = $row[4] | <b>Y</b> = $row[5] | <b>N</b> = $row[6]]";
+            print('            <li>'.$row[1].' ('.$row[0].') ['.$row[2].'] (lvl '.$row[3].') '.$position.' | '.$row[7].' PV'."\n");
         }
         $db->close;
     }
@@ -363,7 +364,16 @@
         $luxe     = GetLuxe($type,$nom,$desc);
         $craft    = GetCraft($type,$nom,$desc,$template);
 
-        $item_txt = '['.$row[0].'] '.$type.' : '.$nom.' '.$template.' ('.$desc.')'.$luxe.$craft.'<br>';
+        if ( preg_match('/Diamant|Obsidienne|Opale|Saphir|Emeraude|Rubis/', $nom, $matches) )
+        {
+            $nom = preg_replace("/en $matches[0]/", "<b> en $matches[0]</b>", $nom);
+        }
+        if ( preg_match('/Adamantium|Argent|Or|Cuivre|Mithril|Etain/', $nom, $matches) )
+        {
+            $nom = preg_replace("/en $matches[0]/", "<b> en $matches[0]</b>", $nom);
+        }
+
+        $item_txt = '['.$row[0].'] '.$type.' : '.$nom.' '.$template.' ('.$desc.') '.$luxe.' '.$craft.'<br>';
         print('              '.$item_png.$item_txt."\n");
         $CARACS = GetSumCaracs($desc,$CARACS);
     }

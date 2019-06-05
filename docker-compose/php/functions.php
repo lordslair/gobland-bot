@@ -302,6 +302,8 @@ function GetCraft($type,$nom,$desc,$template)
 
             if     ( preg_match('/Temps:-5min/', $desc) )                                                        { return $craft; }
             if     ( $desc  == 'En cours de fabrication' )                                                       { return $craft; }
+
+            if     ( preg_match('/Obsidienne|Mithril|Opale|Saphir|Emeraude|Rubis/', $nom) )                      { return $craft; }
         }
     }
 }
