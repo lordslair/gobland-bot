@@ -9,7 +9,9 @@
 <?php include 'inc.header.php'; ?>
       </div>
       <div id="content">
-      <link href="/style/tt_r.css"  rel="stylesheet" type="text/css"  />
+        <link href="/style/tt_r.css"  rel="stylesheet" type="text/css"  />
+        <link href="/style/gps.css"  rel="stylesheet" type="text/css"  />
+        <div id="tooltip" display="none" style="position: absolute; display: none;"></div>
 <?php
     include 'functions.php';
     include 'queries.php';
@@ -257,12 +259,71 @@
                         WHERE IdMeute = '$meute_id'";
         $query_meute = $db->query($req_meute);
 
+        print('          <table cellspacing="0" id="trollsList" style="margin-right:auto;margin-left:0px">'."\n");
+        print('            <tr>'."\n");
+        print('              <th>Pseudo</th>'."\n");
+        print('              <th>Num</th>'."\n");
+        print('              <th>Race</th>'."\n");
+        print('              <th>Niv.</th>'."\n");
+        print('              <th>Position</th>'."\n");
+        print('              <th>PV</th>'."\n");
+        print('              <th>Carte</th>'."\n");
+        print('            </tr>'."\n");
+
+        $rowspan = 0;
         while ($row = $query_meute->fetchArray())
         {
-            $position = "[<b>X</b> = $row[4] | <b>Y</b> = $row[5] | <b>N</b> = $row[6]]";
-            print('            <li>'.$row[1].' ('.$row[0].') ['.$row[2].'] (lvl '.$row[3].') '.$position.' | '.$row[7].' PV'."\n");
+            print('            <tr>'."\n");
+            $position = "<b>X</b> = $row[4] | <b>Y</b> = $row[5] | <b>N</b> = $row[6]";
+
+            print('              <td>'."\n");
+            print('                <a href="http://games.gobland.fr/Profil.php?IdPJ='.$row[0].'" target="_blank">'.$row[1].'</a>'."\n");
+            print('              </td>'."\n");
+            print('              <td>'.$row[0].'</td>'."\n");
+            print('              <td>'.$row[2].'</td>'."\n");
+            print('              <td>'.$row[3].'</td>'."\n");
+            print('              <td>'.$position.'</td>'."\n");
+            print('              <td>'.$row[7].' PV</td>'."\n");
+
+            if ( $rowspan == 0 )
+            {
+                $arr_colors = ["AliceBlue","AntiqueWhite","Aqua","Aquamarine","Azure",
+                               "Beige","Bisque","Black","BlanchedAlmond","Blue",
+                               "BlueViolet","Brown","BurlyWood","CadetBlue","Chartreuse",
+                               "Chocolate","Coral","CornflowerBlue","Cornsilk","Crimson"];
+
+                $req_carte = "SELECT Id,Nom,X,Y,N
+                              FROM Meutes
+                              WHERE IdMeute = '$meute_id'";
+                $query_carte = $db->query($req_carte);
+
+                print('              <td rowspan="10">'."\n");
+                print('                <svg version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="minigraph" role="img">'."\n");
+                print('                  <g class="grid x-grid" id="xGrid"><line x1="100" x2="100" y1="000" y2="200"></line></g>'."\n");
+                print('                  <g class="grid y-grid" id="yGrid"><line x1="000" x2="200" y1="100" y2="100"></line></g>'."\n");
+
+                while ($row = $query_carte->fetchArray())
+                {
+                    $color    = $arr_colors[array_rand($arr_colors, 1)];
+                    $cx       = round(100 + $row[2]/2);
+                    $cy       = round(100 - $row[3]/2);
+                    $position = "<b>X</b> = $row[2] | <b>Y</b> = $row[3] | <b>N</b> = $row[4]";
+                    $tt       = '\''.'['.$row[0].'] '.$row[1].' ('.$position.')\'';
+
+                    print('                  <g fill="'.$color.'">'."\n");
+                    print('                    <circle cx="'.$cx.'" cy="'.$cy.'" r="4" onmousemove="showTooltip(evt, '.$tt.')";" onmouseout="hideTooltip();"></circle>'."\n");
+                    print('                  </g>'."\n");
+                }
+
+                print('                </svg>'."\n");
+                print('              </td>'."\n");
+            }
+            print('            </tr>'."\n");
+            $rowspan++;
         }
         $db->close;
+
+        print('          </table>'."\n");
     }
     else
     {
@@ -395,6 +456,7 @@ end:
 ?>
         </div> <!-- profilInfos -->
       </div> <!-- content -->
+      <script type="text/javascript" src="/js/tt-gps.js"></script>
     </div> <!-- page -->
   </body>
 </html>

@@ -18,6 +18,14 @@
   width: 600px;
 }
 
+.minigraph {
+  height:200px;
+  width: 200px;
+  stroke: #000;
+  stroke-dasharray: 0;
+  stroke-width: 1;
+}
+
 .leg {
   height: 50px;
   width: 400px;
