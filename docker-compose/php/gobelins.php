@@ -236,7 +236,10 @@
     print('          <li style="border: 0px;float: left;margin: 0px;font-family: courier;font-size: 12px;"> Total: | ');
     foreach ( $CARACS as $carac => $value )
     {
-        printf ("<b>%s</b>:%+d | ", $carac,$value);
+        if ( $value != 0 )
+        {
+            printf ("<b>%s</b>:%+d | ", $carac,$value);
+        }
     }
     print('</li>'."\n");
     print('        </fieldset>'."\n");
@@ -446,7 +449,10 @@
     print('          <li style="border: 0px;float: left;margin: 0px;font-family: courier;font-size: 12px;"> Total: | ');
     foreach ( $CARACS as $carac => $value )
     {
-        printf ("<b>%s</b>:%+d | ", $carac,$value);
+        if ( $value != 0 )
+        {
+            printf ("<b>%s</b>:%+d | ", $carac,$value);
+        }
     }
     print('</li>'."\n");
 
