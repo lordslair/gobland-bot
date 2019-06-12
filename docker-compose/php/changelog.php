@@ -14,6 +14,7 @@
           <fieldset>
           <legend>Gobland-IT Version 3</legend>
             <ul>
+              <li>2019-06-12 : Ajout d'un zomm sur la minimap de meute (<b>@Omnivore</b>)
               <li>2019-06-05 : Amélioration de l'affichage des meutes + minimap (<b>@Omnivore</b>)
               <li>2019-06-05 : Amélioration de l'affichage des crafts 'nobles' (<b>@Le Kipu</b>)
               <li>2019-06-04 : Relooking de la page /cavernes.php (<b>@all</b>)

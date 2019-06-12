@@ -301,7 +301,7 @@
                 $query_carte = $db->query($req_carte);
 
                 print('              <td rowspan="10">'."\n");
-                print('                <svg version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="minigraph" role="img">'."\n");
+                print('                <svg version="1.2" id="minigraph" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="minigraph" role="img">'."\n");
                 print('                  <g class="grid x-grid" id="xGrid"><line x1="100" x2="100" y1="000" y2="200"></line></g>'."\n");
                 print('                  <g class="grid y-grid" id="yGrid"><line x1="000" x2="200" y1="100" y2="100"></line></g>'."\n");
 
@@ -463,6 +463,22 @@ end:
         </div> <!-- profilInfos -->
       </div> <!-- content -->
       <script type="text/javascript" src="/js/tt-gps.js"></script>
+      <script type="text/javascript" src="/js/svg-pan-zoom.min.js"></script>
+      <script>
+        // Don't use window.onLoad like this in production, because it can only listen to one function.
+        window.onload = function() {
+          // Expose to window namespase for testing purposes
+          window.zoomMiniGraph = svgPanZoom('#minigraph', {
+            controlIconsEnabled: false,
+          });
+          document.getElementById('enable').addEventListener('click', function() {
+            window.zoomMiniGraph.enableControlIcons();
+          })
+          document.getElementById('disable').addEventListener('click', function() {
+            window.zoomMiniGraph.disableControlIcons();
+          })
+        };
+      </script>
     </div> <!-- page -->
   </body>
 </html>

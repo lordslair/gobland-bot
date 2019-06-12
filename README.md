@@ -49,6 +49,7 @@ I used mainy :
 * SQLite
 * [YAML::Tiny] - THE easy way to deal with YAML files
 * [tristen/tablesort][tablesort] - One good JS to sort HTML tables
+* [ariutta/svg-pan-zoom][svg-pan-zoom] - One good JS to zoom an SVG in HTML
 * Docker to make it easy to maintain
 * Alipne - probably the best/lighter base container to work with
 
@@ -146,6 +147,7 @@ gobland-it-perl   | 2017-10-06 09:40:00 Stopping daemon
  - Add a container for Discord integration
  - PHP Error logs accessible from outside the container (docker logs stuff)
  - /data accessible from outside the container (docker volume stuff)
+ - Plan the Kubernetes integration instead of Compose
  
 ### Useful stuff
    
@@ -154,3 +156,4 @@ gobland-it-perl   | 2017-10-06 09:40:00 Stopping daemon
 ---
    [daemon]: <http://www.andrewault.net/2010/05/27/creating-a-perl-daemon-in-ubuntu/>
    [tablesort]: <https://github.com/tristen/tablesort>
+   [svg-pan-zoom]: <https://github.com/ariutta/svg-pan-zoom>
