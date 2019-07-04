@@ -15,4 +15,4 @@ apk update \
 
 echo "`date +"[%F %X]"` Build done ..."
 
-exec /code/perl/gobland-it
+exec /code/gobland-it
