@@ -124,9 +124,9 @@ foreach my $db (@db_list)
                                     IdProprietaire TEXT,
                                     architecture   TEXT,
                                     mobile         TEXT,
-                                    X              INT,
-                                    Y              INT,
-                                    Z              INT)");
+                                    X              TEXT,
+                                    Y              TEXT,
+                                    Z              TEXT)");
 
     $dbh->do("CREATE TABLE IF NOT EXISTS Vue  (Id        INT PRIMARY KEY,
                                  Categorie TEXT,
