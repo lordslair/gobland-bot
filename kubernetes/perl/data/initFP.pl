@@ -26,7 +26,9 @@ my $dbh       = DBI->connect($dsn, 'root', $db_pass, { RaiseError => 1 }) or die
 
 foreach my $db (@db_list)
 {
-    print STDERR "`date +"[%F %X]"` [initFP] DB: $db\n";
+    my $dateTime = sprintf "%4d-%02d-%02d %02d:%02d:%02d", $year + 1900, $mon + 1, $mday, $hour, $min, $sec;
+    print STDERR "$dateTime [initFP] DB: $db\n";
+
     $dbh->do("USE `$db`");
     
         if ( -f "$path/data/$lieux_csv" )
