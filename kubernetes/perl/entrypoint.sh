@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "`date +"[%F %X]"` Building Perl dependencies and system set-up ..."
+echo "`date +"%F %X"` Building Perl dependencies and system set-up ..."
 
 apk update \
     && apk add --no-cache perl perl-libwww perl-dbi perl-dbd-mysql \
@@ -13,6 +13,6 @@ apk update \
     && apk del .build-deps \
     && rm -rf /root/.cpanm
 
-echo "`date +"[%F %X]"` Build done ..."
+echo "`date +"%F %X"` Build done ..."
 
 exec /code/gobland-it
