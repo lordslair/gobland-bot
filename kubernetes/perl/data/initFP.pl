@@ -12,9 +12,9 @@ my $techs_csv  = 'FP_Tech.csv';
 my $lieux_csv  = 'FP_Lieu.csv';
 my $lieux2_csv = 'Lieux.csv';
     
-`wget "$source/$skills_csv" -O "$path/data/$skills_csv"`;
-`wget "$source/$techs_csv"  -O "$path/data/$techs_csv"`;
-`wget "$source/$lieux_csv"  -O "$path/data/$lieux_csv"`;
+`wget --quiet "$source/$skills_csv" -O "$path/data/$skills_csv"`;
+`wget --quiet "$source/$techs_csv"  -O "$path/data/$techs_csv"`;
+`wget --quiet "$source/$lieux_csv"  -O "$path/data/$lieux_csv"`;
     
 my @db_list   = split(',', $ENV{'DBLIST'});
 my $db_driver = 'mysql';
