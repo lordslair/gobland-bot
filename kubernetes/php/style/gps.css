@@ -1,0 +1,65 @@
+.graph .labels.x-labels {
+  text-anchor: middle;
+}
+
+.graph .labels.y-labels {
+  text-anchor: end;
+}
+
+#tooltip {
+  background: cornsilk;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.graph {
+  height:600px;
+  width: 600px;
+}
+
+.minigraph {
+  height:200px;
+  width: 200px;
+  stroke: #000;
+  stroke-dasharray: 0;
+  stroke-width: 1;
+}
+
+.leg {
+  height: 50px;
+  width: 400px;
+}
+
+.leg .grid {
+  stroke: #000;
+  stroke-dasharray: 0;
+  stroke-width: 1;
+}
+
+.graph .grid {
+  stroke: #000;
+  stroke-dasharray: 0;
+  stroke-width: 1;
+}
+
+.labels {
+  font-size: 13px;
+}
+
+.label-title {
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 12px;
+  fill: black;
+}
+
+.Tour         {fill: blue;}
+.Monastere    {fill: green;}
+.Caverne      {fill: black;}
+.Laboratoire  {fill:yellow;}
+.Fosse        {fill:red;}
+.Cercle       {fill:orange;}
+.Amphitheatre {fill: pink;}
+.Hemicycle    {fill: cyan;}
+.Cabane       {fill: brown;}
