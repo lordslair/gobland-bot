@@ -20,19 +20,20 @@ my $yaml_file = 'master.yaml';
 my $yaml      = YAML::Tiny->read( $yaml_file );
 my @db_list   = @{$yaml->[0]{db_list}};
 my $db_path   = '/db';
-    
+
+
+my @db_list   = split(',', $ENV{'DBLIST'});
+my $db_driver = 'mysql';
+my $db_host   = 'gobland-it-mariadb';
+my $db_port   = '3306';
+my $db_pass   = $ENV{'MARIADB_ROOT_PASSWORD'};
+my $dsn       = "DBI:$db_driver:host=$db_host;port=$db_port";
+my $dbh       = DBI->connect($dsn, 'root', $db_pass, { RaiseError => 1 }) or die $DBI::errstr;
+
 foreach my $db (@db_list)
 {
-    print "DB: $db | PATH: $db_path/$db\n";
-    
-    if ( -f "$db_path/$db" )
-    {
-        my $dbh = DBI->connect(
-            "dbi:SQLite:dbname=$db_path/$db",
-            "",
-            "",
-            { RaiseError => 1 },
-        ) or die $DBI::errstr;
+    print STDERR "[initFP] DB: $db\n";
+    $dbh->do("USE `$db`");
     
         if ( -f "$path/data/$lieux_csv" )
         {
@@ -149,10 +150,4 @@ foreach my $db (@db_list)
         {
             print "$path/data/$techs_csv doesn't exist, doin' nothin'\n";
         }
-    
-    }
-    else
-    {
-        print "DB $db_path/$db doesn't exist, doin' nothin' [/!\ Run initDB.pl first]\n";
-    }
 }
