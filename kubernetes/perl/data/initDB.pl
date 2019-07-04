@@ -3,37 +3,33 @@ use strict;
 use warnings;
 
 use DBI;
-use YAML::Tiny;
-use Data::Dumper;
 
-my $yaml_file = 'master.yaml';
-my $yaml      = YAML::Tiny->read( $yaml_file );
-my @db_list   = @{$yaml->[0]{db_list}};
-my $db_path   = '/db';
+my @db_list   = split(',', $ENV{'DBLIST'});
+my $db_file   = 'initDB.SQL';
+my $db_driver = 'mysql';
+my $db_host   = 'gobland-it-mariadb';
+my $db_port   = '3306';
+my $db_pass   = $ENV{'MARIADB_ROOT_PASSWORD'};
+my $dsn       = "DBI:$db_driver:host=$db_host;port=$db_port";
+my $dbh       = DBI->connect($dsn, 'root', $db_pass, { RaiseError => 1 }) or die $DBI::errstr;
 
 foreach my $db (@db_list)
 {
-    print "DB: $db | PATH: $db_path$db\n";
-    
-if ( ! -f "$db_path/$db" )
-{
-    my $dbh = DBI->connect(
-        "dbi:SQLite:dbname=$db_path/$db",
-        "",
-        "",
-        { RaiseError => 1 },
-    ) or die $DBI::errstr;
+    print "DB: $db\n";
 
-    $dbh->do("CREATE TABLE Credentials(Hash TEXT PRIMARY KEY,
+    $dbh->do("CREATE DATABASE IF NOT EXISTS `$db`");
+    $dbh->do("USE `$db`");
+
+    $dbh->do("CREATE TABLE IF NOT EXISTS Credentials(Hash VARCHAR(32) PRIMARY KEY,
                                        Id   INT,
                                        Type TEXT)");
 
-    $dbh->do("CREATE TABLE ItemsCavernes(Id INT PRIMARY KEY,
+    $dbh->do("CREATE TABLE IF NOT EXISTS ItemsCavernes(Id INT PRIMARY KEY,
                                  Type TEXT,
                                  Identifie TEXT,
                                  Nom TEXT,
                                  Magie TEXT,
-                                 Desc TEXT,
+                                 `Desc` TEXT,
                                  Poids INT,
                                  Taille INT,
                                  Qualite INT,
@@ -43,20 +39,20 @@ if ( ! -f "$db_path/$db" )
                                  Reservation TEXT,
                                  Matiere TEXT)");
 
-    $dbh->do("CREATE TABLE ItemsGobelins(Id INT PRIMARY KEY,
+    $dbh->do("CREATE TABLE IF NOT EXISTS ItemsGobelins(Id INT PRIMARY KEY,
                                  Gobelin INT,
                                  Type TEXT,
                                  Identifie TEXT,
                                  Nom TEXT,
                                  Magie TEXT,
-                                 Desc TEXT,
+                                 `Desc` TEXT,
                                  Poids INT,
                                  Taille INT,
                                  Qualite INT,
                                  Utilise TEXT,
                                  Matiere TEXT)");
 
-    $dbh->do("CREATE TABLE Gobelins(Id      INT PRIMARY KEY,
+    $dbh->do("CREATE TABLE IF NOT EXISTS Gobelins(Id      INT PRIMARY KEY,
                                     Gobelin TEXT,
                                     Race    TEXT,
                                     Tribu   TEXT,
@@ -74,7 +70,7 @@ if ( ! -f "$db_path/$db" )
                                     PI      INT,
                                     CT      INT)");
 
-    $dbh->do("CREATE TABLE MPBot (Id         INT PRIMARY KEY,
+    $dbh->do("CREATE TABLE IF NOT EXISTS MPBot (Id         INT PRIMARY KEY,
                                   IdGob      INT,
                                   PMSubject  TEXT,
                                   PMDate     TEXT,
@@ -82,14 +78,14 @@ if ( ! -f "$db_path/$db" )
                                   PMExp      TEXT,
                                   PMText     TEXT)");
 
-    $dbh->do("CREATE TABLE Meutes (Id       INT PRIMARY KEY,
+    $dbh->do("CREATE TABLE IF NOT EXISTS Meutes (Id       INT PRIMARY KEY,
                                    Nom      TEXT,
                                    IdMeute  INT,
                                    NomMeute TEXT,
                                    Tribu    TEXT,
                                    Niveau   INT)");
 
-    $dbh->do("CREATE TABLE Cafards (IdCafard   INT PRIMARY KEY,
+    $dbh->do("CREATE TABLE IF NOT EXISTS Cafards (IdCafard   INT PRIMARY KEY,
                                     Id         INT,
                                     Nom        TEXT,
                                     Effet      TEXT,
@@ -98,7 +94,7 @@ if ( ! -f "$db_path/$db" )
                                     Etat       TEXT,
                                     PNG        TEXT)");
 
-    $dbh->do("CREATE TABLE Skills (Id           TEXT PRIMARY KEY,
+    $dbh->do("CREATE TABLE IF NOT EXISTS Skills (Id           VARCHAR(10) PRIMARY KEY,
                                    IdGob        INT,
                                    Type         TEXT,
                                    IdSkill      INT,
@@ -106,7 +102,7 @@ if ( ! -f "$db_path/$db" )
                                    Connaissance INT,
                                    Tooltip      TEXT)");
 
-    $dbh->do("CREATE TABLE FP_C (IdSkill     INT PRIMARY KEY,
+    $dbh->do("CREATE TABLE IF NOT EXISTS FP_C (IdSkill     INT PRIMARY KEY,
                                  NomSkill    TEXT,
                                  PASkill     INT,
                                  TypeSkill   TEXT,
@@ -114,7 +110,7 @@ if ( ! -f "$db_path/$db" )
                                  Type        TEXT,
                                  Affinite    TEXT)");
 
-    $dbh->do("CREATE TABLE FP_T (IdSkill     INT PRIMARY KEY,
+    $dbh->do("CREATE TABLE IF NOT EXISTS FP_T (IdSkill     INT PRIMARY KEY,
                                  NomSkill    TEXT,
                                  PASkill     INT,
                                  TypeSkill   TEXT,
@@ -122,7 +118,7 @@ if ( ! -f "$db_path/$db" )
                                  Type        TEXT,
                                  Affinite    TEXT)");
 
-    $dbh->do("CREATE TABLE FP_Lieu (IdLieu         INT PRIMARY KEY,
+    $dbh->do("CREATE TABLE IF NOT EXISTS FP_Lieu (IdLieu         INT PRIMARY KEY,
                                     Nom            TEXT,
                                     Type           TEXT,
                                     IdProprietaire TEXT,
@@ -132,7 +128,7 @@ if ( ! -f "$db_path/$db" )
                                     Y              INT,
                                     Z              INT)");
 
-    $dbh->do("CREATE TABLE Vue  (Id        INT PRIMARY KEY,
+    $dbh->do("CREATE TABLE IF NOT EXISTS Vue  (Id        INT PRIMARY KEY,
                                  Categorie TEXT,
                                  Nom       TEXT,
                                  Niveau    INT,
@@ -143,7 +139,7 @@ if ( ! -f "$db_path/$db" )
                                  N         INT,
                                  Z         TEXT)");
 
-    $dbh->do("CREATE TABLE Gobelins2 (Id      INT PRIMARY KEY,
+    $dbh->do("CREATE TABLE IF NOT EXISTS Gobelins2 (Id      INT PRIMARY KEY,
                                       Nom     TEXT,
                                       DLA     TEXT,
                                       BPDLA   INT,
@@ -219,7 +215,7 @@ if ( ! -f "$db_path/$db" )
                                       BPRP    INT,
                                       BMRP    INT)");
 
-    $dbh->do("CREATE TABLE CdM  (Id       INT PRIMARY KEY,
+    $dbh->do("CREATE TABLE IF NOT EXISTS CdM  (Id       INT PRIMARY KEY,
                                  Date     TEXT,
                                  IdMob    INT,
                                  Name     TEXT,
@@ -244,11 +240,11 @@ if ( ! -f "$db_path/$db" )
                                  Pouvoir  TEXT,
                                  ATTDist  TEXT)");
 
-    $dbh->do("CREATE TABLE Suivants (Id        INT PRIMARY KEY,
+    $dbh->do("CREATE TABLE IF NOT EXISTS Suivants (Id        INT PRIMARY KEY,
                                      IdGob     INT,
                                      Nom       TEXT)");
 
-    $dbh->do("CREATE TABLE Kills (Id         INT PRIMARY KEY,
+    $dbh->do("CREATE TABLE IF NOT EXISTS Kills (Id         INT PRIMARY KEY,
                                   Date       TEXT,
                                   IdMob      INT,
                                   NomMob     TEXT,
@@ -257,7 +253,7 @@ if ( ! -f "$db_path/$db" )
                                   PMSubject  TEXT,
                                   PMText     TEXT)");
 
-    $dbh->do("CREATE TABLE Carte (Id        INT PRIMARY KEY,
+    $dbh->do("CREATE TABLE IF NOT EXISTS Carte (Id        INT PRIMARY KEY,
                                   Categorie TEXT,
                                   Nom       TEXT,
                                   Niveau    INT,
@@ -270,7 +266,7 @@ if ( ! -f "$db_path/$db" )
                                   Time      INT,
                                   Date      TEXT)");
 
-    $dbh->do("CREATE TABLE Enchantements (Id        INT PRIMARY KEY,
+    $dbh->do("CREATE TABLE IF NOT EXISTS Enchantements (Id        INT PRIMARY KEY,
                                           Item      TEXT,
                                           Plante    TEXT,
                                           PlanteQ   TEXT,
@@ -279,10 +275,6 @@ if ( ! -f "$db_path/$db" )
                                           Compo2    TEXT,
                                           Compo2Q   TEXT,
                                           Status    TEXT)");
+}
 
-}
-else
-{
-    print "DB already exists, doin' nothin'\n";
-}
-}
+$dbh->disconnect();
