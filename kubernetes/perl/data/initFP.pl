@@ -16,12 +16,6 @@ my $lieux2_csv = 'Lieux.csv';
 `wget "$source/$techs_csv"  -O "$path/data/$techs_csv"`;
 `wget "$source/$lieux_csv"  -O "$path/data/$lieux_csv"`;
     
-my $yaml_file = 'master.yaml';
-my $yaml      = YAML::Tiny->read( $yaml_file );
-my @db_list   = @{$yaml->[0]{db_list}};
-my $db_path   = '/db';
-
-
 my @db_list   = split(',', $ENV{'DBLIST'});
 my $db_driver = 'mysql';
 my $db_host   = 'gobland-it-mariadb';
@@ -49,15 +43,15 @@ foreach my $db (@db_list)
                         $row[1] = Encode::decode_utf8($row[1]);
                         $row[4] = Encode::decode_utf8($row[4]);
     
-                        my $sth = $dbh->prepare( "INSERT OR REPLACE INTO FP_Lieu VALUES( '$row[0]', \
-                                                                                         '$row[1]', \
-                                                                                         '$row[2]', \
-                                                                                         '$row[3]', \
-                                                                                         '$row[4]', \
-                                                                                         '$row[5]', \
-                                                                                         '',        \
-                                                                                         '',        \
-                                                                                         ''         ) ");
+                        my $sth = $dbh->prepare( "REPLACE INTO FP_Lieu VALUES( '$row[0]', \
+                                                                               '$row[1]', \
+                                                                               '$row[2]', \
+                                                                               '$row[3]', \
+                                                                               '$row[4]', \
+                                                                               '$row[5]', \
+                                                                               '',        \
+                                                                               '',        \
+                                                                               ''         ) ");
                         $sth->execute();
                         $sth->finish();
                     }
@@ -104,13 +98,13 @@ foreach my $db (@db_list)
                     if ( $row !~ /^#/ )
                     {
                         $row[1] =~ s/\'/\'\'/g;
-                        my $sth  = $dbh->prepare( "INSERT OR REPLACE INTO FP_C VALUES( '$row[0]', \
-                                                                                       '$row[1]', \
-                                                                                       '$row[2]', \
-                                                                                       '$row[3]', \
-                                                                                       '$row[4]', \
-                                                                                       '$row[5]', \
-                                                                                       '$row[6]'  ) ");
+                        my $sth  = $dbh->prepare( "REPLACE INTO FP_C VALUES( '$row[0]', \
+                                                                             '$row[1]', \
+                                                                             '$row[2]', \
+                                                                             '$row[3]', \
+                                                                             '$row[4]', \
+                                                                             '$row[5]', \
+                                                                             '$row[6]'  ) ");
                         $sth->execute();
                         $sth->finish();
                     }
@@ -133,13 +127,13 @@ foreach my $db (@db_list)
                     if ( $row !~ /^#/ )
                     {
                         $row[1] =~ s/\'/\'\'/g;
-                        my $sth  = $dbh->prepare( "INSERT OR REPLACE INTO FP_T VALUES( '$row[0]', \
-                                                                                       '$row[1]', \
-                                                                                       '$row[2]', \
-                                                                                       '$row[3]', \
-                                                                                       '$row[4]', \
-                                                                                       '$row[5]', \
-                                                                                       '$row[6]'  ) ");
+                        my $sth  = $dbh->prepare( "REPLACE INTO FP_T VALUES( '$row[0]', \
+                                                                             '$row[1]', \
+                                                                             '$row[2]', \
+                                                                             '$row[3]', \
+                                                                             '$row[4]', \
+                                                                             '$row[5]', \
+                                                                             '$row[6]'  ) ");
                         $sth->execute();
                         $sth->finish();
                     }
@@ -151,3 +145,5 @@ foreach my $db (@db_list)
             print "$path/data/$techs_csv doesn't exist, doin' nothin'\n";
         }
 }
+
+$dbh->disconnect();
