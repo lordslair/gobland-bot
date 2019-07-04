@@ -26,7 +26,7 @@ my $dbh       = DBI->connect($dsn, 'root', $db_pass, { RaiseError => 1 }) or die
 
 foreach my $db (@db_list)
 {
-    print STDERR "[initFP] DB: $db\n";
+    print STDERR "`date +"[%F %X]"` [initFP] DB: $db\n";
     $dbh->do("USE `$db`");
     
         if ( -f "$path/data/$lieux_csv" )

@@ -15,7 +15,7 @@ my $dbh       = DBI->connect($dsn, 'root', $db_pass, { RaiseError => 1 }) or die
 
 foreach my $db (@db_list)
 {
-    print STDERR "[initDB] DB: $db\n";
+    print STDERR "`date +"[%F %X]"` [initDB] DB: $db\n";
 
     $dbh->do("CREATE DATABASE IF NOT EXISTS `$db`");
     $dbh->do("USE `$db`");
