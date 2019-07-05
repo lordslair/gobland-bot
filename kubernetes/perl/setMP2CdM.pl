@@ -135,3 +135,14 @@ foreach my $db (@db_list)
         $sth->finish();
     }
 }
+
+# add a line to the log file
+sub logEntry {
+    my ($logText) = @_;
+    my ( $sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst ) = localtime(time);
+    my $dateTime = sprintf "%4d-%02d-%02d %02d:%02d:%02d", $year + 1900, $mon + 1, $mday, $hour, $min, $sec;
+    if ($logging) {
+        binmode(STDERR, ":utf8");
+        print STDERR "$dateTime $logText\n";
+    }
+}
