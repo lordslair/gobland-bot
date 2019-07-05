@@ -3,7 +3,6 @@ use strict;
 use warnings;
     
 use DBI;
-use YAML::Tiny;
 
 my $source     = 'http://public.gobland.fr';
 my $path       = '/code';
