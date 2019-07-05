@@ -28,50 +28,57 @@ foreach my $db (@db_list)
     while (my @row = $sth->fetchrow_array) { $CREDENTIALS{$row[0]} = $row[1] }
     $sth->finish();
 
-    foreach my $gob_id ( sort keys %CREDENTIALS )
+    if (%CREDENTIALS)
     {
-        logEntry("[getIE_BotMessages] DB: $db | Gob: $gob_id");
-
-        my $browser = new LWP::UserAgent;
-        my $request = new HTTP::Request( GET => "http://ie.gobland.fr/IE_BotMessages?id=$gob_id&passwd=$CREDENTIALS{$gob_id}" );
-        my $headers = $request->headers();
-           $headers->header( 'User-Agent','Mozilla/5.0 (compatible; Konqueror/3.4; Linux) KHTML/3.4.2 (like Gecko)');
-           $headers->header( 'Accept', 'text/html, image/jpeg, image/png, text/*, image/*, */*');
-           $headers->header( 'Accept-Encoding','x-gzip, x-deflate, gzip, deflate');
-           $headers->header( 'Accept-Charset', 'iso-8859-15, utf-8;q=0.5, *;q=0.5');
-           $headers->header( 'Accept-Language', 'fr, en');
-           $headers->header( 'Referer', 'http://ie.gobland.fr');
-        my $response = $browser->request($request);
-
-        if ($response->is_success)
+        foreach my $gob_id ( sort keys %CREDENTIALS )
         {
-            foreach my $line (split(/\n/,$response->content))
+            logEntry("[getIE_BotMessages] DB: $db | Gob: $gob_id");
+
+            my $browser = new LWP::UserAgent;
+            my $request = new HTTP::Request( GET => "http://ie.gobland.fr/IE_BotMessages?id=$gob_id&passwd=$CREDENTIALS{$gob_id}" );
+            my $headers = $request->headers();
+               $headers->header( 'User-Agent','Mozilla/5.0 (compatible; Konqueror/3.4; Linux) KHTML/3.4.2 (like Gecko)');
+               $headers->header( 'Accept', 'text/html, image/jpeg, image/png, text/*, image/*, */*');
+               $headers->header( 'Accept-Encoding','x-gzip, x-deflate, gzip, deflate');
+               $headers->header( 'Accept-Charset', 'iso-8859-15, utf-8;q=0.5, *;q=0.5');
+               $headers->header( 'Accept-Language', 'fr, en');
+               $headers->header( 'Referer', 'http://ie.gobland.fr');
+            my $response = $browser->request($request);
+
+            if ($response->is_success)
             {
-                chomp ($line);
-                #IdPM;PMSubject;PMDate;PMStatus;PMExp;PMText
-                $line =~ s/"//g;
-                my @line = split /;/, $line;
-                if ( $line !~ /^#/)
+                foreach my $line (split(/\n/,$response->content))
                 {
-                    if ( $line[1] =~ /'/ ) { $line[1] =~ s/\'/\'\'/g};
-                    if ( $line[5] and $line[5] =~ /'/ )
+                    chomp ($line);
+                    #IdPM;PMSubject;PMDate;PMStatus;PMExp;PMText
+                    $line =~ s/"//g;
+                    my @line = split /;/, $line;
+                    if ( $line !~ /^#/)
                     {
-                        $line[5]     =~ s/\'/\'\'/g;
-                    } else { $line[5] = '' } # To force in case of "Résultat Parchemin" MPBot
+                        if ( $line[1] =~ /'/ ) { $line[1] =~ s/\'/\'\'/g};
+                        if ( $line[5] and $line[5] =~ /'/ )
+                        {
+                            $line[5]     =~ s/\'/\'\'/g;
+                        } else { $line[5] = '' } # To force in case of "Résultat Parchemin" MPBot
 
-                    my $sth  = $dbh->prepare( "INSERT IGNORE INTO MPBot VALUES( '$line[0]', \
-                                                                                '$gob_id' , \
-                                                                                '$line[1]', \
-                                                                                '$line[2]', \
-                                                                                '$line[3]', \
-                                                                                '$line[4]', \
-                                                                                '$line[5]'  )" );
+                        my $sth  = $dbh->prepare( "INSERT IGNORE INTO MPBot VALUES( '$line[0]', \
+                                                                                    '$gob_id' , \
+                                                                                    '$line[1]', \
+                                                                                    '$line[2]', \
+                                                                                    '$line[3]', \
+                                                                                    '$line[4]', \
+                                                                                    '$line[5]'  )" );
 
-                    $sth->execute();
-                    $sth->finish();
+                        $sth->execute();
+                        $sth->finish();
+                    }
                 }
             }
         }
+    }
+    else
+    {
+        logEntry("[getIE_BotMessages] DB: $db | No credentials found");
     }
 }
 $dbh->disconnect();

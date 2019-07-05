@@ -102,10 +102,8 @@ foreach my $db (@db_list)
     else
     {
         logEntry("[getIE_MeuteMembres] DB: $db | No credentials found");
-
     }
 }
-
 $dbh->disconnect();
 
 # add a line to the log file

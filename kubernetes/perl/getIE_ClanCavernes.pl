@@ -119,6 +119,10 @@ foreach my $db (@db_list)
             }
         }
     }
+    else
+    {
+        logEntry("[getIE_ClanCavernes] DB: $db | No credentials found");
+    }
 }
 $dbh->disconnect();
 

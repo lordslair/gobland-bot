@@ -68,6 +68,10 @@ foreach my $db (@db_list)
             }
         }
     }
+    else
+    {
+        logEntry("[getIE_ClanTalents] DB: $db | No credentials found");
+    }
 }
 $dbh->disconnect();
 
