@@ -92,7 +92,7 @@ foreach my $db (@db_list)
                 if ( $count{$gob_id} == 1 )
                 {
                     logEntry("[getIE_MeuteMembres]    MeutesCleaner:$gob_id:$count{$gob_id}");
-                    my $sth  = $dbh->prepare( "DELETE FROM Meutes WHERE Id IS '$gob_id'" );
+                    my $sth  = $dbh->prepare( "DELETE FROM Meutes WHERE Id = '$gob_id'" );
                        $sth->execute();
                        $sth->finish();
                 }

@@ -148,7 +148,7 @@ foreach my $db (@db_list)
         if ( $count{$vue_id} == 1 )
         {
             logEntry("[getIE_Vue]     VueCleaner:$vue_id:$count{$vue_id}");
-            my $sth  = $dbh->prepare( "DELETE FROM Vue WHERE Id IS '$vue_id'" );
+            my $sth  = $dbh->prepare( "DELETE FROM Vue WHERE Id = '$vue_id'" );
                $sth->execute();
                $sth->finish();
         }

@@ -106,7 +106,7 @@ foreach my $db (@db_list)
                 if ( $count{$item_id} == 1 )
                 {
                     logEntry("[getIE_ClanEquipement]    ItemsGobelinsCleaner:$item_id:$count{$item_id}");
-                    my $sth  = $dbh->prepare( "DELETE FROM ItemsGobelins WHERE Id IS '$item_id'" );
+                    my $sth  = $dbh->prepare( "DELETE FROM ItemsGobelins WHERE Id = '$item_id'" );
                        $sth->execute();
                        $sth->finish();
                 }

@@ -90,7 +90,6 @@ foreach my $db (@db_list)
                                                  WHERE  Id = '$line[0]' ");
 
                     $sth->execute();
-
                     $sth->finish();
                     push @item_ids_live, $line[0];
                 }
@@ -113,7 +112,7 @@ foreach my $db (@db_list)
                 if ( $count{$item_id} == 1 )
                 {
                     logEntry("[getIE_ClanCavernes]    ItemsCavernesCleaner:$item_id:$count{$item_id}");
-                    my $sth  = $dbh->prepare( "DELETE FROM ItemsCavernes WHERE Id IS '$item_id'" );
+                    my $sth  = $dbh->prepare( "DELETE FROM ItemsCavernes WHERE Id = '$item_id'" );
                        $sth->execute();
                        $sth->finish();
                 }
