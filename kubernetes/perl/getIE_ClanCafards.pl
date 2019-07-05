@@ -32,7 +32,7 @@ foreach my $db (@db_list)
     {
         my @CREDENTIALS = keys %CREDENTIALS;               # Picking only a random Gobelin in the list to avoid
         my $gob_rand    = $CREDENTIALS[rand @CREDENTIALS]; # using same ID, or requsting from every Gobelin the same data
-        logEntry("[getIE_ClanCafards\n] DB: $db | Gob: $gob_rand");
+        logEntry("[getIE_ClanCafards] DB: $db | Gob: $gob_rand");
 
         my $browser = new LWP::UserAgent;
         my $request = new HTTP::Request( GET => "http://ie.gobland.fr/IE_ClanCafards?id=$gob_rand&passwd=$CREDENTIALS{$gob_rand}" );
