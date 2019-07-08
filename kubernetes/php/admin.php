@@ -29,10 +29,6 @@
     include 'functions.php';
     include 'queries.php';
 
-    $db_file = '/db/'.$_ENV["DBNAME"];
-    $db      = new SQLite3($db_file);
-    if(!$db) { echo $db->lastErrorMsg(); }
-
     if ( $_POST['id'] && $_POST['type'] && $_POST['pass'] )
     {
         if ( preg_match('/^\d*$/', $_POST['id']) )
@@ -45,8 +41,8 @@
                     $gob_pass  = $_POST['pass'];
                     $pass_type = $_POST['type'];
 
-                    $req_insert_gob = "INSERT OR REPLACE INTO Credentials VALUES ('$gob_pass', '$gob_id', '$pass_type')";
-                    $res_insert_gob = $db->exec($req_insert_gob);
+                    $req_insert_gob = "REPLACE INTO Credentials VALUES ('$gob_pass', '$gob_id', '$pass_type')";
+                    $res_insert_gob = $db->query($req_insert_gob);
                     print("<center>ID: $gob_id ajouté en DB</center>");
                     $db->close;
                 }
@@ -77,15 +73,14 @@
             $gob_id    = $_GET['id'];
             $pass_type = $_GET['type'];
             $req_delete_gob = "DELETE FROM Credentials WHERE Id = '$gob_id' AND Type = '$pass_type'";
-            $res_delete_gob = $db->exec($req_delete_gob);
+            $res_delete_gob = $db->query($req_delete_gob);
             print("<center>ID: $gob_id supprimé de la DB</center>");
             $db->close;
         }
     }
-?>
-        <fieldset>
-          <legend>Gobelins présents en DB</legend>
-<?php
+
+    print('        <fieldset>'."\n");
+    print('          <legend>Gobelins pr..sents en DB</legend>'."\n");
 
     $req_credentials   = "SELECT Id,Type,Hash FROM Credentials ORDER BY Type,Id";
     $query_credentials = $db->query($req_credentials);
@@ -97,7 +92,8 @@
     print('              <th>Hash</th>'."\n");
     print('              <th>Actions</th>'."\n");
     print('            </tr>'."\n");
-    while ($row = $query_credentials->fetchArray())
+
+    while ($row = $query_credentials->fetch_array())
     {
         $id   = $row[0];
         $type = $row[1];

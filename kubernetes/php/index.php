@@ -33,12 +33,13 @@
 
     $ct_total   = 0;
 
+    $dbh = new mysqli($db_host, $db_user, $db_pass, $db_file);
+    if(!$dbh) {
+        echo $dbh->lastErrorMsg();
+    }
+
     foreach ($arr_gob_ids as $gob_id)
     {
-
-        $db_file = '/db/'.$_ENV["DBNAME"];
-        $db      = new SQLite3($db_file);
-        if(!$db) { echo $db->lastErrorMsg(); }
 
         $req_profile   = "SELECT Gobelins.Id,Tribu,Gobelin,Niveau,X,Y,N,PA,PV,PVMax,CT,
                                  Gobelins.DLA,Gobelins2.DLA,BPDLA,BMDLA,Gobelins.Etat,Faim
@@ -46,18 +47,18 @@
                           INNER JOIN Gobelins2 on Gobelins.Id = Gobelins2.Id
                           WHERE Gobelins.Id = $gob_id
                           ORDER BY Gobelins.Id";
-        $query_profile = $db->query($req_profile);
+        $query_profile = $dbh->query($req_profile);
 
-        while ($row = $query_profile->fetchArray())
+        while ($row = $query_profile->fetch_array())
         {
             $position    = $row[4].', '.$row[5].', '.$row[6];
 
             $req_meute_id    = "SELECT IdMeute  FROM Meutes WHERE Id = $gob_id";
-            $meute_id  = $db->querySingle($req_meute_id);
+            $meute_id  = $dbh->query($req_meute_id)->fetch_row()[0];
             if ( $meute_id ) { $meute_id = '('.$meute_id.')'; }
 
             $req_meute_nom   = "SELECT NomMeute FROM Meutes WHERE Id = $gob_id";
-            $meute_nom = $db->querySingle($req_meute_nom);
+            $meute_nom = $dbh->query($req_meute_nom)->fetch_row()[0];
 
             $pad = ' ';
             if ( $row[7] > 0 )
@@ -100,8 +101,8 @@
             print('            </td>'."\n");
             print('            </tr>'."\n");
         }
-        $db->close;
     }
+    $dbh->close;
 
     print('        </table>'."\n");
 
