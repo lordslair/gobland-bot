@@ -134,7 +134,7 @@ foreach my $db (@db_list)
         }
 
         # Find vue ids stored in DB
-        my $req_vue_ids = $dbh->prepare( "SELECT Id FROM Vue" );
+        my $req_vue_ids = $dbh->prepare( "SELECT Id FROM Vue WHERE Id > 0" );
         $req_vue_ids->execute();
 
         while (my $lastline = $req_vue_ids->fetchrow_array)

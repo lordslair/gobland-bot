@@ -96,7 +96,7 @@ foreach my $db (@db_list)
             }
 
             # Find items stored in DB
-            my $req_item_ids = $dbh->prepare( "SELECT Id FROM ItemsCavernes" );
+            my $req_item_ids = $dbh->prepare( "SELECT Id FROM ItemsCavernes WHERE Id > 0" );
             $req_item_ids->execute();
 
             while (my $lastline = $req_item_ids->fetchrow_array)
