@@ -57,6 +57,7 @@ until ($dieNow)
     `perl ./setMP2Kills.pl`;
     `perl ./setCompTT.pl`;
 
+    logEntry("$EMOJIok Exiting loop $loop");
     sleep($sleepMainLoop);
 }
 
