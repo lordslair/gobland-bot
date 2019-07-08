@@ -35,7 +35,7 @@
 
     $dbh = new mysqli($db_host, $db_user, $db_pass, $db_file);
     if(!$dbh) {
-        echo $dbh->lastErrorMsg();
+        echo $db->lastErrorMsg();
     }
 
     foreach ($arr_gob_ids as $gob_id)
@@ -47,18 +47,18 @@
                           INNER JOIN Gobelins2 on Gobelins.Id = Gobelins2.Id
                           WHERE Gobelins.Id = $gob_id
                           ORDER BY Gobelins.Id";
-        $query_profile = $dbh->query($req_profile);
+        $query_profile = $db->query($req_profile);
 
         while ($row = $query_profile->fetch_array())
         {
             $position    = $row[4].', '.$row[5].', '.$row[6];
 
             $req_meute_id    = "SELECT IdMeute  FROM Meutes WHERE Id = $gob_id";
-            $meute_id  = $dbh->query($req_meute_id)->fetch_row()[0];
+            $meute_id  = $db->query($req_meute_id)->fetch_row()[0];
             if ( $meute_id ) { $meute_id = '('.$meute_id.')'; }
 
             $req_meute_nom   = "SELECT NomMeute FROM Meutes WHERE Id = $gob_id";
-            $meute_nom = $dbh->query($req_meute_nom)->fetch_row()[0];
+            $meute_nom = $db->query($req_meute_nom)->fetch_row()[0];
 
             $pad = ' ';
             if ( $row[7] > 0 )
@@ -102,7 +102,7 @@
             print('            </tr>'."\n");
         }
     }
-    $dbh->close;
+    $db->close;
 
     print('        </table>'."\n");
 

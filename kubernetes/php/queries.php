@@ -7,12 +7,12 @@
 
     $dbh = new mysqli($db_host, $db_user, $db_pass, $db_file);
     if(!$dbh) {
-        echo $dbh->lastErrorMsg();
+        echo $db->lastErrorMsg();
     }
 
     $arr_gob_ids   = [];
     $req_gob_ids   = "SELECT Id FROM Gobelins;";
-    $query_gob_ids = $dbh->query($req_gob_ids);
+    $query_gob_ids = $db->query($req_gob_ids);
 
     while ($row = $query_gob_ids->fetch_array())
     {
@@ -31,7 +31,7 @@ function GetSuivantsActions($gob_id,$suivant_id)
                     WHERE IdGob = '$gob_id' AND PMSubject LIKE '%$suivant_id%'
                     ORDER BY Id DESC
                     LIMIT 5;";
-    $query_actions = $dbh->query($req_actions);
+    $query_actions = $db->query($req_actions);
 
     while ($row = $query_actions->fetch_array())
     {
@@ -60,7 +60,7 @@ function GetSuivantsAmelios($gob_id,$suivant_id)
                     FROM MPBot
                     WHERE PMSubject LIKE '%$suivant_id%Entrainement%'
                     ORDER BY PMDate";
-    $query_amelios = $dbh->query($req_amelios);
+    $query_amelios = $db->query($req_amelios);
 
     while ($row = $query_amelios->fetch_array())
     {
