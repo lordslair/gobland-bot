@@ -27,7 +27,7 @@
         </fieldset>
 <?php
     include 'functions.php';
-    include 'queries.php';
+    include 'inc.db.php';
 
     if ( $_POST['id'] && $_POST['type'] && $_POST['pass'] )
     {
@@ -106,8 +106,9 @@
         print('              <td><a href="/admin.php?action=delete&id='.$id.'&type='.$type.'" title="Supprimer">🚫</a></td>'."\n");
         print('            <tr>'."\n");
     }
-    $db->close;
     print('          </table>'."\n");
+
+    $db->close;
 ?>
         </fieldset>
       </div> <!-- content -->

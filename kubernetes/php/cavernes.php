@@ -29,6 +29,7 @@
             <td style="border-style:none;">
 <?php
     include 'functions.php';
+    include 'inc.db.php';
 
     $arr_equipements = ['Arme 1 Main', 'Arme 2 mains', 'Anneau', 'Armure', 'Baguette', 'Bijou', 'Bottes', 'Bouclier', 'Casque', 'Nourriture','Outil', 'Potion', 'Talisman'];
     $arr_count_e     = [];
@@ -49,11 +50,7 @@
 
     foreach ($arr_equipements as $equipement)
     {
-        $db_file = '/db/'.$_ENV["DBNAME"];
-        $db      = new SQLite3($db_file);
-        if(!$db) { echo $db->lastErrorMsg(); }
-
-        $req_equipement   = "SELECT Id,Type,Identifie,Nom,Magie,Desc,Poids,Taille,Qualite,Localisation,Utilise,Prix,Reservation,Matiere
+        $req_equipement   = "SELECT Id,Type,Identifie,Nom,Magie,`Desc`,Poids,Taille,Qualite,Localisation,Utilise,Prix,Reservation,Matiere
                              FROM   ItemsCavernes
                              WHERE  Type = '$equipement'
                              ORDER  BY Type,Nom;";
@@ -61,7 +58,7 @@
 
         $item_png = GetStuffIcon($equipement,$nom);
 
-        while ($row = $query_equipement->fetchArray())
+        while ($row = $query_equipement->fetch_array())
         {
             $item_id   = $row[0];
             $item_type = $row[1];
@@ -94,10 +91,11 @@
                 print('                  </tr>'."\n");
             }
         }
-        $db->close;
     }
         print('                </tbody>'."\n");
         print('              </table>'."\n");
+
+    $db->close;
 ?>
             </td>
           </tr>
@@ -124,6 +122,8 @@
             <td style="border-style:none;">
 
 <?php
+    include 'inc.db.php';
+
     $arr_composants = ['Composant', 'Fleur', 'Racine', 'Champignon'];
     $arr_count_c    = [];
 
@@ -143,11 +143,7 @@
 
     foreach ($arr_composants as $composant)
     {
-        $db_file = '/db/'.$_ENV["DBNAME"];
-        $db      = new SQLite3($db_file);
-        if(!$db) { echo $db->lastErrorMsg(); }
-
-        $req_composant = "SELECT Id,Type,Identifie,Nom,Magie,Desc,Poids,Taille,Qualite,Localisation,Utilise,Prix,Reservation,Matiere
+        $req_composant = "SELECT Id,Type,Identifie,Nom,Magie,`Desc`,Poids,Taille,Qualite,Localisation,Utilise,Prix,Reservation,Matiere
                           FROM   ItemsCavernes
                           WHERE  Type = '$composant'
                           ORDER  BY Nom;";
@@ -155,7 +151,7 @@
 
         $item_png = GetMateriauIcon($composant);
 
-        while ($row = $query_composant->fetchArray())
+        while ($row = $query_composant->fetch_array())
         {
             $item_id  = $row[0];
             $nom      = $row[3];
@@ -183,11 +179,12 @@
             }
 
         }
-        $db->close;
     }
 
     print('                </tbody>'."\n");
     print('              </table>'."\n");
+
+    $db->close;
 ?>
             </td>
           </tr>
@@ -215,6 +212,8 @@
             <td style="border-style:none;">
 
 <?php
+    include 'inc.db.php';
+
     $arr_minerais  = ['Sable', "Minerai d''Or", 'Minerai de Cuivre', "Minerai d''Argent", "Minerai d''Etain", 'Minerai de Mithril', "Minerai d''Adamantium", 'Minerai de Fer'];
     $arr_materiaux = ['Cuir', 'Tissu', 'Rondin'];
     $arr_roches    = ['Pierre', 'Tas de Terre'];
@@ -239,11 +238,7 @@
 
     foreach ($arr_items as $item)
     {
-        $db_file = '/db/'.$_ENV["DBNAME"];
-        $db      = new SQLite3($db_file);
-        if(!$db) { echo $db->lastErrorMsg(); }
-
-        $req_items = "SELECT Id,Type,Identifie,Nom,Magie,Desc,Poids,Taille,Qualite,Localisation,Utilise,Prix,Reservation,Matiere
+        $req_items = "SELECT Id,Type,Identifie,Nom,Magie,`Desc`,Poids,Taille,Qualite,Localisation,Utilise,Prix,Reservation,Matiere
                       FROM   ItemsCavernes
                       WHERE  Nom = '$item'
                       ORDER  BY Nom;";
@@ -252,7 +247,7 @@
         $item     = preg_replace('/\'\'/', '\'', $item);
         $item_png = GetMateriauIcon($item);
 
-        while ($row = $query_items->fetchArray())
+        while ($row = $query_items->fetch_array())
         {
             $item_id   = $row[0];
             $item_type = $row[1];
@@ -294,11 +289,12 @@
             }
 
         }
-        $db->close;
     }
 
     print('                </tbody>'."\n");
     print('              </table>'."\n");
+
+    $db->close;
 ?>
             </td>
           </tr>

@@ -5,10 +5,12 @@
     $db_user = 'root';
     $db_pass = $_ENV["MARIADB_ROOT_PASSWORD"];
 
-    $dbh = new mysqli($db_host, $db_user, $db_pass, $db_file);
-    if(!$dbh) {
+    $db = new mysqli($db_host, $db_user, $db_pass, $db_file);
+    if(!$db) {
         echo $db->lastErrorMsg();
     }
+
+    $db->set_charset("utf8");
 
     $arr_gob_ids   = [];
     $req_gob_ids   = "SELECT Id FROM Gobelins;";

@@ -63,104 +63,100 @@
         <tbody id="cdm">
         <div id="tooltip" display="none" style="position: absolute; display: none;"></div>
 <?php
-    include 'functions.php';
+    include 'inc.db.php';
 
-        $db_file = '/db/'.$_ENV["DBNAME"];
-        $db      = new SQLite3($db_file);
-        if(!$db) { echo $db->lastErrorMsg(); }
+    $req_cdm_ids    = "SELECT DISTINCT Name,Niveau FROM CdM ORDER BY Name;";
 
-        $req_cdm_ids    = "SELECT DISTINCT Name,Niveau FROM CdM ORDER BY Name;";
+    if ( preg_match('/^\w$/', $_GET['filter']) )
+    {
+        $filter      = $_GET['filter'];
+        $req_cdm_ids = "SELECT DISTINCT Name,Niveau FROM CdM WHERE Name LIKE '$filter%';";
+    }
 
-        if ( preg_match('/^\w$/', $_GET['filter']) )
+    $query_cdm_ids = $db->query($req_cdm_ids);
+
+    while ($cdm_ids = $query_cdm_ids->fetch_array())
+    {
+        $mob_id;
+        $mob_date;
+        $mob_name   = $cdm_ids[0];
+        $mob_name   = preg_replace('/\'/', '\'\'', $mob_name);
+        $mob_niv    = $cdm_ids[1];
+        $mob_pv_min = 0;
+        $mob_pv_max = 999;
+        $mob_bless;
+        $mob_att_min =  1;
+        $mob_att_max = 99;
+        $mob_esq_min =  1;
+        $mob_esq_max = 99;
+        $mob_deg_min =  1;
+        $mob_deg_max = 99;
+        $mob_reg_min =  1;
+        $mob_reg_max = 99;
+        $mob_arm_min =  1;
+        $mob_arm_max = 99;
+        $mob_per_min =  1;
+        $mob_per_max = 99;
+
+        $pouvoir_png = '<img src="/images/stuff/icon_127.png">';
+
+        $distance_png = '<img src="/images/stuff/icon_67.png" title="Attaque: Distance">';
+        $contact_png  = '<img src="/images/stuff/icon_35.png" title="Attaque: Corps à Corps">';
+
+        $req_cdm    = "SELECT * FROM CdM WHERE Name = '$mob_name' AND Niveau = '$mob_niv'";
+        $query_cdm  = $db->query($req_cdm);
+
+        $update     = 0; # To count how many CdM we have of each IdMonstre
+        while ($cdm = $query_cdm->fetch_array())
         {
-            $filter      = $_GET['filter'];
-            $req_cdm_ids = "SELECT DISTINCT Name,Niveau FROM CdM WHERE Name LIKE '$filter%';";
+            $mob_date    = $cdm[1];
+            $mob_type    = $cdm[4];
+            $mob_niv     = $cdm[5];
+            $mob_bless   = $cdm[8];
+            $mob_pouvoir = '';
+
+            $mob_pv_min  = max($mob_pv_min ,$cdm[6]);
+            $mob_pv_max  = min($mob_pv_max ,$cdm[7]);
+            $mob_att_min = max($mob_att_min,$cdm[9]);
+            $mob_att_max = min($mob_att_max,$cdm[10]);
+            $mob_esq_min = max($mob_esq_min,$cdm[11]);
+            $mob_esq_max = min($mob_esq_max,$cdm[12]);
+            $mob_deg_min = max($mob_deg_min,$cdm[13]);
+            $mob_deg_max = min($mob_deg_max,$cdm[14]);
+            $mob_reg_min = max($mob_reg_min,$cdm[15]);
+            $mob_reg_max = min($mob_reg_max,$cdm[16]);
+            $mob_arm_min = max($mob_arm_min,$cdm[17]);
+            $mob_arm_max = min($mob_arm_max,$cdm[18]);
+            $mob_per_min = max($mob_per_min,$cdm[19]);
+            $mob_per_max = min($mob_per_max,$cdm[20]);
+
+            $tt_style = 'width: 15em;background: cornsilk;color: black;border: 1px solid black;';
+            $tt = '<div class="tt_r">'.$pouvoir_png.'<span class="tt_r_text" style="'.$tt_style.'">'.$cdm[22].'</span></div>';
+            if ( $cdm[22] != '' ) { $mob_pouvoir = $tt; }
+
+            $mob_distance = '';
+            if ( $cdm[23] == 'Oui' ) { $mob_distance = $distance_png; }
+            if ( $cdm[23] == 'Non' ) { $mob_distance = $contact_png; }
+
+            $update++;
         }
 
-        $query_cdm_ids = $db->query($req_cdm_ids);
-
-        while ($cdm_ids = $query_cdm_ids->fetchArray())
-        {
-            $mob_id;
-            $mob_date;
-            $mob_name   = $cdm_ids[0];
-            $mob_name   = preg_replace('/\'/', '\'\'', $mob_name);
-            $mob_niv    = $cdm_ids[1];
-            $mob_pv_min = 0;
-            $mob_pv_max = 999;
-            $mob_bless;
-            $mob_att_min =  1;
-            $mob_att_max = 99;
-            $mob_esq_min =  1;
-            $mob_esq_max = 99;
-            $mob_deg_min =  1;
-            $mob_deg_max = 99;
-            $mob_reg_min =  1;
-            $mob_reg_max = 99;
-            $mob_arm_min =  1;
-            $mob_arm_max = 99;
-            $mob_per_min =  1;
-            $mob_per_max = 99;
-
-            $pouvoir_png = '<img src="/images/stuff/icon_127.png">';
-
-            $distance_png = '<img src="/images/stuff/icon_67.png" title="Attaque: Distance">';
-            $contact_png  = '<img src="/images/stuff/icon_35.png" title="Attaque: Corps à Corps">';
-
-            $req_cdm    = "SELECT * FROM CdM WHERE Name = '$mob_name' AND Niveau = '$mob_niv'";
-            $query_cdm  = $db->query($req_cdm);
-
-            $update     = 0; # To count how many CdM we have of each IdMonstre
-            while ($cdm = $query_cdm->fetchArray())
-            {
-                $mob_date    = $cdm[1];
-                $mob_type    = $cdm[4];
-                $mob_niv     = $cdm[5];
-                $mob_bless   = $cdm[8];
-                $mob_pouvoir = '';
-
-                $mob_pv_min  = max($mob_pv_min ,$cdm[6]);
-                $mob_pv_max  = min($mob_pv_max ,$cdm[7]);
-                $mob_att_min = max($mob_att_min,$cdm[9]);
-                $mob_att_max = min($mob_att_max,$cdm[10]);
-                $mob_esq_min = max($mob_esq_min,$cdm[11]);
-                $mob_esq_max = min($mob_esq_max,$cdm[12]);
-                $mob_deg_min = max($mob_deg_min,$cdm[13]);
-                $mob_deg_max = min($mob_deg_max,$cdm[14]);
-                $mob_reg_min = max($mob_reg_min,$cdm[15]);
-                $mob_reg_max = min($mob_reg_max,$cdm[16]);
-                $mob_arm_min = max($mob_arm_min,$cdm[17]);
-                $mob_arm_max = min($mob_arm_max,$cdm[18]);
-                $mob_per_min = max($mob_per_min,$cdm[19]);
-                $mob_per_max = min($mob_per_max,$cdm[20]);
-
-                $tt_style = 'width: 15em;background: cornsilk;color: black;border: 1px solid black;';
-                $tt = '<div class="tt_r">'.$pouvoir_png.'<span class="tt_r_text" style="'.$tt_style.'">'.$cdm[22].'</span></div>';
-                if ( $cdm[22] != '' ) { $mob_pouvoir = $tt; }
-
-                $mob_distance = '';
-                if ( $cdm[23] == 'Oui' ) { $mob_distance = $distance_png; }
-                if ( $cdm[23] == 'Non' ) { $mob_distance = $contact_png; }
-
-                $update++;
-            }
-
-            print('          <tr>'."\n");
-            print('            <td>'.$mob_name.'</td>'."\n");
-            print('            <td>'.$mob_type.'</td>'."\n");
-            print('            <td>'.$mob_niv.'</td>'."\n");
-            print('            <td>'.$mob_pv_min.'-'.$mob_pv_max.'</td>'."\n");
-            print('            <td>'.$mob_att_min.'-'.$mob_att_max.'</td>'."\n");
-            print('            <td>'.$mob_esq_min.'-'.$mob_esq_max.'</td>'."\n");
-            print('            <td>'.$mob_deg_min.'-'.$mob_deg_max.'</td>'."\n");
-            print('            <td>'.$mob_reg_min.'-'.$mob_reg_max.'</td>'."\n");
-            print('            <td>'.$mob_arm_min.'-'.$mob_arm_max.'</td>'."\n");
-            print('            <td>'.$mob_per_min.'-'.$mob_per_max.'</td>'."\n");
-            print('            <td>'.$mob_pouvoir.' '.$mob_distance.'</td>'."\n");
-            print('            <td><b>'.$update.'</b></td>'."\n");
-            print('          </tr>'."\n");
-        }
-        $db->close;
+        print('          <tr>'."\n");
+        print('            <td>'.$mob_name.'</td>'."\n");
+        print('            <td>'.$mob_type.'</td>'."\n");
+        print('            <td>'.$mob_niv.'</td>'."\n");
+        print('            <td>'.$mob_pv_min.'-'.$mob_pv_max.'</td>'."\n");
+        print('            <td>'.$mob_att_min.'-'.$mob_att_max.'</td>'."\n");
+        print('            <td>'.$mob_esq_min.'-'.$mob_esq_max.'</td>'."\n");
+        print('            <td>'.$mob_deg_min.'-'.$mob_deg_max.'</td>'."\n");
+        print('            <td>'.$mob_reg_min.'-'.$mob_reg_max.'</td>'."\n");
+        print('            <td>'.$mob_arm_min.'-'.$mob_arm_max.'</td>'."\n");
+        print('            <td>'.$mob_per_min.'-'.$mob_per_max.'</td>'."\n");
+        print('            <td>'.$mob_pouvoir.' '.$mob_distance.'</td>'."\n");
+        print('            <td><b>'.$update.'</b></td>'."\n");
+        print('          </tr>'."\n");
+    }
+    $db->close;
 
     print('      </tbody>'."\n");
     print('        </table>'."\n");

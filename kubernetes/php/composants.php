@@ -9,26 +9,21 @@
 <?php include 'inc.header.php'; ?>
       </div>
       <div id="content">
-        <link href="/style/tt_r.css"  rel="stylesheet" type="text/css"  />
         <link href="/style/equipement.css"  rel="stylesheet" type="text/css"  />
         <h1>Possessions</h1>
         <h2 class="expanded">Composants Gobelins</h2>
         <table cellspacing="0" id="profilInfos">
 <?php
-    include 'queries.php';
+    include 'inc.db.php';
+    include 'inc.var.php';
 
     foreach ($arr_gob_ids as $gob_id)
     {
-
-        $db_file = '/db/'.$_ENV["DBNAME"];
-        $db      = new SQLite3($db_file);
-        if(!$db) { echo $db->lastErrorMsg(); }
-
-        $req_composant_c   = "SELECT COUNT (*) FROM ItemsGobelins WHERE Type = 'Composant' AND Gobelin = $gob_id";
-        $composant_count   = $db->querySingle($req_composant_c);
+        $req_composant_c   = "SELECT COUNT(*) FROM ItemsGobelins WHERE Type = 'Composant' AND Gobelin = $gob_id";
+        $composant_count   = $db->query($req_composant_c)->fetch_row()[0];
 
         $req_gob_nom       = "SELECT Gobelin FROM Gobelins WHERE Id = $gob_id";
-        $gob_nom           = $db->querySingle($req_gob_nom);
+        $gob_nom           = $db->query($req_gob_nom)->fetch_row()[0];
 
         if ( $composant_count > 0 )
         {
@@ -43,7 +38,7 @@
             $req_composant   = "SELECT * FROM ItemsGobelins WHERE Type = 'Composant' AND Gobelin = '$gob_id'";
             $query_composant = $db->query($req_composant);
 
-            while ($row = $query_composant->fetchArray())
+            while ($row = $query_composant->fetch_array())
             {
                 $item_id = $row[0];
                 $min     = sprintf("%.1f",$row[7]/60);
@@ -52,13 +47,14 @@
 
                 print('                <li class="equipementNonEquipe">'.'['.$item_id.'] '.$nom.' ('.$desc.'), '.$min.' min</li>'."\n");
             }
-            $db->close;
 
             print('              </ul>'."\n");
             print('            </td>'."\n");
             print('          </tr>'."\n");
         }
     }
+
+    $db->close;
 ?>
         </table>
       </div> <!-- content -->

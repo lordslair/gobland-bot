@@ -19,16 +19,14 @@
           </form>
         </fieldset>
 <?php
-    $db_file = '/db/'.$_ENV["DBNAME"];
-    $db      = new SQLite3($db_file);
-    if(!$db) { echo $db->lastErrorMsg(); }
+    include 'inc.db.php';
 
     if ( $_GET['delete'] && (preg_match('/^\d*$/', $_GET['delete'])) )
     {
         $item_id      = $_GET['delete'];
 
         $req_delete_enchant = "DELETE FROM Enchantements WHERE Id = '$item_id'";
-        $res_delete_enchant = $db->exec($req_delete_enchant);
+        $res_delete_enchant = $db->query($req_delete_enchant);
         print("<center>ID: $item_id supprimé de la DB</center>");
         $db->close;
     }
@@ -63,16 +61,15 @@
                 }
             }
 
-                    $req_insert_enchant = "INSERT OR REPLACE
-                                           INTO Enchantements
-                                           VALUES ('$matches[2]', '$matches[1]',
-                                                   '$ENCHANT[5]', '$ENCHANT[6]',
-                                                   '$ENCHANT[1]', '$ENCHANT[2]',
-                                                   '$ENCHANT[3]', '$ENCHANT[4]',
-                                                   'DOING')";
-                    $res_insert_enchant = $db->exec($req_insert_enchant);
-		    print("<center>Enchantement sur <b>[$matches[2]] $matches[1]</b> ajouté en DB</center>");
-                    $db->close;
+            $req_insert_enchant = "REPLACE
+                                   INTO Enchantements
+                                   VALUES ('$matches[2]', '$matches[1]',
+                                           '$ENCHANT[5]', '$ENCHANT[6]',
+                                           '$ENCHANT[1]', '$ENCHANT[2]',
+                                           '$ENCHANT[3]', '$ENCHANT[4]',
+                                           'DOING')";
+            $res_insert_enchant = $db->query($req_insert_enchant);
+	    print("<center>Enchantement sur <b>[$matches[2]] $matches[1]</b> ajouté en DB</center>");
         }
 
         if     ( preg_match('/[!]debug[!]/', $_POST['search'], $matches) )
@@ -90,7 +87,7 @@
     $req_enchantements   = "SELECT * FROM Enchantements ORDER BY Id";
     $query_enchantements = $db->query($req_enchantements);
 
-    while ($row = $query_enchantements->fetchArray())
+    while ($row = $query_enchantements->fetch_array())
     {
         $ok = ' ✅';
         $ko = ' 🔴';
@@ -109,6 +106,7 @@
         print('              <ul style="margin: 4px;"><img src="/images/stuff/icon_1173.png" title="Fleur"> '.$row[2].' '.$row[3].$p_ok.'</ul>'."\n");
         print('            </li>'."\n");
     }
+    $db->close;
 ?>
         </fieldset>
         <fieldset>
