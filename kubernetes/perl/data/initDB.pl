@@ -85,7 +85,20 @@ foreach my $db (@db_list)
                                    IdMeute  INT,
                                    NomMeute TEXT,
                                    Tribu    TEXT,
-                                   Niveau   INT)");
+                                   Niveau   INT,
+                                   X        INT,
+                                   Y        INT,
+                                   N        INT,
+                                   Z        TEXT,
+                                   DLA      TEXT,
+                                   Etat     TEXT,
+                                   PA       INT,
+                                   PV       INT,
+                                   PX       INT,
+                                   PXPerso  INT,
+                                   PI       INT,
+                                   CT       INT,
+                                   CARAC    TEXT)");
 
     $dbh->do("CREATE TABLE IF NOT EXISTS Cafards (IdCafard   INT PRIMARY KEY,
                                     Id         INT,
