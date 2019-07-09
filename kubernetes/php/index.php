@@ -28,7 +28,6 @@
             <th>Action</th>
           </tr>
 <?php
-    include 'queries.php';
     include 'functions.php';
 
     $ct_total   = 0;

@@ -13,8 +13,9 @@
         <link href="/style/gps.css"  rel="stylesheet" type="text/css"  />
         <div id="tooltip" display="none" style="position: absolute; display: none;"></div>
 <?php
+    include 'inc.db.php';
+    include 'inc.var.php';
     include 'functions.php';
-    include 'queries.php';
 
     if ( preg_match('/^\d*$/', $_GET["id"]) )
     {
@@ -34,12 +35,8 @@
         goto end;
     }
 
-    $db_file = '/db/'.$_ENV["DBNAME"];
-    $db      = new SQLite3($db_file);
-    if(!$db) { echo $db->lastErrorMsg(); }
-
     $req_gob_nom       = "SELECT Gobelin FROM Gobelins WHERE Id = '$gob_id'";
-    $gob_nom           = $db->querySingle($req_gob_nom);
+    $gob_nom           = $db->query($req_gob_nom)->fetch_row()[0];
 
     print('        <h1>Profil de ['.$gob_id.'] '.$gob_nom.'</h1>'."\n");
     print('        <div id="profilInfos">'."\n");
@@ -56,8 +53,7 @@
                           FROM Gobelins
                           INNER JOIN Gobelins2 on Gobelins.Id = Gobelins2.Id
                           WHERE Gobelins.Id = '$gob_id'";
-    $row = $db->querySingle($req_gob_full, true);
-    $db->close;
+    $row = $db->query($req_gob_full, true)->fetch_assoc();
 
     $position  = $row['X'].', '.$row['Y'].', '.$row['N'];
 
@@ -118,8 +114,7 @@
                        RP,BRP
                 FROM Gobelins2
                 WHERE Id = '$gob_id'";
-    $row = $db->querySingle($req_aff, true);
-    $db->close;
+    $row = $db->query($req_aff, true)->fetch_assoc();
 
     $style = 'style="border: 0px;float: left;margin: 0px;font-family: courier;font-size: 12px;"';
 
@@ -162,7 +157,7 @@
     $arr_links = [];
     $arr_nivs  = [];
 
-    while ($row = $query_suivants->fetchArray())
+    while ($row = $query_suivants->fetch_array())
     {
         $suivant_id  = $row[0];
         $suivant_nom = $row[1];
@@ -176,7 +171,6 @@
         $arr_links[$suivant_id] = $link;
         $arr_nivs[$suivant_id]  = $suivant_niv;
     }
-    $db->close;
 
     $req_suivants_all   = "SELECT Id,IdGob,Nom
                            FROM Suivants
@@ -184,7 +178,7 @@
                            ORDER BY Id";
     $query_suivants_all = $db->query($req_suivants_all);
 
-    while ($row = $query_suivants_all->fetchArray())
+    while ($row = $query_suivants_all->fetch_array())
     {
         $suivant_id  = $row[0];
         $suivant_nom = $row[2];
@@ -211,7 +205,6 @@
                 print('          </li>'."\n");
             }
     }
-    $db->close;
     print('        </fieldset>'."\n");
 
     # Cafards
@@ -224,12 +217,11 @@
                       WHERE Id = '$gob_id'";
     $query_cafards = $db->query($req_cafards);
 
-    while ($row = $query_cafards->fetchArray())
+    while ($row = $query_cafards->fetch_array())
     {
         print('          <li><img src="'.$row[3].'"> ['.$row[0].'] '.$row[1].' ('.$row[2].')</li>'."\n");
         $CARACS = GetSumCaracs($row[2],$CARACS);
     }
-    $db->close;
 
     print('          </br>'."\n");
     print('          </br>'."\n");
@@ -248,13 +240,12 @@
     print('        <fieldset>'."\n");
 
     $req_meute_id = "SELECT IdMeute  FROM Meutes WHERE Id = $gob_id";
-    $meute_id     = $db->querySingle($req_meute_id);
-    $db->close;
+    $meute_id     = $db->query($req_meute_id)->fetch_row()[0];
 
     if ( $meute_id )
     {
         $req_meute_nom = "SELECT NomMeute FROM Meutes WHERE Id = $gob_id";
-        $meute_nom     = $db->querySingle($req_meute_nom);
+        $meute_nom     = $db->query($req_meute_nom)->fetch_row()[0];
         print('          <legend>Meute ['.$meute_id.'] '.$meute_nom.'</legend>'."\n");
 
         $req_meute   = "SELECT Id,Nom,Tribu,Niveau,X,Y,N,PV
@@ -274,7 +265,7 @@
         print('            </tr>'."\n");
 
         $rowspan = 0;
-        while ($row = $query_meute->fetchArray())
+        while ($row = $query_meute->fetch_array())
         {
             print('            <tr>'."\n");
             $position = "<b>X</b> = $row[4] | <b>Y</b> = $row[5] | <b>N</b> = $row[6]";
@@ -305,7 +296,7 @@
                 print('                  <g class="grid x-grid" id="xGrid"><line x1="100" x2="100" y1="000" y2="200"></line></g>'."\n");
                 print('                  <g class="grid y-grid" id="yGrid"><line x1="000" x2="200" y1="100" y2="100"></line></g>'."\n");
 
-                while ($row = $query_carte->fetchArray())
+                while ($row = $query_carte->fetch_array())
                 {
                     $color    = $arr_colors[array_rand($arr_colors, 1)];
                     $cx       = round(100 + $row[2]/2);
@@ -324,8 +315,6 @@
             print('            </tr>'."\n");
             $rowspan++;
         }
-        $db->close;
-
         print('          </table>'."\n");
     }
     else
@@ -346,7 +335,7 @@
                         WHERE Skills.Type = 'C' AND Skills.IdGob = '$gob_id'";
     $query_talents_c = $db->query($req_talents_c);
 
-    while ($row = $query_talents_c->fetchArray())
+    while ($row = $query_talents_c->fetch_array())
     {
         $niveau  = $row[2];
         $percent = $row[3];
@@ -367,7 +356,6 @@
             print('            <li>'.$nom.' ('.$percent.' %) [Niv. '.$niveau.']</li>'."\n");
         }
     }
-    $db->close;
 
     print('          </ul>'."\n");
     print('          <strong>Techniques</strong> :<br/>'."\n");
@@ -379,7 +367,7 @@
                         WHERE Skills.Type = 'T' AND Skills.IdGob = '$gob_id'";
     $query_talents_t = $db->query($req_talents_t);
 
-    while ($row = $query_talents_t->fetchArray())
+    while ($row = $query_talents_t->fetch_array())
     {
         $niveau  = $row[2];
         $percent = $row[3];
@@ -400,8 +388,6 @@
             print('            <li>'.$nom.' ('.$percent.' %) [Niv. '.$niveau.']</li>'."\n");
         }
     }
-    $db->close;
-
     print('          </ul>'."\n");
     print('        </fieldset>'."\n");
 
@@ -410,12 +396,12 @@
     print('        <fieldset>'."\n");
     print('          <legend>Equipement Porté</legend>'."\n");
 
-    $req_equipement = "SELECT Id,Type,Nom,Magie,Desc,Matiere
+    $req_equipement = "SELECT Id,Type,Nom,Magie,`Desc`,Matiere
                        FROM ItemsGobelins
                        WHERE Utilise = 'VRAI' AND Gobelin = '$gob_id'";
     $query_equipement = $db->query($req_equipement);
 
-    while ($row = $query_equipement->fetchArray())
+    while ($row = $query_equipement->fetch_array())
     {
         $type     = $row[1];
         $nom      = $row[2];
@@ -441,7 +427,6 @@
         print('              '.$item_png.$item_txt."\n");
         $CARACS = GetSumCaracs($desc,$CARACS);
     }
-    $db->close;
 
     asort($CARACS);
     print('          </br>'."\n");
@@ -455,9 +440,9 @@
         }
     }
     print('</li>'."\n");
-
     print('        </fieldset>'."\n");
 
+    $db->close;
 end:
 ?>
         </div> <!-- profilInfos -->
