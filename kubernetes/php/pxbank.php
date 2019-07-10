@@ -26,32 +26,30 @@
         </thread>
         <tbody>
 <?php
-        $db_file = '/db/'.$_ENV["DBNAME"];
-        $db      = new SQLite3($db_file);
-        if(!$db) { echo $db->lastErrorMsg(); }
+    include 'inc.db.php';
 
-        $req_pxbank    = "SELECT Gobelins.Id,PX,PXPerso,PI,Gobelin,Niveau,PITotal
-                          FROM Gobelins
-                          INNER JOIN Gobelins2 on Gobelins.Id = Gobelins2.Id
-                          ORDER BY Gobelins.Id";
-        $query_pxbank = $db->query($req_pxbank);
+    $req_pxbank    = "SELECT Gobelins.Id,PX,PXPerso,PI,Gobelin,Niveau,PITotal
+                      FROM Gobelins
+                      INNER JOIN Gobelins2 on Gobelins.Id = Gobelins2.Id
+                      ORDER BY Gobelins.Id";
+    $query_pxbank = $db->query($req_pxbank);
 
-        while ($row = $query_pxbank->fetchArray())
-        {
-            $total = $row[1] + $row[2] + $row[6];
+    while ($row = $query_pxbank->fetch_array())
+    {
+        $total = $row[1] + $row[2] + $row[6];
 
-            print('          <tr>'."\n");
-            print('            <td>'.$row[4].'</td>'."\n");
-            print('            <td>'.$row[0].'</td>'."\n");
-            print('            <td>'.$row[5].'</td>'."\n");
-            print('            <td>'.$row[2].'</td>'."\n");
-            print('            <td>'.$row[1].'</td>'."\n");
-            print('            <td>'.$row[3].'</td>'."\n");
-            print('            <td>'.$row[6].'</td>'."\n");
-            print('            <td>'.$total.'</td>'."\n");
-            print('          </tr>'."\n");
-        }
-        $db->close;
+        print('          <tr>'."\n");
+        print('            <td>'.$row[4].'</td>'."\n");
+        print('            <td>'.$row[0].'</td>'."\n");
+        print('            <td>'.$row[5].'</td>'."\n");
+        print('            <td>'.$row[2].'</td>'."\n");
+        print('            <td>'.$row[1].'</td>'."\n");
+        print('            <td>'.$row[3].'</td>'."\n");
+        print('            <td>'.$row[6].'</td>'."\n");
+        print('            <td>'.$total.'</td>'."\n");
+        print('          </tr>'."\n");
+    }
+    $db->close;
 ?>
         </tbody>
         </table>

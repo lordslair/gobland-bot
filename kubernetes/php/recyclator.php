@@ -23,13 +23,10 @@
             <th style="cursor: pointer;" data-sort-method='number'>#</th>
           </tr>
         </thread>
-        <tbody id="cdm">
+        <tbody id="recyclage">
 <?php
+    include 'inc.db.php';
     include 'functions.php';
-
-    $db_file = '/db/'.$_ENV["DBNAME"];
-    $db      = new SQLite3($db_file);
-    if(!$db) { echo $db->lastErrorMsg(); }
 
     $arr_niv = ['Apprenti','Compagnon','Maître', 'Grand Maître'];
     $hash    = [];
@@ -42,7 +39,7 @@
                            AND    PMText LIKE '%AVEZ RÉUSSI%que $niv%recyclé%'";
         $query_rec_ids = $db->query($req_rec_ids);
 
-        while ($rec_ids = $query_rec_ids->fetchArray())
+        while ($rec_ids = $query_rec_ids->fetch_array())
         {
             $mp_id      = $rec_ids[0];
             $mp_text    = $rec_ids[1];
@@ -73,7 +70,6 @@
             if ( ! $hash[$niv][$item]['min'] ) { $hash[$niv][$item]['min'] = 999; }
             $hash[$niv][$item]['min'] = min($hash[$niv][$item]['min'],$carats);
         }
-        $db->close;
     }
 
     foreach ( $arr_niv as $niv )
@@ -101,6 +97,8 @@
 
     print('      </tbody>'."\n");
     print('        </table>'."\n");
+
+    $db->close;
 ?>
         <script type="text/javascript" src="/js/tristen-tablesort.js"></script>
         <script type="text/javascript" src="/js/tristen-tablesort.number.js"></script>

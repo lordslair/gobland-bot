@@ -27,76 +27,74 @@
           <text x="301" y="009" font-family="sans-serif" font-size="10px" fill="black"> 200</text>
 
 <?php
-        $db_file = '/db/'.$_ENV["DBNAME"];
-        $db      = new SQLite3($db_file);
-        if(!$db) { echo $db->lastErrorMsg(); }
+    include 'inc.db.php';
 
-        $arr_colors = ["AliceBlue","AntiqueWhite","Aqua","Aquamarine","Azure",
-                       "Beige","Bisque","Black","BlanchedAlmond","Blue",
-                       "BlueViolet","Brown","BurlyWood","CadetBlue","Chartreuse",
-                       "Chocolate","Coral","CornflowerBlue","Cornsilk","Crimson"];
+    $arr_colors = ["AliceBlue","AntiqueWhite","Aqua","Aquamarine","Azure",
+                   "Beige","Bisque","Black","BlanchedAlmond","Blue",
+                   "BlueViolet","Brown","BurlyWood","CadetBlue","Chartreuse",
+                   "Chocolate","Coral","CornflowerBlue","Cornsilk","Crimson"];
 
-        $req_radar_g    = "SELECT Gobelins.Id,Gobelins.Gobelin,X,Y,N,PER,BMPER,BPPER,
-                           (PER+BMPER+BPPER) AS CASES 
-                           FROM Gobelins
-                           INNER JOIN Gobelins2 on Gobelins.Id = Gobelins2.Id
-                           ORDER BY CASES DESC";
-        $query_radar_g = $db->query($req_radar_g);
+    $req_radar_g    = "SELECT Gobelins.Id,Gobelins.Gobelin,X,Y,N,PER,BMPER,BPPER,
+                       (PER+BMPER+BPPER) AS CASES 
+                       FROM Gobelins
+                       INNER JOIN Gobelins2 on Gobelins.Id = Gobelins2.Id
+                       ORDER BY CASES DESC";
+    $query_radar_g = $db->query($req_radar_g);
 
-        while ($row = $query_radar_g->fetchArray())
-        {
-            $gob_id   = $row[0];
-            $X        = $row[2];
-            $Y        = $row[3];
-            $N        = $row[4];
-            $cases    = 1 + $row[5] + $row[6] + $row[7];
-            $position = "<b>X</b> = $X | <b>Y</b> = $Y | <b>N</b> = $N";
-            $tt       = '\''.'['.$gob_id.'] '.$row[1].' ('.$position.')\'';
+    while ($row = $query_radar_g->fetch_array())
+    {
+        $gob_id   = $row[0];
+        $X        = $row[2];
+        $Y        = $row[3];
+        $N        = $row[4];
+        $cases    = 1 + $row[5] + $row[6] + $row[7];
+        $position = "<b>X</b> = $X | <b>Y</b> = $Y | <b>N</b> = $N";
+        $tt       = '\''.'['.$gob_id.'] '.$row[1].' ('.$position.')\'';
 
-            $cx       = ($X + 200) * 1.5;
-            $cy       = (200 - $Y) * 1.5;
+        $cx       = ($X + 200) * 1.5;
+        $cy       = (200 - $Y) * 1.5;
 
-            $color    = $arr_colors[array_rand($arr_colors, 1)];
+        $color    = $arr_colors[array_rand($arr_colors, 1)];
 
-            print('          <g fill="'.$color.'">'."\n");
-            print('            <circle cx="'.$cx.'" cy="'.$cy.'" r="'.$cases.'" onmousemove="showTooltip(evt, '.$tt.')";" onmouseout="hideTooltip();"></circle>'."\n");
-            print('          </g>'."\n");
+        print('          <g fill="'.$color.'">'."\n");
+        print('            <circle cx="'.$cx.'" cy="'.$cy.'" r="'.$cases.'" onmousemove="showTooltip(evt, '.$tt.')";" onmouseout="hideTooltip();"></circle>'."\n");
+        print('          </g>'."\n");
 
-            print('          <g stroke="black" fill="none">'."\n");
-            print('            <circle fill="none"  cx="'.$cx.'" cy="'.$cy.'" r="'.$cases.'"></circle>'."\n");
-            print('          </g>'."\n");
-        }
+        print('          <g stroke="black" fill="none">'."\n");
+        print('            <circle fill="none"  cx="'.$cx.'" cy="'.$cy.'" r="'.$cases.'"></circle>'."\n");
+        print('          </g>'."\n");
+    }
 
-        $req_radar_s    = "SELECT Suivants.Id,Vue.Nom,Vue.X,Vue.Y,Vue.N
-                           FROM Suivants
-                           INNER JOIN Vue on Suivants.Id = Vue.Id
-                           ORDER BY Suivants.Id";
-        $query_radar_s = $db->query($req_radar_s);
+    $req_radar_s    = "SELECT Suivants.Id,Vue.Nom,Vue.X,Vue.Y,Vue.N
+                       FROM Suivants
+                       INNER JOIN Vue on Suivants.Id = Vue.Id
+                       ORDER BY Suivants.Id";
+    $query_radar_s = $db->query($req_radar_s);
 
-        while ($row = $query_radar_s->fetchArray())
-        {
-            $X        = $row[2];
-            $Y        = $row[3];
-            $N        = $row[4];
-            $cases    = 2;      # Hardcoded for now
-            $position = "<b>X</b> = $X | <b>Y</b> = $Y | <b>N</b> = $N";
-            $tt       = '\''.'['.$row[0].'] '.$row[1].' ('.$position.')\'';
+    while ($row = $query_radar_s->fetch_array())
+    {
+        $X        = $row[2];
+        $Y        = $row[3];
+        $N        = $row[4];
+        $cases    = 2;      # Hardcoded for now
+        $position = "<b>X</b> = $X | <b>Y</b> = $Y | <b>N</b> = $N";
+        $tt       = '\''.'['.$row[0].'] '.$row[1].' ('.$position.')\'';
 
-            $cx       = ($X + 200) * 1.5;
-            $cy       = (200 - $Y) * 1.5;
+        $cx       = ($X + 200) * 1.5;
+        $cy       = (200 - $Y) * 1.5;
 
-            $color    = $arr_colors[array_rand($arr_colors, 1)];
+        $color    = $arr_colors[array_rand($arr_colors, 1)];
 
-            print('          <g fill="'.$color.'">'."\n");
-            print('            <circle cx="'.$cx.'" cy="'.$cy.'" r="'.$cases.'" onmousemove="showTooltip(evt, '.$tt.')";" onmouseout="hideTooltip();"></circle>'."\n");
-            print('          </g>'."\n");
+        print('          <g fill="'.$color.'">'."\n");
+        print('            <circle cx="'.$cx.'" cy="'.$cy.'" r="'.$cases.'" onmousemove="showTooltip(evt, '.$tt.')";" onmouseout="hideTooltip();"></circle>'."\n");
+        print('          </g>'."\n");
 
-            print('          <g stroke="black" fill="none">'."\n");
-            print('            <circle fill="none"  cx="'.$cx.'" cy="'.$cy.'" r="'.$cases.'"></circle>'."\n");
-            print('          </g>'."\n");
-        }
+        print('          <g stroke="black" fill="none">'."\n");
+        print('            <circle fill="none"  cx="'.$cx.'" cy="'.$cy.'" r="'.$cases.'"></circle>'."\n");
+        print('          </g>'."\n");
+    }
 
-        $db->close;
+    $db->close;
 ?>
 
         </svg>

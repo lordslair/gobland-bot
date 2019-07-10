@@ -21,9 +21,7 @@
         <fieldset>
           <legend>Kestatrouvé :</legend>
 <?php
-    $db_file = '/db/'.$_ENV["DBNAME"];
-    $db      = new SQLite3($db_file);
-    if(!$db) { echo $db->lastErrorMsg(); }
+    include 'inc.db.php';
 
     if ( $_POST['search'] )
     {
@@ -123,7 +121,7 @@
             print('              <th>N</th>'."\n");
             print('            </tr>'."\n");
 
-        while ($row = $query_locator->fetchArray())
+        while ($row = $query_locator->fetch_array())
         {
             print('            <tr>'."\n");
             print('              <td>'.$row[0].'</td>'."\n");
@@ -135,9 +133,9 @@
             print('              <td>'.$row[6].'</td>'."\n");
             print('            </tr>'."\n");
         }
-        $db->close;
         print('          </table>'."\n");
     }
+    $db->close;
 ?>
         </fieldset>
         <fieldset>

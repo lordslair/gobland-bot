@@ -15,20 +15,17 @@
         <h2 class="expanded">Matériaux Gobelins</h2>
         <table cellspacing="0" id="profilInfos">
 <?php
-    include 'queries.php';
+    include 'inc.db.php';
+    include 'inc.var.php';
     include 'functions.php';
 
     foreach ($arr_gob_ids as $gob_id)
     {
-        $db_file = '/db/'.$_ENV["DBNAME"];
-        $db      = new SQLite3($db_file);
-        if(!$db) { echo $db->lastErrorMsg(); }
-
-        $req_materiaux_c   = "SELECT COUNT (*) FROM ItemsGobelins WHERE ( Type = 'Matériau' OR Type = 'Roche' OR Type = 'Minerai' ) AND Gobelin = '$gob_id'";
-        $materiaux_count   = $db->querySingle($req_materiaux_c);
+        $req_materiaux_c   = "SELECT COUNT(*) FROM ItemsGobelins WHERE ( Type = 'Matériau' OR Type = 'Roche' OR Type = 'Minerai' ) AND Gobelin = '$gob_id'";
+        $materiaux_count   = $db->query($req_materiaux_c)->fetch_row()[0];
 
         $req_gob_nom       = "SELECT Gobelin FROM Gobelins WHERE Id = '$gob_id'";
-        $gob_nom           = $db->querySingle($req_gob_nom);
+        $gob_nom           = $db->query($req_gob_nom)->fetch_row()[0];
 
         if ( $materiaux_count > 0 )
         {
@@ -46,7 +43,7 @@
                                 ORDER BY Type,Nom";
             $query_materiaux = $db->query($req_materiaux);
 
-            while ($row = $query_materiaux->fetchArray())
+            while ($row = $query_materiaux->fetch_array())
             {
                 $item_id = $row[0];
                 $type    = $row[2];
@@ -67,13 +64,13 @@
                 print('                  </div>'."\n");
                 print('                </li>'."\n");
             }
-            $db->close;
 
             print('              </ul>'."\n");
             print('            </td>'."\n");
             print('          </tr>'."\n");
         }
     }
+    $db->close;
 ?>
         </table>
       </div> <!-- content -->

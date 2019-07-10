@@ -28,14 +28,11 @@
             <th>Action</th>
           </tr>
 <?php
+    include 'inc.db.php';
+    include 'inc.var.php';
     include 'functions.php';
 
     $ct_total   = 0;
-
-    $dbh = new mysqli($db_host, $db_user, $db_pass, $db_file);
-    if(!$dbh) {
-        echo $db->lastErrorMsg();
-    }
 
     foreach ($arr_gob_ids as $gob_id)
     {
@@ -101,7 +98,6 @@
             print('            </tr>'."\n");
         }
     }
-    $db->close;
 
     print('        </table>'."\n");
 
@@ -109,6 +105,7 @@
     print('          <h3>Fortune : '.$ct_total.' CT (gobelins)</h3>'."\n");
     print('        </div>'."\n");
 
+    $db->close;
 ?>
       </div> <!-- content -->
     </div> <!-- page -->

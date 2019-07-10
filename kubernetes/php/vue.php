@@ -10,8 +10,8 @@
       </div>
       <div id="content">
 <?php
+    include 'inc.db.php';
     include 'functions.php';
-    include 'queries.php';
 
     if ( preg_match('/^\d*$/', $_GET["id"]) )
     {
@@ -36,12 +36,8 @@
         goto end;
     }
 
-    $db_file = '/db/'.$_ENV["DBNAME"];
-    $db      = new SQLite3($db_file);
-    if(!$db) { echo $db->lastErrorMsg(); }
-
     $req_gob_nom       = "SELECT Gobelin FROM Gobelins WHERE Id = '$gob_id'";
-    $gob_nom           = $db->querySingle($req_gob_nom);
+    $gob_nom           = $db->query($req_gob_nom)->fetch_row()[0];
 
     $T_emoji = '<img src="/images/1f4b0.png" width="16" height="16">'; #💰
     $L_emoji = '<img src="/images/1f3e0.png" width="16" height="16">'; #🏠
@@ -58,7 +54,7 @@
     $arr_suivants      = [];
     $req_suivants_full = "SELECT Id FROM Suivants";
     $query_suivants    = $db->query($req_suivants_full);
-    while ($row = $query_suivants->fetchArray())
+    while ($row = $query_suivants->fetch_array())
     {
         $arr_suivants[] = $row[0];
     }
@@ -70,16 +66,13 @@
                      INNER JOIN Vue on Suivants.Id = Vue.Id
                      WHERE Suivants.Id = '$gob_id'";
 
-        $row = $db->querySingle($req_full, true);
-        $db->close;
+        $row = $db->query($req_full, true)->fetch_assoc();
 
         $X       = $row['X'];
         $Y       = $row['Y'];
         $N       = $row['N'];
         $cases   = 4;       # Hardcoded for now
 
-        $req_gob_nom       = "SELECT Nom FROM Suivants WHERE Id = '$gob_id'";
-        $gob_nom           = $db->querySingle($req_gob_nom);
         $getsuiv           = '&suivant=TRUE';
     }
     else
@@ -88,23 +81,19 @@
                           INNER JOIN Gobelins2 on Gobelins.Id = Gobelins2.Id
                           WHERE Gobelins.Id = $gob_id";
 
-        $row = $db->querySingle($req_full, true);
-        $db->close;
+        $row = $db->query($req_full, true)->fetch_assoc();
 
         $X       = $row['X'];
         $Y       = $row['Y'];
         $N       = $row['N'];
         $cases   = $row['PER'] + $row['BMPER'] + $row['BPPER'];
 
-        $req_gob_nom       = "SELECT Gobelin FROM Gobelins WHERE Id = '$gob_id'";
-        $gob_nom           = $db->querySingle($req_gob_nom);
         $getsuiv           = '';
 
         # We use $_GET["small"] to restrict the view
         if ( $_GET["small"] ) { $cases = 5;}
         # We use $_GET["medium"] to restrict the view
         if ( $_GET["medium"] ) { $cases = 10;}
-
     }
 
     if ( $cases > 0 )
@@ -151,12 +140,11 @@
         $req_vue    .= " AND   (( Categorie = 'C' AND Niveau BETWEEN '$niv_min' AND '$niv_max') OR ( Categorie = 'G' ) OR ( Categorie = 'L' ))";
     }
 
-#print_r($req_vue);
     $query_vue = $db->query($req_vue);
 
     $ITEMS = [];
 
-    while ($row = $query_vue->fetchArray())
+    while ($row = $query_vue->fetch_array())
     {
         $id   = $row[0];
         $cat  = $row[1];
@@ -236,7 +224,6 @@
             $ITEMS[$x][$y]['tt'] .= "&nbsp;&nbsp;[$id] <span style='color:$tt_text_c'>".$nom.'</span><br>';
         }
     }
-    $db->close;
 
     print('        <h1>Vue de ['.$gob_id.'] '.$gob_nom.' ('.$cases.' cases)'.'</h1>'."\n");
     print('        <h3>Centrée sur [ X='.$X.' | Y= '.$Y.' | N= '.$N.' ]'.'</h3>'."\n");
@@ -323,6 +310,8 @@
 
     print('          </tbody>'."\n");
     print('        </table>'."\n");
+
+    $db->close;
 
     end:
 ?>
