@@ -22,31 +22,29 @@
           <g class="grid l-grid" id="lGrid"><line x1="000" x2="000" y1="000" y2="600"></line></g>
 
 <?php
-        $db_file = '/db/'.$_ENV["DBNAME"];
-        $db      = new SQLite3($db_file);
-        if(!$db) { echo $db->lastErrorMsg(); }
+    include 'inc.db.php';
 
-        $req_gps    = "SELECT * FROM FP_Lieu";
-        $query_gps = $db->query($req_gps);
+    $req_gps    = "SELECT * FROM FP_Lieu";
+    $query_gps = $db->query($req_gps);
 
-        while ($row = $query_gps->fetchArray())
-        {
-            if ( ! $row[6] ) { continue; } # If coordinates not present in DB, we skip the display
+    while ($row = $query_gps->fetch_array())
+    {
+        if ( ! $row[6] ) { continue; } # If coordinates not present in DB, we skip the display
 
-            $position = "<b>X</b> = $row[6] | <b>Y</b> = $row[7] | <b>N</b> = $row[8]";
-            $cx       = ($row[6] + 200) * 1.5;
-            $cy       = (200 - $row[7]) * 1.5;
-            $tt       = '\''.$row[1].' ('.$position.')\'';
-            $dv       = $row[4];
-            $dv       = preg_replace('/é/','e',$dv);
-            $dv       = preg_replace('/è/','e',$dv);
-            $dv       = preg_replace('/â/','a',$dv);
+        $position = "<b>X</b> = $row[6] | <b>Y</b> = $row[7] | <b>N</b> = $row[8]";
+        $cx       = ($row[6] + 200) * 1.5;
+        $cy       = (200 - $row[7]) * 1.5;
+        $tt       = '\''.$row[1].' ('.$position.')\'';
+        $dv       = $row[4];
+        $dv       = preg_replace('/é/','e',$dv);
+        $dv       = preg_replace('/è/','e',$dv);
+        $dv       = preg_replace('/â/','a',$dv);
 
-            print('          <g class="'.$dv.'">'."\n");
-            print('            <circle cx="'.$cx.'" cy="'.$cy.'" r="2" onmousemove="showTooltip(evt, '.$tt.')";" onmouseout="hideTooltip();"></circle>'."\n");
-            print('          </g>'."\n");
-        }
-        $db->close;
+        print('          <g class="'.$dv.'">'."\n");
+        print('            <circle cx="'.$cx.'" cy="'.$cy.'" r="2" onmousemove="showTooltip(evt, '.$tt.')";" onmouseout="hideTooltip();"></circle>'."\n");
+        print('          </g>'."\n");
+    }
+    $db->close;
 ?>
 
         </svg>
