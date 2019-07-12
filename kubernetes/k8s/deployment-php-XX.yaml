@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: gobland-it-php-XX
+  labels:
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: php-XX
+      tier: backend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: php-XX
+        tier: backend
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: gobland-it-php-XX
+        image: php:fpm-alpine
+        command: ["/code/entrypoint.sh"]
+        volumeMounts:
+        - mountPath: /code
+          name: code
+        env:
+        - name: MARIADB_ROOT_PASSWORD
+          value: YYYYY
+        - name: CLANNAME
+          value: "ZZZZZ"
+        - name: CLANID
+          value: XX
+      volumes:
+      - name: code
+        persistentVolumeClaim:
+          claimName: gobland-it-code-php

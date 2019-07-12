@@ -1,0 +1,13 @@
+piVersion: v1
+kind: Service
+metadata:
+  name: gobland-it-mariadb
+  labels:
+    tier: backend
+spec:
+  selector:
+    app: mariadb
+    tier: backend
+  ports:
+  - protocol: TCP
+    port: 3306
