@@ -36,7 +36,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validate credentials
     if(empty($username_err) && empty($password_err)){
         // Prepare a select statement
-        $sql = "SELECT account_id, account_name, account_password FROM users WHERE account_enabled = TRUE AND account_name = ?";
+        $sql = "SELECT account_id, account_name, account_password, account_clan FROM users WHERE account_enabled = TRUE AND account_name = ?";
 
         if($stmt = $db->prepare($sql)){
             // Bind variables to the prepared statement as parameters
@@ -62,6 +62,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             $_SESSION["loggedin"] = true;
                             $_SESSION["id"] = $id;
                             $_SESSION["gob_name"] = $gob_name;
+                            $_SESSION["gob_clan"] = $gob_clan;
 
                             // Redirect user to welcome page
                             header("location: index.php");

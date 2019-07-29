@@ -152,8 +152,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 <input type="reset" class="btn btn-default" value="Annuler">
             </div>
             <p>Déjà enregistré ? <a href="login.php">Connexion</a>.</p>
-            <p>/!\ L'administrateur validera votre compte.<br>
-               Votre accès sera effectif sous 24/48h /!\</p>
+            <p>⚠️ L'administrateur validera votre compte.<br>
+               Votre accès sera effectif sous 24/48h ⚠️</p>
         </form>
     </div>
 </body>
