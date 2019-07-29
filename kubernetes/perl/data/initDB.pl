@@ -5,7 +5,6 @@ use warnings;
 use DBI;
 
 my @db_list   = split(',', $ENV{'DBLIST'});
-my $db_file   = 'initDB.SQL';
 my $db_driver = 'mysql';
 my $db_host   = 'gobland-it-mariadb';
 my $db_port   = '3306';
@@ -13,9 +12,25 @@ my $db_pass   = $ENV{'MARIADB_ROOT_PASSWORD'};
 my $dsn       = "DBI:$db_driver:host=$db_host;port=$db_port";
 my $dbh       = DBI->connect($dsn, 'root', $db_pass, { RaiseError => 1 }) or die $DBI::errstr;
 
+my ( $sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst ) = localtime(time);
+
+# Create 'global' DB, used for IT logins and more
+my $dateTime = sprintf "%4d-%02d-%02d %02d:%02d:%02d", $year + 1900, $mon + 1, $mday, $hour, $min, $sec;
+print STDERR "$dateTime [initDB] DB: global\n";
+$dbh->do("CREATE DATABASE IF NOT EXISTS `global`");
+$dbh->do("USE `global`");
+$dbh->do("CREATE TABLE IF NOT EXISTS `users` (
+    `account_id` int(11) NOT NULL AUTO_INCREMENT,
+    `account_name` text NOT NULL,
+    `account_password` varchar(255) NOT NULL,
+    `account_clan` int(11) DEFAULT NULL,
+    `account_enabled` tinyint(1) NOT NULL DEFAULT 0,
+    `account_since` datetime DEFAULT current_timestamp(),
+    PRIMARY KEY (`account_id`))");
+
+# Create per-clan DB
 foreach my $db (@db_list)
 {
-    my ( $sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst ) = localtime(time);
     my $dateTime = sprintf "%4d-%02d-%02d %02d:%02d:%02d", $year + 1900, $mon + 1, $mday, $hour, $min, $sec;
     print STDERR "$dateTime [initDB] DB: $db\n";
 
