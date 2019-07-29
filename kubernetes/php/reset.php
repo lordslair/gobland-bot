@@ -85,7 +85,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 <body>
     <div class="wrapper">
         <h2>Modifier votre mot de passe</h2>
-        <h3>User: <?php echo htmlspecialchars($_SESSION["gob_name"]); ?></h3>
+        <h3>Gobelin: <?php echo htmlspecialchars($_SESSION["gob_name"]); ?> | Clan: <?php echo htmlspecialchars($_SESSION["gob_clan"]); ?></h3>
         <p>Merci d'indiquer votre nouveau mot de passe</p>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
             <div class="form-group <?php echo (!empty($new_password_err)) ? 'has-error' : ''; ?>">
