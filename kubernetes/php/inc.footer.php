@@ -8,6 +8,7 @@ $update  = "[MàJ: $lastupdate]";
 $gobelin = '[Gobelin: <b>'.$_SESSION["gob_name"].'</b>]';
 $clan    = '[Clan: <b>'.$_SESSION["gob_clan"].'</b>]';
 $logout  = '[<a href="/logout.php" title="Déconnexion">🚫 Déconnexion</a>]';
+$reset   = '[<a href="/reset.php" title="Reset">🔐 Modifier</a>]';
 
-print('        <div class="footer">'."$gobelin - $clan - $update <br> $logout".'</div>'."\n");
+print('        <div class="footer">'."$gobelin - $clan - $update <br> $logout - $reset".'</div>'."\n");
 ?>

@@ -108,6 +108,7 @@
 
     $db->close;
 ?>
+<?php include 'inc.footer.php'; ?>
       </div> <!-- content -->
     </div> <!-- page -->
   </body>
