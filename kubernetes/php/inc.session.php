@@ -1,4 +1,6 @@
 <?php
+// Set sessions sava path (for sharing betwwen replicas)
+session_save_path('/code/sessions');
 // Initialize the session
 session_start();
 
