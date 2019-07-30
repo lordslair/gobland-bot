@@ -17,7 +17,7 @@ my $lieux2_csv = 'Lieux.csv';
 `wget --quiet "$source/$lieux_csv"  -O "$path/data/$lieux_csv"`;
 `wget --quiet "$source/$clans_csv"  -O "$path/data/$clans_csv"`;
     
-my $db_name   = ('global');
+my @db_list   = ('global');
 my $db_driver = 'mysql';
 my $db_host   = 'gobland-it-mariadb';
 my $db_port   = '3306';
