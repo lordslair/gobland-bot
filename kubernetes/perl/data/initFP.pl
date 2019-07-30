@@ -148,6 +148,35 @@ foreach my $db (@db_list)
         {
             print "$path/data/$techs_csv doesn't exist, doin' nothin'\n";
         }
+
+        if ( -f "$path/data/$clans_csv" )
+        {
+            open (my $fh, '<:encoding(UTF-8)', "$path/data/$clans_csv") or die "Could not open file '$path/data/$clans_csv' $!";
+                while (my $row = <$fh>)
+                {
+                    $row     =~ s/"//g;
+                    my @row  = split /;/, $row;
+
+                    if ( $row !~ /^#/ )
+                    {
+                        $row[1] =~ s/\'/\'\'/g;
+                        my $sth  = $dbh->prepare( "REPLACE INTO FP_Clan VALUES( '$row[0]', \
+                                                                                '$row[1]', \
+                                                                                '$row[2]', \
+                                                                                '$row[3]', \
+                                                                                '$row[4]', \
+                                                                                '$row[5]', \
+                                                                                '$row[6]'  ) ");
+                        $sth->execute();
+                        $sth->finish();
+                    }
+                }
+            close($fh);
+        }
+        else
+        {
+            print "$path/data/$clans_csv doesn't exist, doin' nothin'\n";
+        }
 }
 
 $dbh->disconnect();
