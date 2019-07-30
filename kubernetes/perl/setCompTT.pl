@@ -100,7 +100,8 @@ foreach my $db (@db_list)
             my $niveau = $row[1];
             my $tt     = '';
 
-            my $sth = $dbh->prepare( "SELECT DEG,BMDEG,BPDEG,REG,BMREG,BPREG,PER,BMPER,BPPER,ATT,BMATT,BPATT \
+            my $sth = $dbh->prepare( "SELECT DEG,BMDEG,BPDEG,REG,BMREG,BPREG,PER,BMPER,BPPER,ATT,BMATT,BPATT, \
+                                             MM,BMM \
                                       FROM Gobelins2 WHERE Id = '$gob_id'" );
             $sth->execute();
             my @attr = $sth->fetchrow_array;
@@ -229,6 +230,22 @@ foreach my $db (@db_list)
                 my $soin   = $coeff * $reg + $reg_bm;
 
                 $tt = 'Soin : '.$soin.' PV(s)';
+            }
+            elsif ( $t_id == 17 )
+            {
+                my $coeff;
+                if    ( $niveau == 1 ) { $coeff = 1   }
+                elsif ( $niveau == 2 ) { $coeff = 1.1 }
+                elsif ( $niveau == 3 ) { $coeff = 1.2 }
+                elsif ( $niveau == 4 ) { $coeff = 1.3 }
+
+                my $vue    = $attr[6] + $attr[7] + $attr[8];
+                my $mm_total = $attr[12] + $attr[13];
+                my $db = int((sqrt( 19 + 18 * (($mm_total * $coeff)/5 + 3)) - 7)/ 2);
+                my $portee_h = $db + 20 + $vue;
+                my $portee_v = int($db /3) + 3;
+                $tt  = Encode::decode_utf8('Portée H').' : '.$portee_h.'<br>';
+                $tt .= Encode::decode_utf8('Portée V').' : '.$portee_v;
             }
 
             if ( $tt ne '' )
