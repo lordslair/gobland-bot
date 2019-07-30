@@ -166,32 +166,6 @@ foreach my $db (@db_list)
                                    Connaissance INT,
                                    Tooltip      TEXT)");
 
-    $dbh->do("CREATE TABLE IF NOT EXISTS FP_C (IdSkill     INT PRIMARY KEY,
-                                 NomSkill    TEXT,
-                                 PASkill     INT,
-                                 TypeSkill   TEXT,
-                                 NiveauSkill INT,
-                                 Type        TEXT,
-                                 Affinite    TEXT)");
-
-    $dbh->do("CREATE TABLE IF NOT EXISTS FP_T (IdSkill     INT PRIMARY KEY,
-                                 NomSkill    TEXT,
-                                 PASkill     INT,
-                                 TypeSkill   TEXT,
-                                 NiveauSkill INT,
-                                 Type        TEXT,
-                                 Affinite    TEXT)");
-
-    $dbh->do("CREATE TABLE IF NOT EXISTS FP_Lieu (IdLieu         INT PRIMARY KEY,
-                                    Nom            TEXT,
-                                    Type           TEXT,
-                                    IdProprietaire TEXT,
-                                    architecture   TEXT,
-                                    mobile         TEXT,
-                                    X              TEXT,
-                                    Y              TEXT,
-                                    Z              TEXT)");
-
     $dbh->do("CREATE TABLE IF NOT EXISTS Vue  (Id        INT PRIMARY KEY,
                                  Categorie TEXT,
                                  Nom       TEXT,

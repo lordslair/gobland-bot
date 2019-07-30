@@ -22,7 +22,7 @@
           <g class="grid l-grid" id="lGrid"><line x1="000" x2="000" y1="000" y2="600"></line></g>
 
 <?php
-    include 'inc.db.php';
+    include 'inc.db-global.php';
 
     $req_gps    = "SELECT * FROM FP_Lieu";
     $query_gps = $db->query($req_gps);

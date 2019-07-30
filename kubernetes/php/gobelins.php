@@ -332,7 +332,7 @@
 
     $req_talents_c   = "SELECT IdGob,Skills.IdSkill,Niveau,Connaissance,NomSkill,Tooltip
                         FROM Skills
-                        INNER JOIN FP_C on Skills.IdSkill = FP_C.IdSkill
+                        INNER JOIN global.FP_Skill on Skills.IdSkill = FP_Skill.IdSkill
                         WHERE Skills.Type = 'C' AND Skills.IdGob = '$gob_id'";
     $query_talents_c = $db->query($req_talents_c);
 
@@ -364,7 +364,7 @@
 
     $req_talents_t   = "SELECT IdGob,Skills.IdSkill,Niveau,Connaissance,NomSkill,Tooltip
                         FROM Skills
-                        INNER JOIN FP_T on Skills.IdSkill = FP_T.IdSkill
+                        INNER JOIN global.FP_Tech on Skills.IdSkill = FP_Tech.IdSkill
                         WHERE Skills.Type = 'T' AND Skills.IdGob = '$gob_id'";
     $query_talents_t = $db->query($req_talents_t);
 
