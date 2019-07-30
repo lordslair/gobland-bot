@@ -8,14 +8,14 @@ data:
   config : |
     server {
       listen      80;
-      server_name XXXX;
+      server_name glit.lordslair.net;
 
       index index.php index.html;
       root /code;
 
       location ~ /.*\.php$ {
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
-        fastcgi_pass php-XX:9000;
+        fastcgi_pass gobland-it-php:9000;
         fastcgi_index index.php;
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;

@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: gobland-it-php-XX
+  name: gobland-it-php
   labels:
     tier: backend
 spec:
   selector:
-    app: php-XX
+    app: php
     tier: backend
   ports:
   - protocol: TCP

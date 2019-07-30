@@ -1,5 +1,5 @@
 <?php
-    $db_file = $_ENV["CLANID"];
+    $db_file = $_SESSION["gob_clan"];
     $db_host = 'gobland-it-mariadb';
     $db_port = '3306';
     $db_user = 'root';
