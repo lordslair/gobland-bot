@@ -247,6 +247,28 @@ foreach my $db (@db_list)
                 $tt  = Encode::decode_utf8('Portée H').' : '.$portee_h.'<br>';
                 $tt .= Encode::decode_utf8('Portée V').' : '.$portee_v;
             }
+            elsif ( $t_id == 40 )
+            {
+                my $coeff;
+                if    ( $niveau == 1 ) { $coeff = 5   }
+                elsif ( $niveau == 2 ) { $coeff = 4.5 }
+                elsif ( $niveau == 3 ) { $coeff = 4   }
+                elsif ( $niveau == 4 ) { $coeff = 3.5 }
+
+                my $x = int( ($attr[9] + $attr[14]) / $coeff );
+                my $m_con = 0;
+                my $m_esq = 0;
+
+                if    ( $niveau == 1 ) {                               }
+                elsif ( $niveau == 2 ) { $m_esq = int($x/2)            }
+                elsif ( $niveau == 3 ) { $m_esq = $x                   }
+                elsif ( $niveau == 4 ) { $m_esq = $x ; $m_con = $x * 5 }
+
+                $tt  = 'Malus<br>';
+                $tt .= 'ATT -'.$x.'D3<br>';
+                $tt .= 'ESQ -'.$m_esq.'D3<br>';
+                $tt .= 'Con -'.$m_con.'%<br>';
+            }
 
             if ( $tt ne '' )
             {
