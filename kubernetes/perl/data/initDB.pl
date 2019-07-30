@@ -14,7 +14,7 @@ my $dbh       = DBI->connect($dsn, 'root', $db_pass, { RaiseError => 1 }) or die
 
 my ( $sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst ) = localtime(time);
 
-# Create 'global' DB, used for IT logins and more
+# Create 'global' DB, used for IT logins, FP and more
 my $dateTime = sprintf "%4d-%02d-%02d %02d:%02d:%02d", $year + 1900, $mon + 1, $mday, $hour, $min, $sec;
 print STDERR "$dateTime [initDB] DB: global\n";
 $dbh->do("CREATE DATABASE IF NOT EXISTS `global`");
@@ -27,6 +27,40 @@ $dbh->do("CREATE TABLE IF NOT EXISTS `users` (
     `account_enabled` tinyint(1) NOT NULL DEFAULT 0,
     `account_since` datetime DEFAULT current_timestamp(),
     PRIMARY KEY (`account_id`))");
+
+    $dbh->do("CREATE TABLE IF NOT EXISTS FP_Skill (IdSkill     INT PRIMARY KEY,
+                                 NomSkill    TEXT,
+                                 PASkill     INT,
+                                 TypeSkill   TEXT,
+                                 NiveauSkill INT,
+                                 Type        TEXT,
+                                 Affinite    TEXT)");
+
+    $dbh->do("CREATE TABLE IF NOT EXISTS FP_Tech (IdSkill     INT PRIMARY KEY,
+                                 NomSkill    TEXT,
+                                 PASkill     INT,
+                                 TypeSkill   TEXT,
+                                 NiveauSkill INT,
+                                 Type        TEXT,
+                                 Affinite    TEXT)");
+
+    $dbh->do("CREATE TABLE IF NOT EXISTS FP_Lieu (IdLieu         INT PRIMARY KEY,
+                                    Nom            TEXT,
+                                    Type           TEXT,
+                                    IdProprietaire TEXT,
+                                    architecture   TEXT,
+                                    mobile         TEXT,
+                                    X              TEXT,
+                                    Y              TEXT,
+                                    Z              TEXT)");
+
+    $dbh->do("CREATE TABLE IF NOT EXISTS FP_Clan (Id         INT PRIMARY KEY,
+                                    Nom            TEXT,
+                                    NbMembres      INT,
+                                    Blason         TEXT,
+                                    DateCreation   TEXT,
+                                    Gestionnaire   TEXT,
+                                    Site           TEXT)");
 
 # Create per-clan DB
 foreach my $db (@db_list)

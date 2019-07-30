@@ -9,13 +9,15 @@ my $path       = '/code';
 my $skills_csv = 'FP_Skill.csv';
 my $techs_csv  = 'FP_Tech.csv';
 my $lieux_csv  = 'FP_Lieu.csv';
+my $clans_csv  = 'FP_Clan.csv';
 my $lieux2_csv = 'Lieux.csv';
     
 `wget --quiet "$source/$skills_csv" -O "$path/data/$skills_csv"`;
 `wget --quiet "$source/$techs_csv"  -O "$path/data/$techs_csv"`;
 `wget --quiet "$source/$lieux_csv"  -O "$path/data/$lieux_csv"`;
+`wget --quiet "$source/$clans_csv"  -O "$path/data/$clans_csv"`;
     
-my @db_list   = split(',', $ENV{'DBLIST'});
+my $db_name   = ('global');
 my $db_driver = 'mysql';
 my $db_host   = 'gobland-it-mariadb';
 my $db_port   = '3306';
