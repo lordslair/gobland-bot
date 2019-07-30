@@ -102,13 +102,13 @@ foreach my $db (@db_list)
                     if ( $row !~ /^#/ )
                     {
                         $row[1] =~ s/\'/\'\'/g;
-                        my $sth  = $dbh->prepare( "REPLACE INTO FP_C VALUES( '$row[0]', \
-                                                                             '$row[1]', \
-                                                                             '$row[2]', \
-                                                                             '$row[3]', \
-                                                                             '$row[4]', \
-                                                                             '$row[5]', \
-                                                                             '$row[6]'  ) ");
+                        my $sth  = $dbh->prepare( "REPLACE INTO FP_Skill VALUES( '$row[0]', \
+                                                                                 '$row[1]', \
+                                                                                 '$row[2]', \
+                                                                                 '$row[3]', \
+                                                                                 '$row[4]', \
+                                                                                 '$row[5]', \
+                                                                                 '$row[6]'  ) ");
                         $sth->execute();
                         $sth->finish();
                     }
@@ -131,13 +131,13 @@ foreach my $db (@db_list)
                     if ( $row !~ /^#/ )
                     {
                         $row[1] =~ s/\'/\'\'/g;
-                        my $sth  = $dbh->prepare( "REPLACE INTO FP_T VALUES( '$row[0]', \
-                                                                             '$row[1]', \
-                                                                             '$row[2]', \
-                                                                             '$row[3]', \
-                                                                             '$row[4]', \
-                                                                             '$row[5]', \
-                                                                             '$row[6]'  ) ");
+                        my $sth  = $dbh->prepare( "REPLACE INTO FP_Tech VALUES( '$row[0]', \
+                                                                                '$row[1]', \
+                                                                                '$row[2]', \
+                                                                                '$row[3]', \
+                                                                                '$row[4]', \
+                                                                                '$row[5]', \
+                                                                                '$row[6]'  ) ");
                         $sth->execute();
                         $sth->finish();
                     }
