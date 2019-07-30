@@ -225,7 +225,7 @@ foreach my $db (@db_list)
             {
                 my $coeff  = $niveau;
                 my $reg    = $attr[3];
-                my $reg_bm = $attr[4] + $attr[5];
+                my $reg_bm = $attr[4];
                 my $soin   = $coeff * $reg + $reg_bm;
 
                 $tt = 'Soin : '.$soin.' PV(s)';
