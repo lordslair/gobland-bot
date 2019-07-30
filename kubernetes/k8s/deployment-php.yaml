@@ -29,8 +29,6 @@ spec:
         env:
         - name: MARIADB_ROOT_PASSWORD
           value: YYYYY
-        - name: CLANNAME
-          value: "ZZZZZ"
       volumes:
       - name: code
         persistentVolumeClaim:

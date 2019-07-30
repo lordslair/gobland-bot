@@ -11,7 +11,7 @@
       </div>
       <div id="content">
 <?php
-    print ('<br><h1>'.$_ENV["CLANNAME"].'</h1><br>');
+    print ('<br><h1>'.$_SESSION["gob_clan_name"].'</h1><br>');
 ?>
         <table cellspacing="0" id="trollsList">
           <tr>

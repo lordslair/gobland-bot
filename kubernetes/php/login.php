@@ -58,11 +58,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             // Password is correct, so start a new session
                             session_start();
 
+                            $req_clan_name = "SELECT Nom
+                                              FROM FP_Clan
+                                              WHERE Id = '$gob_clan'";
+                            $gob_clan_name = $db->query($req_clan_name)->fetch_row()[0];
+
                             // Store data in session variables
-                            $_SESSION["loggedin"] = true;
-                            $_SESSION["id"] = $id;
-                            $_SESSION["gob_name"] = $gob_name;
-                            $_SESSION["gob_clan"] = $gob_clan;
+                            $_SESSION["loggedin"]      = true;
+                            $_SESSION["id"]            = $id;
+                            $_SESSION["gob_name"]      = $gob_name;
+                            $_SESSION["gob_clan"]      = $gob_clan;
+                            $_SESSION["gob_clan_name"] = $gob_clan_name;
 
                             // Redirect user to welcome page
                             header("location: index.php");

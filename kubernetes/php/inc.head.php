@@ -1,5 +1,5 @@
 <?php
-    print ('    <title>Gobland-IT ('.$_ENV["CLANID"].') '.$_ENV["CLANNAME"].'</title>'."\n");
+    print ('    <title>GL-IT ('.$_SESSION["gob_clan"].') '.$_SESSION["gob_clan_name"].'</title>'."\n");
 ?>
     <link rel="stylesheet" type="text/css" href="/style/common.css" />
     <link rel="stylesheet" type="text/css" href="/style/menu.css" />
