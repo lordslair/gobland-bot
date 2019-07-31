@@ -347,6 +347,27 @@ foreach my $db (@db_list)
                 $tt .= 'Full : '.$coeff.'%<br>';
                 $tt .= 'Res. : '.$coeff_r.'%<br>';
             }
+            # Feinte
+            elsif ( $t_id == 45 )
+            {
+                my $coeff  = $niveau * 2;
+                my $x      = $niveau * 4;
+                my $coefa  = 0.60 + ( $niveau * 0.05 );
+                my $coefb  = 0.40 + ( $niveau * 0.05 );
+
+                my $att    = int(($attr[9]  * $coefa));
+                my $att_bm = int(($attr[10] * $coefa));
+                my $deg    = int(($attr[0]  * $coefb));
+                my $deg_bm = int(($attr[1]  * $coefb));
+
+                $tt  = 'Gobelin<br>';
+                $tt .= 'ESQ : +'.$coeff.'<br>';
+                $tt .= 'Jet ATT: '.$att.'D6 + '.$att_bm.'<br>';
+                $tt .= 'Jet DEG: '.$deg.'D6 + '.$deg_bm.'<br>';
+                $tt .= '<br>';
+                $tt .= 'Monstre<br>';
+                $tt .= 'Con -'.$x.'%<br>';
+            }
 
             if ( $tt ne '' )
             {
