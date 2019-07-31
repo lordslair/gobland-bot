@@ -247,6 +247,19 @@ foreach my $db (@db_list)
                 $tt  = Encode::decode_utf8('Portée H').' : '.$portee_h.'<br>';
                 $tt .= Encode::decode_utf8('Portée V').' : '.$portee_v;
             }
+            # Image-Miroir
+            elsif ( $t_id == 18 )
+            {
+                my $nbr;
+                my $duree;
+                if    ( $niveau == 1 ) { $nbr = 5 ; $duree = 12 }
+                elsif ( $niveau == 2 ) { $nbr = 6 ; $duree = 12 }
+                elsif ( $niveau == 3 ) { $nbr = 7 ; $duree = 24 }
+                elsif ( $niveau == 4 ) { $nbr = 8 ; $duree = 24 }
+
+                $tt  = Encode::decode_utf8('Durée').' : '.$duree.'H<br>';
+                $tt .= 'Images : '.$nbr;
+            }
             # Eclair
             elsif ( $t_id == 33 )
             {
