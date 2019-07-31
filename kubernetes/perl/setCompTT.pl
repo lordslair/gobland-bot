@@ -368,6 +368,22 @@ foreach my $db (@db_list)
                 $tt .= 'Monstre<br>';
                 $tt .= 'Con -'.$x.'%<br>';
             }
+            # Symphonie Intestinale
+            elsif ( $t_id == 46 )
+            {
+                my $coeff   = 35 - (  5 * $niveau );
+                my $coeff_r = 70 - ( 10 * $niveau );
+                my $pv      = $pvs[0];
+
+                my $malus   = int($pv/$coeff);
+                my $malus_r = int($pv/$coeff_r);
+
+                $tt  = 'Malus<br>';
+                $tt .= '<br>';
+                $tt .= 'ATT : - '.$malus.'<br>';
+                $tt .= 'ESQ : - '.$malus.'<br>';
+                $tt .= 'PER : - '.$malus.'<br>';
+            }
 
             if ( $tt ne '' )
             {
