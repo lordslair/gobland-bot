@@ -384,6 +384,29 @@ foreach my $db (@db_list)
                 $tt .= 'ESQ : - '.$malus.'<br>';
                 $tt .= 'PER : - '.$malus.'<br>';
             }
+            # Foudre
+            elsif ( $t_id == 68 )
+            {
+                my $coeff     = 7 - $niveau;
+                my $malus_pv  = int($attr[9] / $coeff);
+                my $range     = $attr[6] + $attr[7] + $attr[8];
+                my $malus_per = int($attr[9] / 2 / $coeff);
+
+                my $portee;
+                if    ( $range <  4 )   { $portee = 1 }
+                elsif ( $range <  9 )   { $portee = 2 }
+                elsif ( $range < 15 )   { $portee = 3 }
+                elsif ( $range < 22 )   { $portee = 4 }
+                elsif ( $range < 30 )   { $portee = 5 }
+                elsif ( $range < 39 )   { $portee = 6 }
+
+                $tt  = 'Malus<br>';
+                $tt .= '<br>';
+                $tt .= 'PV - '.$malus_pv.'D3<br>';
+                $tt .= 'PER - '.$malus_per.'D3<br>';
+                $tt .= '<br>';
+                $tt .= Encode::decode_utf8('Portée H').' : '.$portee.'<br>';
+            }
 
             if ( $tt ne '' )
             {
