@@ -231,6 +231,20 @@ foreach my $db (@db_list)
 
                 $tt = 'Soin : '.$soin.' PV(s)';
             }
+            # Ténèbres
+            elsif ( $t_id == 15 )
+            {
+                my $cases_h;
+                my $cases_v;
+                if    ( $niveau == 1 ) { $cases_h = 3 ; $cases_v = 3 }
+                elsif ( $niveau == 2 ) { $cases_h = 7 ; $cases_v = 3 }
+                elsif ( $niveau == 3 ) { $cases_h = 7 ; $cases_v = 7 }
+                elsif ( $niveau == 4 ) { $cases_h = 11; $cases_v = 7 }
+
+                $tt  = 'Zone<br>';
+                $tt .= 'H : '.$cases_h.' Cases<br>';
+                $tt .= 'V : '.$cases_v.' Cases';
+            }
             elsif ( $t_id == 17 )
             {
                 my $coeff;
