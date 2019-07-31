@@ -247,6 +247,30 @@ foreach my $db (@db_list)
                 $tt  = Encode::decode_utf8('Portée H').' : '.$portee_h.'<br>';
                 $tt .= Encode::decode_utf8('Portée V').' : '.$portee_v;
             }
+            # Eclair
+            elsif ( $t_id == 33 )
+            {
+                my $coeff;
+                my $coeff_r;
+                if    ( $niveau == 1 ) { $coeff = 3 ; $coeff_r = 1 }
+                elsif ( $niveau == 2 ) { $coeff = 6 ; $coeff_r = 3 }
+                elsif ( $niveau == 3 ) { $coeff = 9 ; $coeff_r = 4 }
+                elsif ( $niveau == 4 ) { $coeff = 12; $coeff_r = 6 }
+
+                my $range  = int(($attr[6] + $attr[7] + $attr[9])/2);
+                my $portee;
+                if    ( $range <  3 )   { $portee = 1 }
+                elsif ( $range < 11 )   { $portee = 2 }
+                elsif ( $range < 20 )   { $portee = 3 }
+                elsif ( $range < 30 )   { $portee = 4 }
+                elsif ( $range < 41 )   { $portee = 5 }
+                elsif ( $range > 42 )   { $portee = 6 }
+
+                $tt  = Encode::decode_utf8('Portée').' : '.$portee.'<br>';
+                $tt .= '<br>';
+                $tt .= 'Full : '.$coeff.'D3<br>';
+                $tt .= 'Res. : '.$coeff_r.'D3<br>';
+            }
             elsif ( $t_id == 40 )
             {
                 my $coeff;
