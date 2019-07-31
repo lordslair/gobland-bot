@@ -332,6 +332,21 @@ foreach my $db (@db_list)
                 $tt  = 'Durée : <br>';
                 $tt .= $coeff.'/'.$coeff_r.' Tours';
             }
+            # Barrière Psionique
+            elsif ( $t_id == 43 )
+            {
+                my $coeff;
+                if    ( $niveau == 1 ) { $coeff =  70 }
+                elsif ( $niveau == 2 ) { $coeff =  80 }
+                elsif ( $niveau == 3 ) { $coeff =  90 }
+                elsif ( $niveau == 4 ) { $coeff = 100 }
+                my $coeff_r = $coeff - 25;
+
+                $tt  = 'Absorpsion<br>';
+                $tt .= '<br>';
+                $tt .= 'Full : '.$coeff.'%<br>';
+                $tt .= 'Res. : '.$coeff_r.'%<br>';
+            }
 
             if ( $tt ne '' )
             {
