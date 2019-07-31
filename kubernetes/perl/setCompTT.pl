@@ -269,6 +269,18 @@ foreach my $db (@db_list)
                 $tt .= 'ESQ -'.$m_esq.'D3<br>';
                 $tt .= 'Con -'.$m_con.'%<br>';
             }
+            elsif ( $t_id == 42 )
+            {
+                my $coeff;
+                my $coeff_r;
+                if    ( $niveau == 1 ) { $coeff = $niveau; $coeff_r = 0 }
+                elsif ( $niveau == 2 ) { $coeff = $niveau; $coeff_r = 1 }
+                elsif ( $niveau == 3 ) { $coeff = $niveau; $coeff_r = 1 }
+                elsif ( $niveau == 4 ) { $coeff = $niveau; $coeff_r = 2 }
+
+                $tt  = 'Durée : <br>';
+                $tt .= $coeff.'/'.$coeff_r.' Tours';
+            }
 
             if ( $tt ne '' )
             {
