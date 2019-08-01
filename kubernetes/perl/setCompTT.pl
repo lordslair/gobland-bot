@@ -199,6 +199,7 @@ foreach my $db (@db_list)
 
                 $tt = 'Full : '.$deg.'D3'."<br>".'Res. : '.$deg_r.'D3';
             }
+            # Baratin
             elsif ( $t_id == 11 )
             {
                 my $coeff    =  6 - $niveau;
@@ -216,12 +217,12 @@ foreach my $db (@db_list)
                 $tt  = Encode::decode_utf8('Portée').' : '.$portee.' Case(s)'.'<br>';
                 $tt .= '<br>';
                 $tt .= 'Si full'.'<br>';
-                $tt .= 'ESQ -'.$esq.'D'.'<br>';
-                $tt .= 'RS -'.$malus.'%'.'<br>';
+                $tt .= 'ESQ : -'.$esq.'D6'.'<br>';
+                $tt .= 'RS : -'.$malus.'%'.'<br>';
                 $tt .= '<br>';
                 $tt .= Encode::decode_utf8('Si resisté').'<br>';
-                $tt .= 'ESQ -'.$esq_r.'D'.'<br>';
-                $tt .= 'RS -'.$malus_r.'%'.'<br>';
+                $tt .= 'ESQ : -'.$esq_r.'D6'.'<br>';
+                $tt .= 'RS : -'.$malus_r.'%'.'<br>';
             }
             elsif ( $t_id == 12 )
             {
