@@ -380,7 +380,7 @@
             print('            <li>'."\n");
             print('              <div class="tt_r">'."\n");
             print('                '.$nom.' ('.$percent.' %) [Niv. '.$niveau.']'."\n");
-            print('                <span class="tt_r_text">'.$tt.'</span>'."\n");
+            print('                <span class="tt_r_text" style="width: 15em;background: cornsilk;color: black;border: 1px solid black;text-align: left;font-family: monospace;font-size: 12px">'.$tt.'</span>'."\n");
             print('              </div>'."\n");
             print('            </li>'."\n");
         }
