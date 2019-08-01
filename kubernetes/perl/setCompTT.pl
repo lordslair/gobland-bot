@@ -129,14 +129,13 @@ foreach my $db (@db_list)
                 my $reg_full = sprintf("%d",$malus*$reg);
                 my $reg_r    = sprintf("%d",$malus_r*$reg);
 
-                $tt  = 'Si full'.'<br>';
-                $tt .= 'DEG : -'.$deg_full.'<br>';
-                $tt .= 'REG : -'.$reg_full.'<br>';
+                $tt  = 'DEG : -'.$deg_full.' | Full<br>';
+                $tt .= 'REG : -'.$reg_full.' | Full<br>';
                 $tt .= '<br>';
-                $tt .= Encode::decode_utf8('Si resisté').'<br>';
-                $tt .= 'DEG : -'.$deg_r.'<br>';
-                $tt .= 'REG : -'.$reg_r.'<br>';
+                $tt .= 'DEG : -'.$deg_r.' | Res.<br>';
+                $tt .= 'REG : -'.$reg_r.' | Res.<br>';
             }
+            # Attaque à double tranchant
             elsif ( $t_id == 7 )
             {
                 my $coeff;
@@ -145,8 +144,10 @@ foreach my $db (@db_list)
                 elsif ( $niveau == 3 ) { $coeff = 3 }
                 elsif ( $niveau == 4 ) { $coeff = 2 }
 
-                $tt = 'Bonus : +1 / '.$coeff.'PVs';
+                $tt  = 'Bonus : +1 / '.$coeff.'PVs | Full<br>';
+                $tt .= 'Bonus : +0 / '.$coeff.'PVs | Res.';
             }
+            # Projectile d'Ombre
             elsif ( $t_id == 9 )
             {
                 my $coeff;
@@ -169,21 +170,22 @@ foreach my $db (@db_list)
                 elsif ( $vue <= 22 ) { $portee = 4 }
                 elsif ( $vue <= 30 ) { $portee = 5 }
                 elsif ( $vue <= 39 ) { $portee = 6 }
-                my $po_deg     = ( $att + $per ) /2;
-                my $po_deg_bmm = ( $att_bmm + $per_bmm ) /2;
-                my $po_att     = (($per+$att)/2);
-                my $po_att_bmm = ( $att_bmm + $per_bmm ) /2;
+                my $po_deg     = int(( $att + $per ) /2);
+                my $po_deg_bmm = int(( $att_bmm + $per_bmm ) /2);
+                my $po_att     = int((($per+$att)/2));
+                my $po_att_bmm = int(( $att_bmm + $per_bmm ) /2);
 
                 $tt  = Encode::decode_utf8('Portée').' : '.$portee.' Case(s)'.'<br>';
                 $tt .= '<br>';
                 $tt .= 'Si cible < '.$coeff.' Cases'.'<br>';
                 $tt .= 'ATT : '.$po_att.' D6 + '.$po_att_bmm.'<br>';
-                $tt .= 'DEG : '.$po_deg.' D3 + '.$po_deg_bmm;
+                $tt .= 'DEG : '.$po_deg.' D3 + '.$po_deg_bmm.'<br>';
                 $tt .= '<br>';
                 $tt .= 'Si cible > '.$coeff.' Cases'.'<br>';
                 $tt .= 'ATT : '.($po_att -1).' D6 + '.$po_att_bmm.'<br>';
                 $tt .= 'DEG : '.($po_deg -1).' D3 + '.$po_deg_bmm;
             }
+            # Bombe à retardement
             elsif ( $t_id == 10 )
             {
                 my $coeff;
@@ -197,7 +199,9 @@ foreach my $db (@db_list)
                 my $deg_r = ( $attr[6] + $attr[0] ) / $coeff_r;
                    $deg_r = sprintf("%d",$deg_r);
 
-                $tt = 'Full : '.$deg.'D3'."<br>".'Res. : '.$deg_r.'D3';
+                $tt  = 'DEG : -'.$deg.'D3 | Full';
+                $tt .= '<br>';
+                $tt .= 'DEG : -'.$deg_r.'D3 | Res.';
             }
             # Baratin
             elsif ( $t_id == 11 )
@@ -216,22 +220,24 @@ foreach my $db (@db_list)
 
                 $tt  = Encode::decode_utf8('Portée').' : '.$portee.' Case(s)'.'<br>';
                 $tt .= '<br>';
-                $tt .= 'Si full'.'<br>';
-                $tt .= 'ESQ : -'.$esq.'D6'.'<br>';
-                $tt .= 'RS : -'.$malus.'%'.'<br>';
+                $tt .= 'ESQ : -'.$esq.'D6'.' | Full<br>';
+                $tt .= 'RS &nbsp;: -'.$malus.'%'.' | Full<br>';
                 $tt .= '<br>';
-                $tt .= Encode::decode_utf8('Si resisté').'<br>';
-                $tt .= 'ESQ : -'.$esq_r.'D6'.'<br>';
-                $tt .= 'RS : -'.$malus_r.'%'.'<br>';
+                $tt .= 'ESQ : -'.$esq_r.'D6'.' | Res.<br>';
+                $tt .= 'RS &nbsp;: -'.$malus_r.'%'.' | Res.<br>';
             }
+            # Soin
             elsif ( $t_id == 12 )
             {
                 my $coeff  = $niveau;
                 my $reg    = $attr[3];
                 my $reg_bm = $attr[4];
                 my $soin   = $coeff * $reg + $reg_bm;
+                my $soin_r = int($soin/2);;
 
-                $tt = 'Soin : '.$soin.' PV(s)';
+                $tt  = 'Soin : '.$soin.' PV(s) | Full';
+                $tt .= '<br>';
+                $tt .= 'Soin : '.$soin_r.' PV(s) | Res.';
             }
             # Ténèbres
             elsif ( $t_id == 15 )
@@ -244,9 +250,10 @@ foreach my $db (@db_list)
                 elsif ( $niveau == 4 ) { $cases_h = 11; $cases_v = 7 }
 
                 $tt  = 'Zone<br>';
-                $tt .= 'H : '.$cases_h.' Cases<br>';
-                $tt .= 'V : '.$cases_v.' Cases';
+                $tt .= 'H : '.$cases_h.' Case(s)<br>';
+                $tt .= 'V : '.$cases_v.' Case(s)';
             }
+            # Téléportation
             elsif ( $t_id == 17 )
             {
                 my $coeff;
@@ -260,8 +267,8 @@ foreach my $db (@db_list)
                 my $db = int((sqrt( 19 + 18 * (($mm_total * $coeff)/5 + 3)) - 7)/ 2);
                 my $portee_h = $db + 20 + $vue;
                 my $portee_v = int($db /3) + 3;
-                $tt  = Encode::decode_utf8('Portée H').' : '.$portee_h.'<br>';
-                $tt .= Encode::decode_utf8('Portée V').' : '.$portee_v;
+                $tt  = Encode::decode_utf8('Portée H').' : '.$portee_h.' Case(s)<br>';
+                $tt .= Encode::decode_utf8('Portée V').' : '.$portee_v.' Case(s)';
             }
             # Image-Miroir
             elsif ( $t_id == 18 )
@@ -272,9 +279,12 @@ foreach my $db (@db_list)
                 elsif ( $niveau == 2 ) { $nbr = 6 ; $duree = 12 }
                 elsif ( $niveau == 3 ) { $nbr = 7 ; $duree = 24 }
                 elsif ( $niveau == 4 ) { $nbr = 8 ; $duree = 24 }
+                my $nbr_r = int($nbr/2);
 
-                $tt  = Encode::decode_utf8('Durée').' : '.$duree.'H<br>';
-                $tt .= 'Images : '.$nbr;
+                $tt  = Encode::decode_utf8('Durée').' &nbsp;: '.$duree.'H<br>';
+                $tt .= '<br>';
+                $tt .= 'Images : '.$nbr.' | Full<br>';
+                $tt .= 'Images : '.$nbr_r.' | Res.<br>';
             }
             # Eclair
             elsif ( $t_id == 33 )
@@ -297,9 +307,10 @@ foreach my $db (@db_list)
 
                 $tt  = Encode::decode_utf8('Portée').' : '.$portee.'<br>';
                 $tt .= '<br>';
-                $tt .= 'Full : '.$coeff.'D3<br>';
-                $tt .= 'Res. : '.$coeff_r.'D3<br>';
+                $tt .= 'DEG : -'.$coeff.'D6 | Full<br>';
+                $tt .= 'DEG : -'.$coeff_r.'D6 | Res.<br>';
             }
+            # Attaque Etourdissante
             elsif ( $t_id == 40 )
             {
                 my $coeff;
@@ -317,11 +328,15 @@ foreach my $db (@db_list)
                 elsif ( $niveau == 3 ) { $m_esq = $x                   }
                 elsif ( $niveau == 4 ) { $m_esq = $x ; $m_con = $x * 5 }
 
-                $tt  = 'Malus<br>';
-                $tt .= 'ATT -'.$x.'D3<br>';
-                $tt .= 'ESQ -'.$m_esq.'D3<br>';
-                $tt .= 'Con -'.$m_con.'%<br>';
+                $tt  = Encode::decode_utf8('Durée').' : 2 Tours | Full<br>';
+                $tt .= Encode::decode_utf8('Durée').' : 2 Tours | Res.<br>';
+                $tt .= '<br>';
+                $tt .= 'Malus<br>';
+                $tt .= 'ATT : -'.$x.'D3<br>';
+                $tt .= 'ESQ : -'.$m_esq.'D3<br>';
+                $tt .= 'Con : -'.$m_con.'%<br>';
             }
+            # Bouclier Psychique
             elsif ( $t_id == 42 )
             {
                 my $coeff;
@@ -331,8 +346,8 @@ foreach my $db (@db_list)
                 elsif ( $niveau == 3 ) { $coeff = $niveau; $coeff_r = 1 }
                 elsif ( $niveau == 4 ) { $coeff = $niveau; $coeff_r = 2 }
 
-                $tt  = 'Durée : <br>';
-                $tt .= $coeff.'/'.$coeff_r.' Tours';
+                $tt  = 'Durée : '.$coeff.' Tour(s) | Full<br>';
+                $tt .= 'Durée : '.$coeff_r.' Tour(s) | Res.';
             }
             # Barrière Psionique
             elsif ( $t_id == 43 )
@@ -346,8 +361,8 @@ foreach my $db (@db_list)
 
                 $tt  = 'Absorpsion<br>';
                 $tt .= '<br>';
-                $tt .= 'Full : '.$coeff.'%<br>';
-                $tt .= 'Res. : '.$coeff_r.'%<br>';
+                $tt .= 'DEG reçus : -'.$coeff.'% | Full<br>';
+                $tt .= 'DEG reçus : -'.$coeff_r.'% | Res.<br>';
             }
             # Feinte
             elsif ( $t_id == 45 )
@@ -380,11 +395,13 @@ foreach my $db (@db_list)
                 my $malus   = int($pv/$coeff);
                 my $malus_r = int($pv/$coeff_r);
 
-                $tt  = 'Malus<br>';
+                $tt  = 'ATT : -'.$malus.' | Full<br>';
+                $tt .= 'ESQ : -'.$malus.' | Full<br>';
+                $tt .= 'PER : -'.$malus.' | Full<br>';
                 $tt .= '<br>';
-                $tt .= 'ATT : - '.$malus.'<br>';
-                $tt .= 'ESQ : - '.$malus.'<br>';
-                $tt .= 'PER : - '.$malus.'<br>';
+                $tt .= 'ATT : -'.$malus_r.' | Res.<br>';
+                $tt .= 'ESQ : -'.$malus_r.' | Res.<br>';
+                $tt .= 'PER : -'.$malus_r.' | Res.<br>';
             }
             # Foudre
             elsif ( $t_id == 68 )
@@ -402,12 +419,10 @@ foreach my $db (@db_list)
                 elsif ( $range < 30 )   { $portee = 5 }
                 elsif ( $range < 39 )   { $portee = 6 }
 
-                $tt  = 'Malus<br>';
+                $tt  = Encode::decode_utf8('Portée H').' : '.$portee.' Case(s)<br>';
                 $tt .= '<br>';
-                $tt .= 'PV - '.$malus_pv.'D3<br>';
-                $tt .= 'PER - '.$malus_per.'D3<br>';
-                $tt .= '<br>';
-                $tt .= Encode::decode_utf8('Portée H').' : '.$portee.'<br>';
+                $tt .= 'PV &nbsp;: -'.$malus_pv.'D3<br>';
+                $tt .= 'PER : -'.$malus_per.'D3 (2 Tours)<br>';
             }
 
             if ( $tt ne '' )
