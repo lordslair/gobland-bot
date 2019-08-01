@@ -107,6 +107,7 @@ foreach my $db (@db_list)
             my @attr = $sth->fetchrow_array;
             $sth->finish;
 
+            # Rafale Psychique
             if ( $t_id == 2 )
             {
                 my $coeff;
@@ -129,12 +130,12 @@ foreach my $db (@db_list)
                 my $reg_r    = sprintf("%d",$malus_r*$reg);
 
                 $tt  = 'Si full'.'<br>';
-                $tt .= 'DEG : '.$deg_full.'<br>';
-                $tt .= 'Malus : REG -'.$reg_full.'<br>';
+                $tt .= 'DEG : -'.$deg_full.'<br>';
+                $tt .= 'REG : -'.$reg_full.'<br>';
                 $tt .= '<br>';
                 $tt .= Encode::decode_utf8('Si resisté').'<br>';
-                $tt .= 'DEG : '.$deg_r.'<br>';
-                $tt .= 'Malus : REG -'.$reg_r.'<br>';
+                $tt .= 'DEG : -'.$deg_r.'<br>';
+                $tt .= 'REG : -'.$reg_r.'<br>';
             }
             elsif ( $t_id == 7 )
             {
