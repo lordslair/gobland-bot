@@ -101,7 +101,10 @@ foreach my $db (@db_list)
             my $tt     = '';
 
             my $sth = $dbh->prepare( "SELECT DEG,BMDEG,BPDEG,REG,BMREG,BPREG,PER,BMPER,BPPER,ATT,BMATT,BPATT, \
-                                             MM,BMM \
+                                             MM,BMM, \
+                                             ESQ,BMESQ,BPESQ, \
+                                             BPArm,BMArm, \
+                                             MR,BMR
                                       FROM Gobelins2 WHERE Id = '$gob_id'" );
             $sth->execute();
             my @attr = $sth->fetchrow_array;
@@ -305,10 +308,68 @@ foreach my $db (@db_list)
                 elsif ( $range < 41 )   { $portee = 5 }
                 elsif ( $range > 42 )   { $portee = 6 }
 
-                $tt  = Encode::decode_utf8('Portée').' : '.$portee.'<br>';
+                $tt  = Encode::decode_utf8('Portée').' : '.$portee.' Case(s)<br>';
                 $tt .= '<br>';
                 $tt .= 'DEG : -'.$coeff.'D6 | Full<br>';
                 $tt .= 'DEG : -'.$coeff_r.'D6 | Res.<br>';
+            }
+            # Double Epée
+            elsif ( $t_id == 38 )
+            {
+                my $x;
+                my $coeff;
+                my $coefff;
+                if    ( $niveau == 1 ) { $x = 2 ; $coeff = 1.00 ; $coefff =  8 }
+                elsif ( $niveau == 2 ) { $x = 2 ; $coeff = 1.50 ; $coefff = 10 }
+                elsif ( $niveau == 3 ) { $x = 2 ; $coeff = 2.00 ; $coefff = 12 }
+                elsif ( $niveau == 4 ) { $x = 3 ; $coeff = 2.00 ; $coefff = 14 }
+
+                my $att    = $attr[9];
+                my $att_m  = $attr[10];
+                my $att_p  = int($attr[11] * $coeff);
+                my $att_bm = $att_m + $att_p;
+
+                my $deg    = $attr[0];
+                my $deg_m  = $attr[1];
+                my $deg_p  = int($attr[2] * $coeff);
+                my $deg_bm = $deg_m + $deg_p;
+
+                my $faim = int($x * (($attr[9] + $attr[0]) /$coefff) );
+
+                $tt  = '1er coup<br>';
+                $tt .= 'ATT : '.$att.'D6 + '.$att_bm.'<br>';
+                $tt .= 'DEG : '.$deg.'D3 + '.$deg_bm.'<br>';
+                $tt .= '<br>';
+                $tt .= 'Faim : ~'.$faim.'<br>';
+            }
+            # Double Dague
+            elsif ( $t_id == 39 )
+            {
+                my $x;
+                my $coeff;
+                my $coefff;
+                if    ( $niveau == 1 ) { $x = 2 ; $coeff = 1.00 ; $coefff =  8 }
+                elsif ( $niveau == 2 ) { $x = 2 ; $coeff = 1.15 ; $coefff = 10 }
+                elsif ( $niveau == 3 ) { $x = 3 ; $coeff = 1.30 ; $coefff = 12 }
+                elsif ( $niveau == 4 ) { $x = 4 ; $coeff = 1.50 ; $coefff = 14 }
+
+                my $att    = $attr[9];
+                my $att_m  = $attr[10];
+                my $att_p  = int($attr[11] * $coeff);
+                my $att_bm = $att_m + $att_p;
+
+                my $deg    = $attr[0];
+                my $deg_m  = $attr[1];
+                my $deg_p  = int($attr[2] * $coeff);
+                my $deg_bm = $deg_m + $deg_p;
+
+                my $faim = int($x * (($attr[9] + $attr[0]) /$coefff) );
+
+                $tt  = '1er coup<br>';
+                $tt .= 'ATT : '.$att.'D6 + '.$att_bm.'<br>';
+                $tt .= 'DEG : '.$deg.'D3 + '.$deg_bm.'<br>';
+                $tt .= '<br>';
+                $tt .= 'Faim : ~'.$faim.'<br>';
             }
             # Attaque Etourdissante
             elsif ( $t_id == 40 )
@@ -335,6 +396,28 @@ foreach my $db (@db_list)
                 $tt .= 'ATT : -'.$x.'D3<br>';
                 $tt .= 'ESQ : -'.$m_esq.'D3<br>';
                 $tt .= 'Con : -'.$m_con.'%<br>';
+            }
+            # Tranche-Artère
+            elsif ( $t_id == 41 )
+            {
+                my $coeff;
+                my $mul;
+                my $mulb;
+;
+                if    ( $niveau == 1 ) { $coeff = 3.5; $mul = 0.50; $mulb = 0.5 }
+                elsif ( $niveau == 2 ) { $coeff = 3.0; $mul = 0.50; $mulb = 0.5 }
+                elsif ( $niveau == 3 ) { $coeff = 2.5; $mul = 0.66; $mulb = 0.5 }
+                elsif ( $niveau == 4 ) { $coeff = 2.0; $mul = 0.66; $mulb = 1.0 }
+
+                my $deg    = int($mul * $attr[0]);
+                my $deg_bm = int($mulb * $attr[1]);
+                my $x      = int(($attr[9] + $attr[14]) / $coeff);
+
+                $tt  = 'DEG : '.$deg.'D3 + '.$deg_bm.'<br>';
+                $tt .= 'Malus : -'.$x.'D3 PV /tour<br>';
+                $tt .= '<br>';
+                $tt .= 'Durée : 2 Tour(s) | Full<br>';
+                $tt .= 'Durée : 1 Tour(s) | Res.';
             }
             # Bouclier Psychique
             elsif ( $t_id == 42 )
@@ -403,6 +486,28 @@ foreach my $db (@db_list)
                 $tt .= 'ESQ : -'.$malus_r.' | Res.<br>';
                 $tt .= 'PER : -'.$malus_r.' | Res.<br>';
             }
+            # Piège Gluant
+            elsif ( $t_id == 50 )
+            {
+                my $coeff;
+                my $x;
+                if    ( $niveau == 1 ) { $coeff = 1.00; $x = 2 }
+                elsif ( $niveau == 2 ) { $coeff = 1.25; $x = 2 }
+                elsif ( $niveau == 3 ) { $coeff = 1.50; $x = 3 }
+                elsif ( $niveau == 4 ) { $coeff = 2.00; $x = 3 }
+
+                my $cout    = 1 + 0.5 * $niveau;
+                my $seuil   = 55 + 10 * $niveau;
+                my $coeff_r = $coeff / 2;
+                my $mr      = int(($attr[19] + $attr[20]) * $coeff);
+                my $mr_r    = int(($attr[19] + $attr[20]) * $coeff_r);
+
+                $tt .= 'Malus : PA x'.$cout.' /'.$x.' tours<br>';
+                $tt .= 'Seuil : '.$seuil.' %<br>';
+                $tt .= '<br>';
+                $tt .= 'Piège : MR '.$mr.' | Full<br>';
+                $tt .= 'Piège : MR '.$mr_r.' | Res.<br>';
+            }
             # Foudre
             elsif ( $t_id == 68 )
             {
@@ -423,6 +528,80 @@ foreach my $db (@db_list)
                 $tt .= '<br>';
                 $tt .= 'PV &nbsp;: -'.$malus_pv.'D3<br>';
                 $tt .= 'PER : -'.$malus_per.'D3 (2 Tours)<br>';
+            }
+            # Peur
+            elsif ( $t_id == 73 )
+            {
+                my $coeff   = $niveau * 2;
+                my $coeff_r = $niveau;
+
+                $tt .= 'Cible : '.$coeff.' Mob(s) | Full<br>';
+                $tt .= 'Cible : '.$coeff_r.' Mob(s) | Res.<br>';
+            }
+            # Germes de Peste
+            elsif ( $t_id == 74 )
+            {
+                my $coeff;
+                my $duree;
+
+                if    ( $niveau == 1 ) { $coeff = 1; $duree = 2 }
+                elsif ( $niveau == 2 ) { $coeff = 1; $duree = 3 }
+                elsif ( $niveau == 3 ) { $coeff = 2; $duree = 3 }
+                elsif ( $niveau == 4 ) { $coeff = 2; $duree = 4 }
+
+                $tt .= 'Malus : -'.$coeff.'D3 PV /tour<br>';
+                $tt .= '<br>';
+                $tt .= 'Durée : '.$duree.' Tour(s)<br>';
+            }
+            # Gonflette
+            elsif ( $t_id == 83 )
+            {
+                my $coeff;
+                my $x;
+
+                if    ( $niveau == 1 ) { $coeff = 3.5; $x = 2 }
+                elsif ( $niveau == 2 ) { $coeff = 3.5; $x = 3 }
+                elsif ( $niveau == 3 ) { $coeff = 3.0; $x = 3 }
+                elsif ( $niveau == 4 ) { $coeff = 3.0; $x = 4 }
+
+                my $deg = int( $attr[0] / $coeff );
+                my $max = $deg * $x;
+
+                $tt .= 'Bonus : +'.$coeff.'DEG /tour<br>';
+                $tt .= '<br>';
+                $tt .= 'Cumul : Max +'.$max.'DEG<br>';
+            }
+            # Forme spectrale
+            elsif ( $t_id == 85 )
+            {
+                my $coeff;
+                my $mul;
+                my $mulb;
+
+                if    ( $niveau == 1 ) { $nbr = 1 }
+                elsif ( $niveau == 2 ) { $nbr = 1 }
+                elsif ( $niveau == 3 ) { $nbr = 2 }
+                elsif ( $niveau == 4 ) { $nbr = 2 }
+
+                my $esq_bm = 2 + $niveau;
+                my $arm_bm = $niveau;
+                my $arm_c  = int((0.05 * $niveau * $attr[17]) + (0.10 * $attr[17])) 
+                my $arm_cr = int(0.05 * $niveau * $attr[17])
+
+                my $arm    = $arm_bm + $arm_c;
+                my $arm_r  = $arm_bm + $arm_cr;
+
+                $tt  = 'Arm M : +'.$arm.' | Full<br>';
+                $tt .= 'Arm P : -'.$arm_c.' | Full<br>';
+                $tt .= 'ESQ &nbsp;: +'.$esq_bm.' | Full<br>';
+                $tt .= 'Libre : '.$nbr.' Case(s) | Full<br>';
+                $tt .= 'Durée : 2 Tour(s) | Full<br>';
+                $tt .= '<br>';
+                $tt .= 'Arm M : +'.$arm_r.' | Full<br>';
+                $tt .= 'Arm P : -'.$arm_cr.' | Full<br>';
+                $tt .= 'ESQ &nbsp;: +'.$esq_bm.' | Full<br>';
+                $tt .= 'Libre : '.$nbr.' Case(s) | Full<br>';
+                $tt .= 'Durée : 1 Tour(s) | Res.';
             }
 
             if ( $tt ne '' )
