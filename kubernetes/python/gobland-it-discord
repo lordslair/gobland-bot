@@ -1,0 +1,81 @@
+#!/usr/bin/python
+import re
+import discord
+import sys
+import os
+
+from queries import *
+
+token  = os.environ['TOKEN_32']
+client = discord.Client()
+
+@client.event
+async def on_ready():
+    print('Logged in as')
+    print(client.user.name)
+    print(client.user.id)
+    print(os.environ['DBNAME'])
+    print('------')
+
+@client.event
+async def on_message(message):
+    # we do not want the bot to reply to itself
+    if message.author == client.user:
+        return
+
+    if message.content.startswith('!!help'):
+        print('[{}] !!help'.format(message.author))
+        h_oukilest = '!!oulikest ID  -> Renvoie la position pour un mob/gob\n'
+        h_cdm      = '!!cdm ID       -> Renvoie la dernière CdM du mob demandé\n'
+        help       = '```' + h_oukilest + h_cdm + '```'
+        await client.send_message(message.channel, help)
+
+    elif message.content.startswith('!!oukilest'):
+        print('[{}] !!oukilest'.format(message.author))
+        m = re.match(r"!!oukilest (?P<id>\d*)", message.content)
+        if m is not None:
+            print('[{}] !!oukilest {}'.format(message.author,m.group('id')))
+            stats = oukilest(m.group('id'))
+            if stats:
+                # Id,Nom,Niveau,Type,Clan,X,Y,N,Z
+                msgTitre = ' {:6} : {:15} : {:4} : {:4} : {:4} : {:4}\n'.format('Id', 'Nom', 'Niv.', 'X', 'Y', 'N')
+                msgLine  = ' {:6} : {:15} : {:4} : {:4} : {:4} : {:4}\n'.format('======', '===============', '====', '====', '====', '====')
+                msgInfos = ' {:<6} : {:<15} : {:<4} : {:>4} : {:>4} : {:>4}\n'.format(stats[0],stats[1],stats[2],stats[5],stats[6],stats[7])
+                answer   = '```' + msgTitre + msgLine + msgInfos + '```'
+                await client.send_message(message.channel,answer)
+            else:
+                await client.send_message(message.channel, 'Informations non trouvées en DB pour ID: ' + m.group('id'))
+
+    elif message.content.startswith('!!cdm'):
+        print('[{}] !!cdm'.format(message.author))
+        m = re.match(r"!!cdm (?P<id>\d*)", message.content)
+        if m is not None:
+            print('[{}] !!cdm {}'.format(message.author,m.group('id')))
+            stats = cdm(m.group('id'))
+            if stats:
+                # Id,Date,IdMob,Name,Niveau,PVMin,PVMax,Blessure,ATTMin,ATTMax,ESQMin,ESQMax,DEGMin,DEGMax
+                #                                                REGMin,REGMax,ARMMin,ARMmax,PERMin,PERMax
+                pvs = '{}-{}'.format(stats[5],stats[6])
+                att = '{}-{}'.format(stats[8],stats[9])
+                esq = '{}-{}'.format(stats[10],stats[11])
+                deg = '{}-{}'.format(stats[12],stats[13])
+                reg = '{}-{}'.format(stats[14],stats[15])
+                arm = '{}-{}'.format(stats[16],stats[17])
+                per = '{}-{}'.format(stats[18],stats[19])
+                msgTitre_1 = ' {:6} : {:15} : {:4} : {:3} : {:7} :'.format('Id', 'Nom', 'Niv.', 'B.', 'PV')
+                msgLine_1  = ' {:6} : {:15} : {:4} : {:3} : {:7} :'.format('======', '===============', '====', '===', '=======')
+                msgInfos_1 = ' {:<6} : {:<15} : {:<4} : {:>2}% : {:>7} :'.format(stats[2],stats[3],stats[4],stats[7],pvs)
+                msgTitre_2 = ' {:5} : {:5} : {:5}'.format('ATT', 'ESQ', 'DEG')
+                msgLine_2  = ' {:5} : {:5} : {:5}'.format('=====', '=====', '=====')
+                msgInfos_2 = ' {:>5} : {:>5} : {:>5}'.format(att,esq,deg)
+                msgTitre_3 = ' {:5} : {:5} : {:5}\n'.format('REG', 'ARM', 'PER')
+                msgLine_3  = ' {:5} : {:5} : {:5}\n'.format('=====', '=====', '=====')
+                msgInfos_3 = ' {:>5} : {:>5} : {:>5}\n'.format(reg,arm,per)
+                msgTitre   = msgTitre_1 + msgTitre_2 + msgTitre_3
+                msgLine    = msgLine_1 + msgLine_2 + msgLine_3
+                msgInfos   = msgInfos_1 + msgInfos_2 + msgInfos_3
+                answer   = '```' + msgTitre + msgLine + msgInfos + '```'
+                await client.send_message(message.channel,answer)
+            else:
+                await client.send_message(message.channel, 'Informations non trouvées en DB pour ID: ' + m.group('id'))
+client.run(token)
