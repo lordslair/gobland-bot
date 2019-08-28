@@ -202,7 +202,7 @@
         print('                    <th>X</th>'."\n");
         print('                    <th>Y</th>'."\n");
         print('                    <th>N</th>'."\n");
-        print('                    <th>Mise .. jour</th>'."\n");
+        print('                    <th>Mise à jour</th>'."\n");
         print('                  </tr>'."\n");
 
         while ($row = $query_locator->fetch_array())
