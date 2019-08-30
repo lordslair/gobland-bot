@@ -137,7 +137,8 @@
             $count++;
         }
 
-        if ( preg_match('/@(gobelin|monstre):([\w]*)\s?/u', $_POST['search'], $matches) )
+        # Gobelin/Monstre selector
+        if ( preg_match('/@(gobelin|monstre):[\'"]?([\w\s]*)[\'"]?\s?/u', $_POST['search'], $matches) )
         {
             if ($count == 0)
             {
@@ -151,7 +152,7 @@
         }
 
         # Item/Lieu selector
-        if ( preg_match('/(tresor|lieu):([\w]*)\s?/u', $_POST['search'], $matches) )
+        if ( preg_match('/(tresor|lieu):[\'"]?([\w\s]*)[\'"]?\s?/u', $_POST['search'], $matches) )
         {
             if ($count == 0)
             {
