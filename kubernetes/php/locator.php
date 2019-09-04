@@ -301,7 +301,7 @@
           - Tu cherches un Monstre de type Strige -> <b>@monstre:Strige</b><br>
           - Tu cherches un Gobelin d'ID 355 -> <b>@id:355</b><br>
           - Tu cherches un Monstre de type Strige en surface -> <b>@monstre:Strige n:0</b><br>
-          - Tu cherches un Monstre de niveau 6 -> <b>level=6</b><br>
+          - Tu cherches un Monstre de niveau 6 -> <b>level:6</b><br>
           - Tu cherches un Monstre de type Strige ET d'un niveau 6 à 8 -> <b>@monstre:Strige level:6..8</b><br>
           - Tu cherches un Objet de type Anneau -> <b>@tresor:Anneau</b><br>
           - Tu cherches un Objet de type Anneau avec zone ( 0 < X < 20; 0 < Y < 20; -20 < N < -10 ) -> <b>@tresor:Anneau x:0..20 y:0..20 n:-20..-10</b><br>
