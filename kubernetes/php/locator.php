@@ -138,7 +138,19 @@
         }
 
         # Gobelin/Monstre selector
-        if ( preg_match('/@(gobelin|monstre):[\'"]?([\w\s]*)[\'"]?\s?/u', $_POST['search'], $matches) )
+        if ( preg_match('/@(gobelin|monstre):[\'"]([\w\s]*)[\'"]\s?/u', $_POST['search'], $matches) )
+        {
+            if ($count == 0)
+            {
+                $clause .= "( Type = '$matches[2]' OR Nom = '$matches[2]')";
+            }
+            else
+            {
+                $clause .= " AND ( Type = '$matches[2]' OR Nom = '$matches[2]' )";
+            }
+            $count++;
+        }
+        elseif ( preg_match('/@(gobelin|monstre):([\w]*)\s?/u', $_POST['search'], $matches) )
         {
             if ($count == 0)
             {
@@ -152,7 +164,19 @@
         }
 
         # Item/Lieu selector
-        if ( preg_match('/(tresor|lieu):[\'"]?([\w\s]*)[\'"]?\s?/u', $_POST['search'], $matches) )
+        if ( preg_match('/(tresor|lieu):[\'"]([\w\s]*)[\'"]\s?/u', $_POST['search'], $matches) )
+        {
+            if ($count == 0)
+            {
+                $clause .= "( Type = '$matches[2]' OR Nom = '$matches[2]' )";
+            }
+            else
+            {
+                $clause .= " AND ( Type = '$matches[2]' OR Nom = '$matches[2]' )";
+            }
+            $count++;
+        }
+        elseif ( preg_match('/(tresor|lieu):([\w]*)\s?/u', $_POST['search'], $matches) )
         {
             if ($count == 0)
             {
