@@ -128,7 +128,7 @@ foreach my $db (@db_list)
                     }
                 }
             }
-            else
+            elsif ( $portee > 30 and $portee < 80 )
             {
                 print "DB: $db | Gob: $gob_id | getIE_Vue | Cases > 30\n";
                 logEntry("[getIE_Vue] DB: $db | Gob: $gob_id");
@@ -136,7 +136,7 @@ foreach my $db (@db_list)
                 my $response_total = '';
 
                 my $browser = new LWP::UserAgent;
-                my $request = new HTTP::Request( GET => "http://ie.gobland.fr/IE_Vue?id=$gob_id&passwd=$CREDENTIALS{$gob_id}&filtre=4" );
+                my $request = new HTTP::Request( GET => "http://ie.gobland.fr/IE_Vue?id=$gob_id&passwd=$CREDENTIALS{$gob_id}&dH=30&dV=15" );
                 my $headers = $request->headers();
                    $headers->header( 'User-Agent','Mozilla/5.0 (compatible; Konqueror/3.4; Linux) KHTML/3.4.2 (like Gecko)');
                    $headers->header( 'Accept', 'text/html, image/jpeg, image/png, text/*, image/*, */*');
@@ -145,6 +145,19 @@ foreach my $db (@db_list)
                    $headers->header( 'Accept-Language', 'fr, en');
                    $headers->header( 'Referer', 'http://ie.gobland.fr');
                 my $response = $browser->request($request);
+
+                if ($response->is_success) { $response_total = $response_total."\n".$response->content }
+
+                $browser = new LWP::UserAgent;
+                $request = new HTTP::Request( GET => "http://ie.gobland.fr/IE_Vue?id=$gob_id&passwd=$CREDENTIALS{$gob_id}&filtre=1" );
+                $headers = $request->headers();
+                $headers->header( 'User-Agent','Mozilla/5.0 (compatible; Konqueror/3.4; Linux) KHTML/3.4.2 (like Gecko)');
+                $headers->header( 'Accept', 'text/html, image/jpeg, image/png, text/*, image/*, */*');
+                $headers->header( 'Accept-Encoding','x-gzip, x-deflate, gzip, deflate');
+                $headers->header( 'Accept-Charset', 'iso-8859-15, utf-8;q=0.5, *;q=0.5');
+                $headers->header( 'Accept-Language', 'fr, en');
+                $headers->header( 'Referer', 'http://ie.gobland.fr');
+                $response = $browser->request($request);
 
                 if ($response->is_success) { $response_total = $response_total."\n".$response->content }
 
@@ -179,6 +192,95 @@ foreach my $db (@db_list)
                     my $now     = strftime "%Y-%m-%d %H:%M:%S", localtime;
                     my $time    = time;
                     foreach my $line (split(/\n/,$response_total))
+                    {
+                        chomp ($line);
+                        #"Categorie";"Dist";"Id";"Nom";"Niveau";"Type";"Clan";"X";"Y";"N";"Z"
+                        $line =~ s/"//g;
+                        my @line = split /;/, $line;
+                        if ( ($line !~ /^#/) and ($line !~ /^$/) )
+                        {
+                            $line[3]      =~ s/\'/\'\'/g;
+                            $line[5]      =~ s/\'/\'\'/g;
+                            $line[6]      =~ s/\'/\'\'/g;
+                            if ( $line[4] eq '' ) { $line[4] = 0 }
+                            if ( $line[5] =~ /Musculeux|Nodef|Trad|Yonnair|Zozo|Mentalo|Gobelin/ ) { $line[0] = 'G' }
+
+                            # First query to INSERT the line if not exists, or IGNORE
+                            my $sth       = $dbh->prepare( "INSERT IGNORE INTO Vue VALUES( '$line[2]', \
+                                                                                           '$line[0]', \
+                                                                                           '$line[3]', \
+                                                                                           '$line[4]', \
+                                                                                           '$line[5]', \
+                                                                                           '$line[6]', \
+                                                                                           '$line[7]', \
+                                                                                           '$line[8]', \
+                                                                                           '$line[9]', \
+                                                                                           '$line[10]'  ) ");
+                            $sth->execute();
+
+                            # Second query to UPDATE data if the line exists
+                            $sth       = $dbh->prepare( "UPDATE Vue SET Niveau = '$line[4]', \
+                                                                             X = '$line[7]', \
+                                                                             Y = '$line[8]', \
+                                                                             N = '$line[9]'  \
+                                                         WHERE Id = '$line[2]' ");
+
+                            $sth->execute();
+
+                            # INSERT to keep the Vue into Carte
+                            # Location won't be cleaned if no more in Vue
+                            $sth       = $dbh->prepare( "INSERT IGNORE INTO Carte VALUES( '$line[2]', \
+                                                                                          '$line[0]', \
+                                                                                          '$line[3]', \
+                                                                                          '$line[4]', \
+                                                                                          '$line[5]', \
+                                                                                          '$line[6]', \
+                                                                                          '$line[7]', \
+                                                                                          '$line[8]', \
+                                                                                          '$line[9]', \
+                                                                                          '$line[10]',\
+                                                                                          '$time',    \
+                                                                                          '$now'      ) ");
+                            $sth->execute();
+                            $sth       = $dbh->prepare( "UPDATE Carte SET Niveau = '$line[4]', \
+                                                                               X = '$line[7]', \
+                                                                               Y = '$line[8]', \
+                                                                               N = '$line[9]', \
+                                                                            Time = '$time', \
+                                                                            Date = '$now'   \
+                                                         WHERE Id = '$line[2]' ");
+
+                            $sth->execute();
+
+                            $sth->finish();
+                            push @vue_ids_live, $line[2];
+                        }
+                    }
+                }
+            }
+            elsif ( $portee > 80 )
+            {
+                print "DB: $db | Gob: $gob_id | getIE_Vue | Cases > 80\n";
+                logEntry("[getIE_Vue] DB: $db | Gob: $gob_id");
+
+                my $response_total = '';
+
+                my $browser = new LWP::UserAgent;
+                my $request = new HTTP::Request( GET => "http://ie.gobland.fr/IE_Vue?id=$gob_id&passwd=$CREDENTIALS{$gob_id}&dH=35&dV=15" );
+                my $headers = $request->headers();
+                   $headers->header( 'User-Agent','Mozilla/5.0 (compatible; Konqueror/3.4; Linux) KHTML/3.4.2 (like Gecko)');
+                   $headers->header( 'Accept', 'text/html, image/jpeg, image/png, text/*, image/*, */*');
+                   $headers->header( 'Accept-Encoding','x-gzip, x-deflate, gzip, deflate');
+                   $headers->header( 'Accept-Charset', 'iso-8859-15, utf-8;q=0.5, *;q=0.5');
+                   $headers->header( 'Accept-Language', 'fr, en');
+                   $headers->header( 'Referer', 'http://ie.gobland.fr');
+                my $response = $browser->request($request);
+
+                if ($response->is_success)
+                {
+                    my $now     = strftime "%Y-%m-%d %H:%M:%S", localtime;
+                    my $time    = time;
+                    foreach my $line (split(/\n/,$response->content))
                     {
                         chomp ($line);
                         #"Categorie";"Dist";"Id";"Nom";"Niveau";"Type";"Clan";"X";"Y";"N";"Z"
