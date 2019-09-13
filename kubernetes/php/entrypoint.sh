@@ -7,7 +7,8 @@ apk update --no-cache \
                                     tzdata \
     && cp /usr/share/zoneinfo/Europe/Paris /etc/localtime \
     && apk del .build-deps \
-    && docker-php-ext-install mysqli
+    && docker-php-ext-install mysqli \
+    && docker-php-ext-enable mysqli
 
 echo "`date +"%F %X"` Build done ..."
 
