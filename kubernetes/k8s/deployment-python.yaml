@@ -18,22 +18,22 @@ spec:
         app: python
         tier: backend
     spec:
-      initContainers:
-      - name: gobland-it-python-init
-        image: busybox
-        volumeMounts:
-        - name: code
-          mountPath: /code
-        command: ["/bin/sh"]
-        args: [
-         "-c",
-         "(
-              wget   https://github.com/lordslair/gobland-bot/archive/master.zip -O /code/gobland-it.zip &&
-              unzip  /code/gobland-it.zip -d /code/ &&
-              cp -a  /code/gobland-bot-master/kubernetes/python/* /code/ &&
-              rm -rf /code/gobland-bot-master /code/gobland-it.zip
-          ) || echo 1"
-        ]
+#      initContainers:
+#      - name: gobland-it-python-init
+#        image: busybox
+#        volumeMounts:
+#        - name: code
+#          mountPath: /code
+#        command: ["/bin/sh"]
+#        args: [
+#         "-c",
+#         "(
+#              wget   https://github.com/lordslair/gobland-bot/archive/master.zip -O /code/gobland-it.zip &&
+#              unzip  /code/gobland-it.zip -d /code/ &&
+#              cp -a  /code/gobland-bot-master/kubernetes/python/* /code/ &&
+#              rm -rf /code/gobland-bot-master /code/gobland-it.zip
+#          ) || echo 1"
+#        ]
       containers:
       - name: gobland-it-python
         image: alpine:3.7
@@ -42,7 +42,7 @@ spec:
         - name: DBLIST
           value: "XX,YY"
         - name: MARIADB_ROOT_PASSWORD
-          value: Trustno1
+          value: YYYYY
         - name: TOKEN_XX
           value: AAAAA
         - name: TOKEN_YY

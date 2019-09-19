@@ -19,25 +19,6 @@ spec:
         tier: backend
     spec:
       restartPolicy: Always
-      initContainers:
-      - name: gobland-it-php-init
-        image: busybox
-        volumeMounts:
-        - name: code
-          mountPath: /code
-        command: ["/bin/sh"]
-        args: [
-         "-c",
-         "(
-              wget   https://github.com/lordslair/gobland-bot/archive/master.zip -O /code/gobland-it.zip &&
-              unzip  /code/gobland-it.zip -d /code/ &&
-              cp -a  /code/gobland-bot-master/kubernetes/php/* /code/ &&
-              rm -rf /code/gobland-bot-master /code/gobland-it.zip
-          ) || echo 1"
-        ]
-        env:
-        - name: MARIADB_ROOT_PASSWORD
-          value: Trustno1
       containers:
       - name: gobland-it-php
         image: php:fpm-alpine
