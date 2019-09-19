@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mon-grafana
+  namespace: monitoring
+  labels:
+    tier: infra
+spec:
+  selector:
+    app: grafana
+    tier: infra
+  ports:
+  - protocol: TCP
+    port: 3000
