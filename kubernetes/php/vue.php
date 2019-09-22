@@ -95,6 +95,13 @@
         if ( $_GET["small"] ) { $cases = 5;}
         # We use $_GET["medium"] to restrict the view
         if ( $_GET["medium"] ) { $cases = 10;}
+        # We use $_GET["medium"] to restrict the view
+        if ( $_GET["big"] ) { $cases = 20;}
+
+        # We use $_GET["x|y|n"] to center the view
+        if ( $_GET["x"] ) { $X = $_GET["x"]; }
+        if ( $_GET["y"] ) { $Y = $_GET["y"]; }
+        if ( $_GET["n"] ) { $N = $_GET["n"]; }
     }
 
     if ( $cases > 0 )
@@ -131,15 +138,22 @@
                 AND   N      BETWEEN '$n_min'   AND '$n_max'";
 
     # We use $_GET["lvl"] to restrict the view
-    $niv_min     = 1;
+    $niv_min     = 0;
     $niv_max     = 99;
-    if ( preg_match('/^\d*-\d*$/', $_GET['lvl']) )
-    {
-        $niveau      = $_GET['lvl'];
-        $niv_min     = preg_replace('/-\d*$/', '', $niveau);
-        $niv_max     = preg_replace('/^\d*-/', '', $niveau);
-        $req_vue    .= " AND   (( Categorie = 'C' AND Niveau BETWEEN '$niv_min' AND '$niv_max') OR ( Categorie = 'G' ) OR ( Categorie = 'L' ))";
-    }
+    if ( $_GET['minlvl'] AND preg_match('/^\d*$/', $_GET['minlvl'])) { $niv_min = $_GET['minlvl']; }
+    if ( $_GET['maxlvl'] AND preg_match('/^\d*$/', $_GET['maxlvl'])) { $niv_max = $_GET['maxlvl']; }
+    $req_vue    .= " AND (Niveau BETWEEN '$niv_min' AND '$niv_max')";
+
+    # We use $_GET["p|l|c|t"] to restrict the view
+    $req_vue_items = '';
+    $items         = 0;
+    if ( $_GET['p'] ) { if ( $items == 0 ) { $req_vue_items .= " Categorie = 'P'"; $items++;} else { $req_vue_items .= " OR Categorie = 'P'";} }
+    if ( $_GET['l'] ) { if ( $items == 0 ) { $req_vue_items .= " Categorie = 'L'"; $items++;} else { $req_vue_items .= " OR Categorie = 'L'";} }
+    if ( $_GET['c'] ) { if ( $items == 0 ) { $req_vue_items .= " Categorie = 'C'"; $items++;} else { $req_vue_items .= " OR Categorie = 'C'";} }
+    if ( $_GET['t'] ) { if ( $items == 0 ) { $req_vue_items .= " Categorie = 'T'"; $items++;} else { $req_vue_items .= " OR Categorie = 'T'";} }
+    if ( $items > 0 ) { $req_vue .= " AND ($req_vue_items)"; }
+
+print $req_vue;
 
     $query_vue = $db->query($req_vue);
 
@@ -233,22 +247,62 @@
     print('        <h1>Vue de ['.$gob_id.'] '.$gob_nom.' ('.$cases.' cases)'.'</h1>'."\n");
     print('        <h3>Centrée sur [ X='.$X.' | Y= '.$Y.' | N= '.$N.' ]'.'</h3>'."\n");
 
+#    print('        <center>'."\n");
+#    print('          Niveau :'."\n");
+#    print('          <a href="/vue.php?id='.$gob_id.'&lvl=1-5'.$getsuiv.'"   title="Niveau 1-5">[<b>1-5</b>]</a>'."\n");
+#    print('          <a href="/vue.php?id='.$gob_id.'&lvl=5-10'.$getsuiv.'"  title="Niveau5-10">[<b>5-10</b>]</a>'."\n");
+#    print('          <a href="/vue.php?id='.$gob_id.'&lvl=10-15'.$getsuiv.'" title="Niveau 10-15">[<b>10-15</b>]</a>'."\n");
+#    print('          <a href="/vue.php?id='.$gob_id.'&lvl=15-20'.$getsuiv.'" title="Niveau15-20">[<b>15-20</b>]</a>'."\n");
+#    print('          <a href="/vue.php?id='.$gob_id.'&lvl=20-99'.$getsuiv.'" title="Niveau 20+">[<b>20+</b>]</a>'."\n");
+#    print('          <a href="/vue.php?id='.$gob_id.$getsuiv.'"              title="NoFiltre">[<b>ALL</b>]</a>'."\n");
+#    print('        </center>'."\n");
+#    print('        <br>'."\n");
     print('        <center>'."\n");
-    print('          Niveau :'."\n");
-    print('          <a href="/vue.php?id='.$gob_id.'&lvl=1-5'.$getsuiv.'"   title="Niveau 1-5">[<b>1-5</b>]</a>'."\n");
-    print('          <a href="/vue.php?id='.$gob_id.'&lvl=5-10'.$getsuiv.'"  title="Niveau5-10">[<b>5-10</b>]</a>'."\n");
-    print('          <a href="/vue.php?id='.$gob_id.'&lvl=10-15'.$getsuiv.'" title="Niveau 10-15">[<b>10-15</b>]</a>'."\n");
-    print('          <a href="/vue.php?id='.$gob_id.'&lvl=15-20'.$getsuiv.'" title="Niveau15-20">[<b>15-20</b>]</a>'."\n");
-    print('          <a href="/vue.php?id='.$gob_id.'&lvl=20-99'.$getsuiv.'" title="Niveau 20+">[<b>20+</b>]</a>'."\n");
-    print('          <a href="/vue.php?id='.$gob_id.$getsuiv.'"              title="NoFiltre">[<b>ALL</b>]</a>'."\n");
-    print('        </center>'."\n");
-    print('        <br>'."\n");
-    print('        <center>'."\n");
-    print('          Restreindre: '."\n");
-    print('          [<a href="/vue.php?id='.$gob_id.'&niveau=TRUE'.$getsuiv.'" title="Vue Restreinte">(Niveau courant N='.$N.')</a> | '."\n");
-    print('          <a href="/vue.php?id='.$gob_id.'&small=TRUE'.$getsuiv.'"   title="Vue Restreinte">(<b>5</b> cases)</a> | '."\n");
-    print('          <a href="/vue.php?id='.$gob_id.'&medium=TRUE'.$getsuiv.'"  title="Vue Restreinte">(<b>10</b> cases)</a>]'."\n");
-    print('          <a href="/vue.php?id='.$gob_id.$getsuiv.'"                 title="Vue Normale">[🚫 ]</a>'."\n");
+    print('        <form action="beta-vue.php" method="get">'."\n");
+    print('        <fieldset>'."\n");
+    print('          <legend>Restreindre: </legend>'."\n");
+    print('          <input id="id" name="id" type="hidden" value="'.$gob_id.'">'."\n");
+    print('          <div>'."\n");
+    print('            <input type="checkbox" id="ncourant" name="niveau" value="TRUE">'."\n");
+    print('            <label for="ncourant">Niveau courant (N='.$N.')</label>'."\n");
+    print('          </div>'."\n");
+    print('          <div>Level: '."\n");
+    print('            <label for="minlvl">min:</label>'."\n");
+    print('            <input type="text" id="lvl" name="minlvl" placeholder="0" size="4">'."\n");
+    print('            <label for="maxlvl">max:</label>'."\n");
+    print('            <input type="text" id="lvl" name="maxlvl" placeholder="40" size="4">'."\n");
+    print('          </div>'."\n");
+    print('          <div>Vue: '."\n");
+    print('            <input type="checkbox" id="small" name="small" value="TRUE">'."\n");
+    print('            <label for="ncourant">minimale (<b>5</b> cases)</label>'."\n");
+    print('            <input type="checkbox" id="medium" name="medium" value="TRUE">'."\n");
+    print('            <label for="ncourant">moyenne (<b>10</b> cases)</label>'."\n");
+    print('            <input type="checkbox" id="big" name="big" value="TRUE">'."\n");
+    print('            <label for="ncourant">grande (<b>20</b> cases)</label>'."\n");
+    print('          </div>'."\n");
+    print('          <div>Seulement: '."\n");
+    print('            <input type="checkbox" id="onlyp" name="p" value="TRUE">'."\n");
+    print('            <label for="ncourant">Plantes</label>'."\n");
+    print('            <input type="checkbox" id="onlyl" name="l" value="TRUE">'."\n");
+    print('            <label for="ncourant">Lieux</label>'."\n");
+    print('            <input type="checkbox" id="onlyc" name="c" value="TRUE">'."\n");
+    print('            <label for="ncourant">Créatures</label>'."\n");
+    print('            <input type="checkbox" id="onlyt" name="t" value="TRUE">'."\n");
+    print('            <label for="ncourant">Trésors</label>'."\n");
+    print('          </div>'."\n");
+    print('          <div>Centrer sur: '."\n");
+    print('            <label for="x">X=</label>'."\n");
+    print('            <input type="text" id="center" name="x" placeholder="'.$X.'" size="4">'."\n");
+    print('            <label for="y">Y =</label>'."\n");
+    print('            <input type="text" id="center" name="y" placeholder="'.$Y.'" size="4">'."\n");
+    print('            <label for="n">N =</label>'."\n");
+    print('            <input type="text" id="center" name="n" placeholder="'.$N.'" size="4">'."\n");
+    print('          </div>'."\n");
+    print('          <div>'."\n");
+    print('            <button type="submit">Go !</button>'."\n");
+    print('          </div>'."\n");
+    print('        </fieldset>'."\n");
+    print('        </form>'."\n");
     print('        <center>'."\n");
     print('        <table cellspacing="0" id="GobVue">'."\n");
     print('          <caption>'."\n");
