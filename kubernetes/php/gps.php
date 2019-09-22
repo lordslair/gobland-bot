@@ -32,6 +32,7 @@
     {
         if ( ! $row[6] ) { continue; } # If coordinates not present in DB, we skip the display
 
+        $row[8] = rtrim($row[8]); # To fix a newline bug introduced with the switch to MariaDB
         $position = "<b>X</b> = $row[6] | <b>Y</b> = $row[7] | <b>N</b> = $row[8]";
         $cx       = ($row[6] + 200) * 1.5;
         $cy       = (200 - $row[7]) * 1.5;
