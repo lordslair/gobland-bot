@@ -110,6 +110,11 @@ foreach my $db (@db_list)
             my @attr = $sth->fetchrow_array;
             $sth->finish;
 
+            my $req_pvs = $dbh->prepare( "SELECT PVMax,BPPVMax,BMPVMax FROM Gobelins2 WHERE Id = '$gob_id'" );
+            $req_pvs->execute();
+            my @pvs = $req_pvs->fetchrow_array;
+            $req_pvs->finish;
+
             # Rafale Psychique
             if ( $t_id == 2 )
             {
@@ -577,6 +582,7 @@ foreach my $db (@db_list)
                 my $coeff;
                 my $mul;
                 my $mulb;
+                my $nbr;
 
                 if    ( $niveau == 1 ) { $nbr = 1 }
                 elsif ( $niveau == 2 ) { $nbr = 1 }
@@ -585,8 +591,8 @@ foreach my $db (@db_list)
 
                 my $esq_bm = 2 + $niveau;
                 my $arm_bm = $niveau;
-                my $arm_c  = int((0.05 * $niveau * $attr[17]) + (0.10 * $attr[17])) 
-                my $arm_cr = int(0.05 * $niveau * $attr[17])
+                my $arm_c  = int((0.05 * $niveau * $attr[17]) + (0.10 * $attr[17]));
+                my $arm_cr = int(0.05 * $niveau * $attr[17]);
 
                 my $arm    = $arm_bm + $arm_c;
                 my $arm_r  = $arm_bm + $arm_cr;
