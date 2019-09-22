@@ -50,7 +50,7 @@
     $M_emoji = '<img src="/images/1f344.png" width="16" height="16">'; #🍄
     $F_emoji = '<img src="/images/1f33a.png" width="16" height="16">'; #🌺
     $R_emoji = '<img src="/images/1f331.png" width="16" height="16">'; #🌱
-
+    $B_emoji = '<img src="/images/1f352.png" width="16" height="16">'; #🍒
 
     $arr_suivants      = [];
     $req_suivants_full = "SELECT Id FROM Suivants";
@@ -205,6 +205,10 @@
         elseif ( $cat == 'P' && $nom == 'Fleur' && !preg_match('/1f33a/', $ITEMS[$x][$y]['td']) )
         {
             $ITEMS[$x][$y]['td'] .= $F_emoji;
+        }
+        elseif ( $cat == 'P' && $nom == 'Baie' && !preg_match('/1f352/', $ITEMS[$x][$y]['td']) )
+        {
+            $ITEMS[$x][$y]['td'] .= $B_emoji;
         }
 
         if ( !preg_match("/N = $n/", $ITEMS[$x][$y]['tt']) )
