@@ -153,8 +153,6 @@
     if ( $_GET['t'] ) { if ( $items == 0 ) { $req_vue_items .= " Categorie = 'T'"; $items++;} else { $req_vue_items .= " OR Categorie = 'T'";} }
     if ( $items > 0 ) { $req_vue .= " AND ($req_vue_items)"; }
 
-print $req_vue;
-
     $query_vue = $db->query($req_vue);
 
     $ITEMS = [];
