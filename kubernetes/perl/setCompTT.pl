@@ -178,6 +178,7 @@ foreach my $db (@db_list)
                 elsif ( $vue <= 22 ) { $portee = 4 }
                 elsif ( $vue <= 30 ) { $portee = 5 }
                 elsif ( $vue <= 39 ) { $portee = 6 }
+                elsif ( $vue > 40  ) { $portee = '> 7' }
                 my $po_deg     = int(( $att + $per ) /2);
                 my $po_deg_bmm = int(( $att_bmm + $per_bmm ) /2);
                 my $po_att     = int((($per+$att)/2));
