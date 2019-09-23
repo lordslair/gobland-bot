@@ -22,7 +22,7 @@
 
     foreach ($arr_gob_ids as $gob_id)
     {
-        $req_materiaux_c   = "SELECT COUNT(*) FROM ItemsGobelins WHERE ( Type = 'Matériau' OR Type = 'Roche' OR Type = 'Minerai' ) AND Gobelin = '$gob_id'";
+        $req_materiaux_c   = "SELECT COUNT(*) FROM ItemsGobelins WHERE ( Type = 'Matériau' OR Type = 'Roche' OR Type = 'Minerai' OR Type = 'Pierre Précieuse' ) AND Gobelin = '$gob_id'";
         $materiaux_count   = $db->query($req_materiaux_c)->fetch_row()[0];
 
         $req_gob_nom       = "SELECT Gobelin FROM Gobelins WHERE Id = '$gob_id'";
