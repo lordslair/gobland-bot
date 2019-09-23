@@ -91,12 +91,8 @@
 
         $getsuiv           = '';
 
-        # We use $_GET["small"] to restrict the view
-        if ( $_GET["small"] ) { $cases = 5;}
-        # We use $_GET["medium"] to restrict the view
-        if ( $_GET["medium"] ) { $cases = 10;}
-        # We use $_GET["medium"] to restrict the view
-        if ( $_GET["big"] ) { $cases = 20;}
+        # We use $_GET["cases"] to restrict the view
+        if ( $_GET['cases'] AND preg_match('/^\d*$/', $_GET['cases'])) { $cases = $_GET['cases']; }
 
         # We use $_GET["x|y|n"] to center the view
         if ( $_GET["x"] ) { $X = $_GET["x"]; }
@@ -245,18 +241,8 @@
     print('        <h1>Vue de ['.$gob_id.'] '.$gob_nom.' ('.$cases.' cases)'.'</h1>'."\n");
     print('        <h3>Centrée sur [ X='.$X.' | Y= '.$Y.' | N= '.$N.' ]'.'</h3>'."\n");
 
-#    print('        <center>'."\n");
-#    print('          Niveau :'."\n");
-#    print('          <a href="/vue.php?id='.$gob_id.'&lvl=1-5'.$getsuiv.'"   title="Niveau 1-5">[<b>1-5</b>]</a>'."\n");
-#    print('          <a href="/vue.php?id='.$gob_id.'&lvl=5-10'.$getsuiv.'"  title="Niveau5-10">[<b>5-10</b>]</a>'."\n");
-#    print('          <a href="/vue.php?id='.$gob_id.'&lvl=10-15'.$getsuiv.'" title="Niveau 10-15">[<b>10-15</b>]</a>'."\n");
-#    print('          <a href="/vue.php?id='.$gob_id.'&lvl=15-20'.$getsuiv.'" title="Niveau15-20">[<b>15-20</b>]</a>'."\n");
-#    print('          <a href="/vue.php?id='.$gob_id.'&lvl=20-99'.$getsuiv.'" title="Niveau 20+">[<b>20+</b>]</a>'."\n");
-#    print('          <a href="/vue.php?id='.$gob_id.$getsuiv.'"              title="NoFiltre">[<b>ALL</b>]</a>'."\n");
-#    print('        </center>'."\n");
-#    print('        <br>'."\n");
     print('        <center>'."\n");
-    print('        <form action="beta-vue.php" method="get">'."\n");
+    print('        <form action="vue.php" method="get">'."\n");
     print('        <fieldset>'."\n");
     print('          <legend>Restreindre: </legend>'."\n");
     print('          <input id="id" name="id" type="hidden" value="'.$gob_id.'">'."\n");
@@ -264,19 +250,15 @@
     print('            <input type="checkbox" id="ncourant" name="niveau" value="TRUE">'."\n");
     print('            <label for="ncourant">Niveau courant (N='.$N.')</label>'."\n");
     print('          </div>'."\n");
-    print('          <div>Level: '."\n");
-    print('            <label for="minlvl">min:</label>'."\n");
+    print('          <div>'."\n");
+    print('            <label for="minlvl">minLvl:</label>'."\n");
     print('            <input type="text" id="lvl" name="minlvl" placeholder="0" size="4">'."\n");
-    print('            <label for="maxlvl">max:</label>'."\n");
+    print('            <label for="maxlvl">maxLvl:</label>'."\n");
     print('            <input type="text" id="lvl" name="maxlvl" placeholder="40" size="4">'."\n");
     print('          </div>'."\n");
     print('          <div>Vue: '."\n");
-    print('            <input type="checkbox" id="small" name="small" value="TRUE">'."\n");
-    print('            <label for="ncourant">minimale (<b>5</b> cases)</label>'."\n");
-    print('            <input type="checkbox" id="medium" name="medium" value="TRUE">'."\n");
-    print('            <label for="ncourant">moyenne (<b>10</b> cases)</label>'."\n");
-    print('            <input type="checkbox" id="big" name="big" value="TRUE">'."\n");
-    print('            <label for="ncourant">grande (<b>20</b> cases)</label>'."\n");
+    print('            <input type="text" id="portee" name="cases" placeholder="'.$cases.'" size="3">'."\n");
+    print('            <label for="cases">Case(s)</label>'."\n");
     print('          </div>'."\n");
     print('          <div>Seulement: '."\n");
     print('            <input type="checkbox" id="onlyp" name="p" value="TRUE">'."\n");
