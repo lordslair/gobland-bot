@@ -141,6 +141,7 @@ function GetMateriauIcon($nom)
     elseif ( $nom == 'Minerai d\'Adamantium' ) { $png = '<img src="/images/stuff/icon_1071.png" title="'.$nom.'">'; }
     elseif ( $nom == 'Minerai de Fer' )        { $png = '<img src="/images/stuff/icon_1072.png" title="'.$nom.'">'; }
     elseif ( $nom == 'Minerai de Titane' )     { $png = '<img src="/images/stuff/icon_1079.png" title="'.$nom.'">'; }
+    elseif ( $nom == 'Minerai de Pétrole' )    { $png = '<img src="/images/stuff/icon_100.png"  title="'.$nom.'">'; }
     elseif ( $nom == 'Cuir' )                  { $png = '<img src="/images/stuff/icon_98.png"   title="'.$nom.'">'; }
     elseif ( $nom == 'Tissu' )                 { $png = '<img src="/images/stuff/icon_103.png"  title="'.$nom.'">'; }
     elseif ( $nom == 'Pierre' )                { $png = '<img src="/images/stuff/icon_1142.png" title="'.$nom.'">'; }
