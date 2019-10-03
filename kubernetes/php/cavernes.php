@@ -215,9 +215,9 @@
 <?php
     include 'inc.db.php';
 
-    $arr_minerais  = ['Sable', "Minerai d''Or", 'Minerai de Cuivre', "Minerai d''Argent", "Minerai d''Etain", 'Minerai de Mithril', "Minerai d''Adamantium", 'Minerai de Fer'];
+    $arr_minerais  = ["Minerai d''Or", 'Minerai de Cuivre', "Minerai d''Argent", "Minerai d''Etain", 'Minerai de Mithril', "Minerai d''Adamantium", 'Minerai de Fer'];
     $arr_materiaux = ['Cuir', 'Tissu', 'Rondin'];
-    $arr_roches    = ['Pierre', 'Tas de Terre'];
+    $arr_roches    = ['Pierre', 'Tas de Terre', 'Sable', 'Minerai de Titane', 'Minerai de Pétrole'];
     $arr_pierres   = ['Diamant', 'Emeraude', 'Obsidienne', 'Opale', 'Rubis', 'Saphir'];
     $arr_items     = array_merge($arr_minerais, $arr_materiaux, $arr_roches, $arr_pierres);
     $arr_count_i   = [];
