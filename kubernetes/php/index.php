@@ -48,6 +48,10 @@
 
         while ($row = $query_profile->fetch_array())
         {
+            $dla = new \DateTime($row[11]);
+            $now = new \DateTime();
+            if($dla->diff($now)->days > 30) { continue; } // In order to hide inactive gobelins
+
             $position    = $row[4].', '.$row[5].', '.$row[6];
 
             $req_meute_id    = "SELECT IdMeute  FROM Meutes WHERE Id = $gob_id";
