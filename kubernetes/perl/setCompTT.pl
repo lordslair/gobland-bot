@@ -271,9 +271,9 @@ foreach my $db (@db_list)
                 elsif ( $niveau == 3 ) { $coeff = 1.2 }
                 elsif ( $niveau == 4 ) { $coeff = 1.3 }
 
-                my $vue    = $attr[6] + $attr[7] + $attr[8];
+                my $vue    = $attr[6] + $attr[7];
                 my $mm_total = $attr[12] + $attr[13];
-                my $db = int((sqrt( 19 + 18 * (($mm_total * $coeff)/5 + 3)) - 7)/ 2);
+                my $db = int((sqrt( 19 + 8 * (($mm_total * $coeff)/5 + 3)) - 7)/ 2);
                 my $portee_h = $db + 20 + $vue;
                 my $portee_v = int($db /3) + 3;
                 $tt  = Encode::decode_utf8('Portée H').' : '.$portee_h.' Case(s)<br>';
