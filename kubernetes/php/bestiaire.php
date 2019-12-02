@@ -84,20 +84,20 @@
         $mob_name   = preg_replace('/\'/', '\'\'', $mob_name);
         $mob_niv    = $cdm_ids[1];
         $mob_pv_min = 0;
-        $mob_pv_max = 999;
+        $mob_pv_max = 00;
         $mob_bless;
-        $mob_att_min =  1;
-        $mob_att_max = 99;
-        $mob_esq_min =  1;
-        $mob_esq_max = 99;
-        $mob_deg_min =  1;
-        $mob_deg_max = 99;
-        $mob_reg_min =  1;
-        $mob_reg_max = 99;
-        $mob_arm_min =  1;
-        $mob_arm_max = 99;
-        $mob_per_min =  1;
-        $mob_per_max = 99;
+        $mob_att_min =  0;
+        $mob_att_max = 00;
+        $mob_esq_min =  0;
+        $mob_esq_max = 00;
+        $mob_deg_min =  0;
+        $mob_deg_max = 00;
+        $mob_reg_min =  0;
+        $mob_reg_max = 00;
+        $mob_arm_min =  0;
+        $mob_arm_max = 00;
+        $mob_per_min =  0;
+        $mob_per_max = 00;
 
         $pouvoir_png = '<img src="/images/stuff/icon_127.png">';
 
@@ -116,20 +116,20 @@
             $mob_bless   = $cdm[8];
             $mob_pouvoir = '';
 
-            $mob_pv_min  = max($mob_pv_min ,$cdm[6]);
-            $mob_pv_max  = min($mob_pv_max ,$cdm[7]);
-            $mob_att_min = max($mob_att_min,$cdm[9]);
-            $mob_att_max = min($mob_att_max,$cdm[10]);
-            $mob_esq_min = max($mob_esq_min,$cdm[11]);
-            $mob_esq_max = min($mob_esq_max,$cdm[12]);
-            $mob_deg_min = max($mob_deg_min,$cdm[13]);
-            $mob_deg_max = min($mob_deg_max,$cdm[14]);
-            $mob_reg_min = max($mob_reg_min,$cdm[15]);
-            $mob_reg_max = min($mob_reg_max,$cdm[16]);
-            $mob_arm_min = max($mob_arm_min,$cdm[17]);
-            $mob_arm_max = min($mob_arm_max,$cdm[18]);
-            $mob_per_min = max($mob_per_min,$cdm[19]);
-            $mob_per_max = min($mob_per_max,$cdm[20]);
+            $mob_pv_min  = $mob_pv_min  + $cdm[6]; # We add everything to divide by $update
+            $mob_pv_max  = $mob_pv_max  + $cdm[7]; # And have a moy(carac) in the end
+            $mob_att_min = $mob_att_min + $cdm[9];
+            $mob_att_max = $mob_att_max + $cdm[10];
+            $mob_esq_min = $mob_esq_min + $cdm[11];
+            $mob_esq_max = $mob_esq_max + $cdm[12];
+            $mob_deg_min = $mob_deg_min + $cdm[13];
+            $mob_deg_max = $mob_deg_max + $cdm[14];
+            $mob_reg_min = $mob_reg_min + $cdm[15];
+            $mob_reg_max = $mob_reg_max + $cdm[16];
+            $mob_arm_min = $mob_arm_min + $cdm[17];
+            $mob_arm_max = $mob_arm_max + $cdm[18];
+            $mob_per_min = $mob_per_min + $cdm[19];
+            $mob_per_max = $mob_per_max + $cdm[20];
 
             $tt_style = 'width: 15em;background: cornsilk;color: black;border: 1px solid black;';
             $tt = '<div class="tt_r">'.$pouvoir_png.'<span class="tt_r_text" style="'.$tt_style.'">'.$cdm[22].'</span></div>';
@@ -141,6 +141,25 @@
 
             $update++;
         }
+
+        # For PV, to have "decade" numbers :
+        $mob_pv_min  = ceil ( $mob_pv_min  / $update / 10 ) * 10;
+        $mob_pv_max  = floor( $mob_pv_max  / $update / 10 ) * 10;
+
+        # To round up   the moy() result -> ceil()
+        # To round down the moy() result -> floor()
+        $mob_att_min = ceil ( $mob_att_min / $update );
+        $mob_att_max = floor( $mob_att_max / $update );
+        $mob_esq_min = ceil ( $mob_esq_min / $update );
+        $mob_esq_max = floor( $mob_esq_max / $update );
+        $mob_deg_min = ceil ( $mob_deg_min / $update );
+        $mob_deg_max = floor( $mob_deg_max / $update );
+        $mob_reg_min = ceil ( $mob_reg_min / $update );
+        $mob_reg_max = floor( $mob_reg_max / $update );
+        $mob_arm_min = ceil ( $mob_arm_min / $update );
+        $mob_arm_max = floor( $mob_arm_max / $update );
+        $mob_per_min = ceil ( $mob_per_min / $update );
+        $mob_per_max = floor( $mob_per_max / $update );
 
         print('          <tr>'."\n");
         print('            <td>'.$mob_name.'</td>'."\n");
