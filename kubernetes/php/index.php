@@ -50,7 +50,8 @@
         {
             $dla = new \DateTime($row[11]);
             $now = new \DateTime();
-            if($dla->diff($now)->days > 30) { continue; } // In order to hide inactive gobelins
+            if($dla->diff($now)->days > 30) { $tr_style = 'background-color: #CCCCCC; opacity: .4'; } 
+            else { $tr_style = ''; } // In order to hide inactive gobelins
 
             $position    = $row[4].', '.$row[5].', '.$row[6];
 
@@ -82,7 +83,7 @@
             $etat      = '';
             if ( $row[15] == 'Camouflé' ) { $etat = '👻'; }
 
-            print('          <tr>'."\n");
+            print('          <tr style="'.$tr_style.'>'."\n");
             print('            <td>'."\n");
             print('              <a href="http://games.gobland.fr/Profil.php?IdPJ='.$gob_id.'" target="_blank">'.$row[2].'</a>'."\n");
             print('            </td>'."\n");
