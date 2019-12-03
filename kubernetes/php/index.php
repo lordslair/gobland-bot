@@ -83,7 +83,7 @@
             $etat      = '';
             if ( $row[15] == 'Camouflé' ) { $etat = '👻'; }
 
-            print('          <tr style="'.$tr_style.'>'."\n");
+            print('          <tr style="'.$tr_style.'">'."\n");
             print('            <td>'."\n");
             print('              <a href="http://games.gobland.fr/Profil.php?IdPJ='.$gob_id.'" target="_blank">'.$row[2].'</a>'."\n");
             print('            </td>'."\n");
