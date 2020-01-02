@@ -81,7 +81,7 @@
     }
 
     print('        <fieldset>'."\n");
-    print('          <legend>Gobelins pr..sents en DB</legend>'."\n");
+    print('          <legend>Gobelins présents en DB</legend>'."\n");
 
     $req_credentials   = "SELECT Id,Type,Hash FROM Credentials ORDER BY Type,Id";
     $query_credentials = $db->query($req_credentials);
