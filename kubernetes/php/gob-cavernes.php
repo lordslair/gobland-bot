@@ -18,10 +18,20 @@
 
     if ( $_SESSION["gob_name"] )
     {
-        $gob_nom = $_SESSION["gob_name"];
+        if ( preg_match('/^\d*$/', $_SESSION["gob_name"]) )
+        {
+            $gob_id = $_SESSION["gob_name"];
 
-        $req_gob_id       = "SELECT Gobelin FROM Gobelins WHERE Gobelin = '$gob_nom'";
-        $gob_id           = $db->query($req_gob_id)->fetch_row()[0];
+            $req_gob_nom       = "SELECT Gobelin FROM Gobelins WHERE Id = '$gob_id'";
+            $gob_nom           = $db->query($req_gob_nom)->fetch_row()[0];
+        }
+        else
+        {
+            $gob_nom = $_SESSION["gob_name"];
+
+            $req_gob_id       = "SELECT Gobelin FROM Gobelins WHERE Gobelin = '$gob_nom'";
+            $gob_id           = $db->query($req_gob_id)->fetch_row()[0];
+        }
     }
     else
     {
