@@ -51,6 +51,7 @@ until ($dieNow)
     `perl ./getIE_ClanMembres.pl`;
     `perl ./getIE_ClanMembres2.pl`;
     `perl ./getIE_ClanCafards.pl`;
+    `perl ./getIE_Cavernes.pl`;
 
     `perl ./setMP2Suivants.pl`;
     `perl ./setMP2CdM.pl`;

@@ -52,8 +52,6 @@ foreach my $db (@db_list)
 
             if ($response->is_success)
             {
-print length($response->content)."\n";
-
                 foreach my $line (split(/\n/,$response->content))
                 {
                     chomp ($line);
