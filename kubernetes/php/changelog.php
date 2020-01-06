@@ -29,6 +29,10 @@
               <li>2019-04-12 : Ajout d'un title pour les icônes (<b>@Omnivore</b>)
               <li>2019-04-12 : Modification d'affichage mineur pour les Dieux (<b>@Pachavor</b>)
               <li>2019-04-08 : Ajout des caracs totales (Cafards, Equipement) (<b>@DeathMetal</b>)
+              <br>
+              <li>2019-12-31 : Arrêt de la v2 / Passage officiel en v3
+              <br>
+              <li>2020-01-06 : Deplacement de /cavernes.php vers /clan-cavernes.php (<b>Internal</b>)
             </ul>
           </fieldset>
         </div> <!-- profilInfos -->

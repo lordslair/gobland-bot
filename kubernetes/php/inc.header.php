@@ -7,7 +7,7 @@
                 <li><a href="/equipements.php" title="Équipement des Gob' du Clan">Équipement du Clan</a></li>
                 <li><a href="/materiaux.php" title="Matériaux des Gob' du Clan">Matériaux du Clan</a></li>
                 <li><a href="/composants.php" title="Composants des Gob' du Clan">Composants du Clan</a></li>
-                <li><a href="/cavernes.php" title="Cavernes du Clan">Cavernes du Clan</a></li>
+                <li><a href="/clan-cavernes.php" title="Cavernes du Clan">Cavernes du Clan</a></li>
               </ul>
             </li>
             <li><a href="" title="">Outils</a>
