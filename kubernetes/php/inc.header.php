@@ -25,6 +25,7 @@
               <ul>
                 <li><a href="/admin.php" title="Admin">Admin</a></li>
                 <li><a href="/locator.php" title="Locator">Locator</a></li>
+                <li><a href="/changelog.php" title="Changelog">Changelog</a></li>
               </ul>
             </li>
           </ul>
