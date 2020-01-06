@@ -90,6 +90,22 @@ foreach my $db (@db_list)
                                  Reservation TEXT,
                                  Matiere TEXT)");
 
+    $dbh->do("CREATE TABLE IF NOT EXISTS Cavernes(Id INT PRIMARY KEY,
+                                 Type TEXT,
+                                 Identifie TEXT,
+                                 Nom TEXT,
+                                 Magie TEXT,
+                                 `Desc` TEXT,
+                                 Poids INT,
+                                 Taille INT,
+                                 Qualite INT,
+                                 Localisation TEXT,
+                                 Utilise TEXT,
+                                 Prix NUMERIC,
+                                 Reservation TEXT,
+                                 Matiere TEXT,
+                                 IdGob INT)");
+
     $dbh->do("CREATE TABLE IF NOT EXISTS ItemsGobelins(Id INT PRIMARY KEY,
                                  Gobelin INT,
                                  Type TEXT,

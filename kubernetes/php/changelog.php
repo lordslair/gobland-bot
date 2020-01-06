@@ -33,6 +33,7 @@
               <li>2019-12-31 : Arrêt de la v2 / Passage officiel en v3
               <br>
               <li>2020-01-06 : Deplacement de /cavernes.php vers /clan-cavernes.php (<b>Internal</b>)
+              <li>2020-01-06 : Ajout de la page /gob-cavernes.php (<b>@Vishvâmitra</b>)
             </ul>
           </fieldset>
         </div> <!-- profilInfos -->
