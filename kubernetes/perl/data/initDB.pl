@@ -149,6 +149,7 @@ foreach my $db (@db_list)
                                    Nom      TEXT,
                                    IdMeute  INT,
                                    NomMeute TEXT,
+                                   Race     TEXT,
                                    Tribu    TEXT,
                                    Niveau   INT,
                                    X        INT,
