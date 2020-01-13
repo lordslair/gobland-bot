@@ -141,13 +141,16 @@
     $req_vue    .= " AND (Niveau BETWEEN '$niv_min' AND '$niv_max')";
 
     # We use $_GET["p|l|c|t"] to restrict the view
-    $req_vue_items = '';
-    $items         = 0;
-    if ( $_GET['p'] ) { if ( $items == 0 ) { $req_vue_items .= " Categorie = 'P'"; $items++;} else { $req_vue_items .= " OR Categorie = 'P'";} }
-    if ( $_GET['l'] ) { if ( $items == 0 ) { $req_vue_items .= " Categorie = 'L'"; $items++;} else { $req_vue_items .= " OR Categorie = 'L'";} }
-    if ( $_GET['c'] ) { if ( $items == 0 ) { $req_vue_items .= " Categorie = 'C'"; $items++;} else { $req_vue_items .= " OR Categorie = 'C'";} }
-    if ( $_GET['t'] ) { if ( $items == 0 ) { $req_vue_items .= " Categorie = 'T'"; $items++;} else { $req_vue_items .= " OR Categorie = 'T'";} }
-    if ( $items > 0 ) { $req_vue .= " AND ($req_vue_items)"; }
+    $req_vue_items = "Categorie = 'G'";
+    if ( $_GET['p'] ) { $req_vue_items .= " OR Categorie = 'P'"; }
+    if ( $_GET['l'] ) { $req_vue_items .= " OR Categorie = 'L'"; }
+    if ( $_GET['c'] ) { $req_vue_items .= " OR Categorie = 'C'"; }
+    if ( $_GET['t'] ) { $req_vue_items .= " OR Categorie = 'T'"; }
+
+    if ( $req_vue_items != "Categorie = 'G'" )
+    {
+        $req_vue .= " AND ($req_vue_items)";
+    }
 
     $query_vue = $db->query($req_vue);
 
