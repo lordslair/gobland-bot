@@ -1,7 +1,6 @@
-#!/usr/bin/perl
 use strict;
 use warnings;
-    
+
 use DBI;
 use POSIX qw(strftime);
 use Encode;
@@ -21,13 +20,14 @@ foreach my $db (@db_list)
     $dbh->do("USE `$db`");
     logEntry("[setMP2Suivants] DB: $db");
 
-    my $now     = strftime "%Y-%m-%d", localtime;
+    my $now       = strftime "%Y-%m-%d", localtime;
+    my $yesterday = strftime "%Y-%m-%d", localtime(time-60*60*(12+(localtime)[2]));
 
     my $req_mps = $dbh->prepare( "SELECT Id,IdGob,PMDate,PMSubject,PMText \
                                   FROM MPBot \
-                                  WHERE PMSubject LIKE 'Infos Suivant%' AND PMDate LIKE '$now%' \
+                                  WHERE PMSubject LIKE 'Infos Suivant%' AND ( PMDate LIKE '$now%' OR PMDate LIKE '$yesterday%' ) \
                                   ORDER BY PMDate \
-                                  LIMIT 100;" ); # To avoid a slow SELECT as MPBot can be huge
+                                  LIMIT 250;" ); # To avoid a slow SELECT as MPBot can be huge
        $req_mps->execute();
 
     my %suivants;
@@ -49,6 +49,21 @@ foreach my $db (@db_list)
                                                                        '$suivants{$suivant_id}{'Nom'}' )" );
         $sth->execute();
         $sth->finish();
+    }
+
+    # To drop Suivants that maybe died, or were given to other gobelins
+    my $req_suivants_db = $dbh->prepare( "SELECT Id, IdGob, Nom FROM Suivants;" );
+       $req_suivants_db->execute();
+
+    while (my @row = $req_suivants_db->fetchrow_array)
+    {
+        if (! $suivants{$row[0]})
+        {
+            logEntry("[setMP2Suivants]    SuivantsCleaner:$row[0]:$row[1]:$row[2]");
+            my $sth  = $dbh->prepare( "DELETE FROM Suivants WHERE Id = '$row[0]'" );
+               $sth->execute();
+               $sth->finish();
+        }
     }
 }
 

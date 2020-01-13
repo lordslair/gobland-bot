@@ -15,6 +15,7 @@
           <fieldset>
           <legend>Gobland-IT Version 3</legend>
             <ul>
+              <li>2020-01-12 : Amélioration de la détection des suivants (<b>@Pachavor</b>)</li>
               <li>2020-01-06 : Deplacement de /cavernes.php vers /clan-cavernes.php (<b>Internal</b>)</li>
               <li>2020-01-06 : Ajout de la page /gob-cavernes.php (<b>@Vishvâmitra</b>)</li>
               <br>
