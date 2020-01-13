@@ -2,6 +2,7 @@
 import os
 import sys
 import mysql.connector
+from mysql.connector import Error
 
 db_name   = '32';
 db_host   = 'gobland-it-mariadb';
