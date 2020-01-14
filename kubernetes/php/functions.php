@@ -369,7 +369,7 @@ function GetCompo($type,$nom,$qualite)
     $req_equip = "SELECT COUNT(*)
                   FROM ItemsGobelins
                   WHERE ( Nom = '$nom' AND Qualite = '$q_nbr' )";
-    $res_equip = $db->querySingle($req_equip)->fetch_row()[0];
+    $res_equip = $db->query($req_equip)->fetch_row()[0];
 
     if ( $res_stock > 0 || $res_equip > 0 )
     {
