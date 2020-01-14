@@ -28,6 +28,15 @@ $dbh->do("CREATE TABLE IF NOT EXISTS `users` (
     `account_since` datetime DEFAULT current_timestamp(),
     PRIMARY KEY (`account_id`))");
 
+$dbh->do("CREATE TABLE `FP_Monstre` (
+    `Id` int(11) NOT NULL AUTO_INCREMENT,
+    `Nom` text NOT NULL,
+    `Famille` text NOT NULL,
+    `Sexe` text DEFAULT NULL,
+    `Special` text DEFAULT NULL,
+    `Description` text DEFAULT NULL,
+    PRIMARY KEY (`Id`))");
+
     $dbh->do("CREATE TABLE IF NOT EXISTS FP_Skill (IdSkill     INT PRIMARY KEY,
                                  NomSkill    TEXT,
                                  PASkill     INT,
@@ -61,6 +70,7 @@ $dbh->do("CREATE TABLE IF NOT EXISTS `users` (
                                     DateCreation   TEXT,
                                     Gestionnaire   TEXT,
                                     Site           TEXT)");
+
 
 # Create per-clan DB
 foreach my $db (@db_list)

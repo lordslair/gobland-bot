@@ -11,11 +11,13 @@ my $techs_csv  = 'FP_Tech.csv';
 my $lieux_csv  = 'FP_Lieu.csv';
 my $clans_csv  = 'FP_Clan.csv';
 my $lieux2_csv = 'Lieux.csv';
+my $monstres_csv = 'FP_Monstre.csv';
     
 `wget --quiet "$source/$skills_csv" -O "$path/data/$skills_csv"`;
 `wget --quiet "$source/$techs_csv"  -O "$path/data/$techs_csv"`;
 `wget --quiet "$source/$lieux_csv"  -O "$path/data/$lieux_csv"`;
 `wget --quiet "$source/$clans_csv"  -O "$path/data/$clans_csv"`;
+`wget --quiet "$source/$monstres_csv"  -O "$path/data/$monstres_csv"`;
     
 my @db_list   = ('global');
 my $db_driver = 'mysql';
@@ -32,6 +34,38 @@ foreach my $db (@db_list)
     print STDERR "$dateTime [initFP] DB: $db\n";
 
     $dbh->do("USE `$db`");
+
+        if ( -f "$path/data/$monstres_csv" )
+        {
+            my $increment = 1;
+            open (my $fh, '<:encoding(UTF-8)', "$path/data/$monstres_csv") or die "Could not open file '$path/data/$monstres_csv' $!";
+                while (my $row = <$fh>)
+                {
+                    $row     =~ s/"//g;
+                    chomp ($row);
+                    my @row  = split /;/, $row;
+
+                    if ( $row !~ /^#/ )
+                    {
+                        $row[0] =~ s/\'/\'\'/g;
+
+                        my $sth = $dbh->prepare( "REPLACE INTO FP_Monstre VALUES( $increment, \
+                                                                                  '$row[0]', \
+                                                                                  '$row[1]', \
+                                                                                  '$row[2]', \
+                                                                                  '$row[3]', \
+                                                                                  '$row[4]' ) ");
+                        $sth->execute();
+                        $sth->finish();
+                        $increment++;
+                    }
+                }
+            close($fh);
+        }
+        else
+        {
+            print "$path/data/$monstres_csv doesn't exist, doin' nothin'\n";
+        }
     
         if ( -f "$path/data/$lieux_csv" )
         {
