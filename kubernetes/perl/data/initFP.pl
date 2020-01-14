@@ -4,20 +4,20 @@ use warnings;
     
 use DBI;
 
-my $source     = 'http://public.gobland.fr';
-my $path       = '/code';
-my $skills_csv = 'FP_Skill.csv';
-my $techs_csv  = 'FP_Tech.csv';
-my $lieux_csv  = 'FP_Lieu.csv';
-my $clans_csv  = 'FP_Clan.csv';
-my $lieux2_csv = 'Lieux.csv';
+my $source       = 'http://public.gobland.fr';
+my $path         = '/code';
+my $skills_csv   = 'FP_Skill.csv';
+my $techs_csv    = 'FP_Tech.csv';
+my $lieux_csv    = 'FP_Lieu.csv';
+my $clans_csv    = 'FP_Clan.csv';
+my $lieux2_csv   = 'Lieux.csv';
 my $monstres_csv = 'FP_Monstre.csv';
     
-`wget --quiet "$source/$skills_csv" -O "$path/data/$skills_csv"`;
-`wget --quiet "$source/$techs_csv"  -O "$path/data/$techs_csv"`;
-`wget --quiet "$source/$lieux_csv"  -O "$path/data/$lieux_csv"`;
-`wget --quiet "$source/$clans_csv"  -O "$path/data/$clans_csv"`;
-`wget --quiet "$source/$monstres_csv"  -O "$path/data/$monstres_csv"`;
+`wget --quiet "$source/$skills_csv"   -O "$path/data/$skills_csv"`;
+`wget --quiet "$source/$techs_csv"    -O "$path/data/$techs_csv"`;
+`wget --quiet "$source/$lieux_csv"    -O "$path/data/$lieux_csv"`;
+`wget --quiet "$source/$clans_csv"    -O "$path/data/$clans_csv"`;
+`wget --quiet "$source/$monstres_csv" -O "$path/data/$monstres_csv"`;
     
 my @db_list   = ('global');
 my $db_driver = 'mysql';
