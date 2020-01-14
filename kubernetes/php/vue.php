@@ -230,6 +230,7 @@
         $tt_text_c = 'black';
         if   ($cat == 'G')                                  { $tt_text_c = 'deepskyblue';};
         if   ($cat == 'C')                                  { $tt_text_c = 'orange';};
+        if ( ($cat == 'C') && ( $id <= 14 ) )               { $tt_text_c = 'yellow';};
         if ( ($cat == 'C') && in_array($id,$arr_suivants) ) { $tt_text_c = 'springgreen';};
 
         if ($cat == 'G' or $cat == 'C')
