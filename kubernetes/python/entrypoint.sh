@@ -4,10 +4,11 @@ echo "`date +"%F %X"` Building PHP dependencies and system set-up ..."
 
 apk update --no-cache \
     && apk add --no-cache python3 \
+    && apk add --no-cache --virtual .build-deps \
+                                    gcc \
+                                    tzdata \
     && pip3 --no-cache-dir install -U discord.py \
                                       mysql-connector-python \
-    && apk add --no-cache --virtual .build-deps \
-                                    tzdata \
     && cp /usr/share/zoneinfo/Europe/Paris /etc/localtime \
     && apk del .build-deps
 
