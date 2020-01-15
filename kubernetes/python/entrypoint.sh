@@ -8,6 +8,7 @@ apk update --no-cache \
                                     python3-dev \
                                     libffi-dev \
                                     gcc \
+                                    libc-dev \
                                     tzdata \
     && pip3 --no-cache-dir install -U discord.py \
                                       mysql-connector-python \
