@@ -6,6 +6,7 @@ apk update --no-cache \
     && apk add --no-cache python3 \
     && apk add --no-cache --virtual .build-deps \
                                     python3-dev \
+                                    libffi-dev \
                                     gcc \
                                     tzdata \
     && pip3 --no-cache-dir install -U discord.py \
