@@ -5,6 +5,7 @@ import sys
 import os
 
 from queries import *
+from datetime import datetime,timedelta
 
 token  = os.environ['TOKEN_32']
 client = discord.Client()
@@ -102,4 +103,34 @@ async def on_message(message):
                 await message.channel.send(answer)
             else:
                 await message.channel.send('Informations non trouvées en DB pour ID: ' + m.group('id'))
+
+# Tasks definitions
+
+async def task_5min_kills():
+    while client.is_ready:
+        channel = discord.utils.get(client.get_all_channels(), name='general')
+        then     = datetime.now() - timedelta(minutes=5)
+        then_str = then.strftime("%Y-%m-%d %H:%M:%S")
+
+        infos = kills(then_str)
+        if infos:
+            for row in infos:
+                # Id,Date,IdMob,NomMob,IdGob,NomGob,PMSubject,PMText
+                id     = row[0]
+                date   = row[1]
+                idmob  = row[2]
+                nommob = row[3]
+                idgob  = row[4]
+                nomgob = row[5]
+                icon   = ':skull_crossbones:'
+                msgLine  = '{} {} a tu.. [{}] {}'.format(icon,nomgob,idmob,nommob)
+                answer   = msgLine
+                print('[task_5min_kills]', then_str, '|', answer)
+
+                if channel:
+                    await channel.send(answer)
+
+        await asyncio.sleep(300) # task runs every 300 seconds / 5 minutes
+
+client.loop.create_task(task_5min_kills())
 client.run(token)

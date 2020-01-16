@@ -60,3 +60,28 @@ def cdm(cdm_id):
         return stats
     else:
         return None;
+
+# Returns kill line(s) from DB, since the date passed as param
+def kills(then_str):
+    if (db_pass):
+
+        db        = mysql.connector.connect( host     = db_host,
+                                             database = db_name,
+                                             user     = db_user,
+                                             password = db_pass)
+        cursor   = db.cursor()
+        SQL      = "SELECT * FROM Kills WHERE Date > %s ORDER BY Date ASC;"
+
+        cursor.execute(SQL, [then_str])
+        infos  = cursor.fetchall()
+
+        if not infos:
+            print('DEBUG @infos is empty', file=sys.stderr)
+
+        if db.is_connected():
+            cursor.close()
+            db.close()
+
+        return infos
+    else:
+        return None;
