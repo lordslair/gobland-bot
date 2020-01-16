@@ -133,5 +133,35 @@ async def task_5min_kills():
 
         await asyncio.sleep(300) # task runs every 300 seconds / 5 minutes
 
+async def task_5min_baratins():
+    while client.is_ready:
+        channel = discord.utils.get(client.get_all_channels(), name='general')
+        then     = datetime.now() - timedelta(minutes=5)
+        then_str = then.strftime("%Y-%m-%d %H:%M:%S")
+
+        infos = baratins(then_str)
+        if infos:
+            for row in infos:
+                # IdGob,Gobelin,PMSubject,PMDate,PMText
+                idgob   = row[0]
+                nomgob  = row[1]
+                subject = row[2]
+                icon   = ':cyclone:'
+
+                m = re.match(r"Résultat Baratin - (?P<nommob>\S*) \((?P<idmob>\d*)\)", subject)
+                if m is not None:
+                    nommob = m.group('nommob')
+                    idmob  = m.group('idmob')
+
+                    msgLine  = '{} {} a baratiné [{}] {}'.format(icon,nomgob,idmob,nommob)
+                    answer   = msgLine
+                    print('[task_5min_baratins]', then_str, '|', answer)
+
+                    if channel:
+                        await channel.send(answer)
+
+        await asyncio.sleep(60) # task runs every 300 seconds / 5 minutes
+
 client.loop.create_task(task_5min_kills())
+client.loop.create_task(task_5min_baratins())
 client.run(token)
