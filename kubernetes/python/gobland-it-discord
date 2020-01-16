@@ -3,6 +3,7 @@ import re
 import discord
 import sys
 import os
+import asyncio
 
 from queries import *
 from datetime import datetime,timedelta
@@ -123,7 +124,7 @@ async def task_5min_kills():
                 idgob  = row[4]
                 nomgob = row[5]
                 icon   = ':skull_crossbones:'
-                msgLine  = '{} {} a tu.. [{}] {}'.format(icon,nomgob,idmob,nommob)
+                msgLine  = '{} {} a tué [{}] {}'.format(icon,nomgob,idmob,nommob)
                 answer   = msgLine
                 print('[task_5min_kills]', then_str, '|', answer)
 
