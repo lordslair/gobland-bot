@@ -47,14 +47,16 @@ async def on_message(message):
                 x    = stats[5]
                 y    = stats[6]
                 n    = stats[7]
-                msgLine  = '[{}] {} ({}) : [ {:>4} | {:>4} | {:>4} ]\n'.format(id,name,niv,x,y,n)
+                msgLine  = '[{}] {} ({}) : [ {:>4} | {:>4} | {:>4} ]'.format(id,name,niv,x,y,n)
                 answer   = '```' + msgLine + '```'
-                await message.channel.send(answer)
             else:
-                await message.channel.send('Informations non trouvées en DB pour ID: ' + m.group('id'))
+                answer   = 'Informations non trouvées en DB pour ID: ' + m.group('id')
+            await message.channel.send(answer)
+        else:
+            answer   = '<ID> n\'est pas un nombre entier [REGEX: (\d*)]'
+        print ('[{}] !!oukilest {}'.format(message.author,answer))
 
     elif message.content.startswith('!!cdm'):
-        print('[{}] !!cdm'.format(message.author))
         m = re.match(r"!!cdm (?P<id>\d*)", message.content)
         if m is not None:
             print('[{}] !!cdm {}'.format(message.author,m.group('id')))
