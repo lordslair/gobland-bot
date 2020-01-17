@@ -17,4 +17,4 @@ apk update --no-cache \
 
 echo "`date +"%F %X"` Build done ..."
 
-exec /code/gobland-it-discord 2>&1
+exec /code/gobland-it-discord
