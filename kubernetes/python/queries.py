@@ -22,11 +22,6 @@ def oukilest(oukilest_id):
         cursor.execute(SQL, (oukilest_id,))
         stats  = cursor.fetchone()
 
-        if not stats:
-            print('DEBUG @stats is empty', file=sys.stderr)
-        else:
-            print('DEBUG @stats: {}'.format(stats), file=sys.stderr)
-
         if db.is_connected():
             cursor.close()
             db.close()
@@ -47,11 +42,6 @@ def cdm(cdm_id):
 
         cursor.execute(SQL, [cdm_id])
         stats  = cursor.fetchone()
-
-        if not stats:
-            print('DEBUG @stats is empty', file=sys.stderr)
-        else:
-            print('DEBUG @stats: {}'.format(stats), file=sys.stderr)
 
         if db.is_connected():
             cursor.close()
@@ -74,9 +64,6 @@ def kills(then_str):
 
         cursor.execute(SQL, [then_str])
         infos  = cursor.fetchall()
-
-        if not infos:
-            print('DEBUG @infos is empty', file=sys.stderr)
 
         if db.is_connected():
             cursor.close()
@@ -104,9 +91,6 @@ def baratins(then_str):
 
         cursor.execute(SQL, [then_str])
         infos  = cursor.fetchall()
-
-        if not infos:
-            print('DEBUG @infos is empty', file=sys.stderr)
 
         if db.is_connected():
             cursor.close()
