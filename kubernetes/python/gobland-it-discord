@@ -19,6 +19,8 @@ async def on_ready():
     print(client.user.id, file=sys.stderr)
     print(db_name, file=sys.stderr)
     print('------', file=sys.stderr)
+    channel = discord.utils.get(client.get_all_channels(), name='general')
+    await channel.send(':partying_face: Salutations, Je me mets au boulot !')
 
 @client.event
 async def on_message(message):
