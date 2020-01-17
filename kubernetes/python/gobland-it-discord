@@ -103,9 +103,12 @@ async def on_message(message):
                 msgper   = 'PER : {}\n'.format(per)
 
                 answer   = '```' + msgLine + msgdate + msgpvs + msgatt + msgdeg + msgesq + msgreg + msgarm + msgper + '```'
-                await message.channel.send(answer)
             else:
-                await message.channel.send('Informations non trouvées en DB pour ID: ' + m.group('id'))
+                answer   = 'Informations non trouvées en DB pour ID: ' + m.group('id')
+            await message.channel.send(answer)
+        else:
+            answer   = '<ID> n\'est pas un nombre entier [REGEX: (\d*)]'
+        print ('[{}] !!cdm {}'.format(message.author, '```' + msgLine.rstrip() + '```'))
 
 # Tasks definitions
 
