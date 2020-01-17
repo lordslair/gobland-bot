@@ -34,7 +34,6 @@ async def on_message(message):
         await message.channel.send(help)
 
     elif message.content.startswith('!!oukilest'):
-        print('[{}] !!oukilest'.format(message.author))
         m = re.match(r"!!oukilest (?P<id>\d*)", message.content)
         if m is not None:
             print('[{}] !!oukilest {}'.format(message.author,m.group('id')))
