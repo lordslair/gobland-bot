@@ -187,6 +187,38 @@ async def task_5min_baratins():
 
         await asyncio.sleep(300) # task runs every 300 seconds / 5 minutes
 
+async def task_5min_wounded():
+    while client.is_ready:
+        for channel_name in channels:
+            then     = datetime.now() - timedelta(minutes=5)
+            then_str = then.strftime("%Y-%m-%d %H:%M:%S")
+
+            if channel_name == 'les-rabatteurs':
+                db_name = '32'
+                channel = discord.utils.get(client.get_all_channels(), name='les-rabatteurs')
+            else:
+                return
+
+            stats = wounded(then_str,db_name)
+            if stats and channel:
+                for row in stats:
+                    # IdMob,Name,Niveau,Blessure,Date
+                    idmob  = row[0]
+                    nommob = row[1]
+                    niv    = row[2]
+                    bless  = row[3]
+                    icon   = ':dart:'
+
+                    msgLine  = '{} [{}] {} est à finir (Blessé à {}%)'.format(icon,idmob,nommob,bless)
+                    answer   = msgLine
+                    print('[task_5min_wounded]', channel, then_str, '|', answer)
+
+                    if channel:
+                        await channel.send(answer)
+
+        await asyncio.sleep(300) # task runs every 300 seconds / 5 minutes
+
 client.loop.create_task(task_5min_kills())
 client.loop.create_task(task_5min_baratins())
+client.loop.create_task(task_5min_wounded())
 client.run(token)
