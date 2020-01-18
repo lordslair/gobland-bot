@@ -58,7 +58,7 @@ async def on_message(message):
                 msgLine  = '[{}] {} ({}) : [ {:>4} | {:>4} | {:>4} ]'.format(id,name,niv,x,y,n)
                 answer   = '```' + msgLine + '```'
             else:
-                answer   = 'Informations non trouvées en DB pour ID: ' + m.group('id')
+                answer   = 'Informations non trouvées en DB(' + db_name + ') pour ID: ' + m.group('id')
             await message.channel.send(answer)
         else:
             answer   = '<ID> n\'est pas un nombre entier [REGEX: (\d*)]'
@@ -72,7 +72,7 @@ async def on_message(message):
             if stats:
 
                 # Looking for position if the mob is in Vue
-                pos = oukilest(m.group('id'))
+                pos = oukilest(m.group('id'),db_name)
                 if pos:
                     x      = stats[5]
                     y      = stats[6]
@@ -112,11 +112,11 @@ async def on_message(message):
 
                 answer   = '```' + msgLine + msgdate + msgpvs + msgatt + msgdeg + msgesq + msgreg + msgarm + msgper + '```'
             else:
-                answer   = 'Informations non trouvées en DB pour ID: ' + m.group('id')
+                answer   = 'Informations non trouvées en DB(' + db_name + ') pour ID: ' + m.group('id')
             await message.channel.send(answer)
         else:
             answer   = '<ID> n\'est pas un nombre entier [REGEX: (\d*)]'
-        print ('[{}] !!cdm {}'.format(message.author, '```' + msgLine.rstrip() + '```'))
+        print ('[{}] !!cdm {}'.format(message.author, '```' + answer.rstrip() + '```'))
 
 # Tasks definitions
 
