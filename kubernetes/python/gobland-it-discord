@@ -4,6 +4,7 @@ import discord
 import sys
 import os
 import asyncio
+import inspect
 
 from queries import *
 from datetime import datetime,timedelta
@@ -132,6 +133,8 @@ async def task_5min_kills():
             else:
                 return
 
+            if channel: print('{} {:<20} {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel))
+
             infos = kills(then_str,db_name)
             if infos and channel:
                 for row in infos:
@@ -163,6 +166,8 @@ async def task_5min_baratins():
                 channel = discord.utils.get(client.get_all_channels(), name='les-rabatteurs')
             else:
                 return
+
+            if channel: print('{} {:<20} {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel))
 
             infos = baratins(then_str,db_name)
             if infos and channel:
@@ -198,6 +203,8 @@ async def task_5min_wounded():
                 channel = discord.utils.get(client.get_all_channels(), name='les-rabatteurs')
             else:
                 return
+
+            if channel: print('{} {:<20} {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel))
 
             stats = wounded(then_str,db_name)
             if stats and channel:
