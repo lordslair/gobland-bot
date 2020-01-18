@@ -41,7 +41,7 @@ spec:
         env:
         - name: MARIADB_ROOT_PASSWORD
           value: YYYYY
-        - name: TOKEN_XX
+        - name: TOKEN
           value: AAAAA
         volumeMounts:
         - mountPath: /code

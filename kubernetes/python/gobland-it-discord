@@ -9,7 +9,7 @@ import inspect
 from queries import *
 from datetime import datetime,timedelta
 
-token    = os.environ['TOKEN_32']
+token    = os.environ['TOKEN']
 client   = discord.Client()
 channels = ['les-rabatteurs']
 
