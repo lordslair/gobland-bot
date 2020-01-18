@@ -4,12 +4,11 @@ import sys
 import mysql.connector
 from mysql.connector import Error
 
-db_name   = '32';
 db_host   = 'gobland-it-mariadb';
 db_user   = 'root'
 db_pass   = os.environ['MARIADB_ROOT_PASSWORD']
 
-def oukilest(oukilest_id):
+def oukilest(oukilest_id,db_name):
     if (db_pass):
 
         db        = mysql.connector.connect( host     = db_host,
@@ -30,7 +29,7 @@ def oukilest(oukilest_id):
     else:
         return None;
 
-def cdm(cdm_id):
+def cdm(cdm_id,db_name):
     if (db_pass):
 
         db        = mysql.connector.connect( host     = db_host,
@@ -52,7 +51,7 @@ def cdm(cdm_id):
         return None;
 
 # Returns kill line(s) from DB, since the date passed as param
-def kills(then_str):
+def kills(then_str,db_name):
     if (db_pass):
 
         db        = mysql.connector.connect( host     = db_host,
@@ -74,7 +73,7 @@ def kills(then_str):
         return None;
 
 # Returns baratin line(s) from DB, since the date passed as param
-def baratins(then_str):
+def baratins(then_str,db_name):
     if (db_pass):
 
         db        = mysql.connector.connect( host     = db_host,

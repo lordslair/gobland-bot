@@ -8,22 +8,29 @@ import asyncio
 from queries import *
 from datetime import datetime,timedelta
 
-token  = os.environ['TOKEN_32']
-client = discord.Client()
-db_name   = '32'
+token    = os.environ['TOKEN_32']
+client   = discord.Client()
+channels = ['les-rabatteurs']
 
 @client.event
 async def on_ready():
     print('Logged in as', file=sys.stderr)
     print(client.user.name, file=sys.stderr)
     print(client.user.id, file=sys.stderr)
-    print(db_name, file=sys.stderr)
     print('------', file=sys.stderr)
-    channel = discord.utils.get(client.get_all_channels(), name='general')
-    await channel.send(':partying_face: Salutations, Je me mets au boulot !')
 
 @client.event
 async def on_message(message):
+
+    # we do not want the bot to reply outside registered clan channels
+    channel = str(message.channel)
+    if channel not in channels:
+        return
+    else:
+        # Select the right DB depending of the channel
+        if channel == 'les-rabatteurs':
+            db_name   = '32'
+
     # we do not want the bot to reply to itself
     if message.author == client.user:
         return
@@ -39,7 +46,7 @@ async def on_message(message):
         m = re.match(r"!!oukilest (?P<id>\d*)", message.content)
         if m is not None:
             print('[{}] !!oukilest {}'.format(message.author,m.group('id')))
-            stats = oukilest(m.group('id'))
+            stats = oukilest(m.group('id'),db_name)
             if stats:
                 # Id,Nom,Niveau,Type,Clan,X,Y,N,Z
                 id   = stats[0]
@@ -61,7 +68,7 @@ async def on_message(message):
         m = re.match(r"!!cdm (?P<id>\d*)", message.content)
         if m is not None:
             print('[{}] !!cdm {}'.format(message.author,m.group('id')))
-            stats = cdm(m.group('id'))
+            stats = cdm(m.group('id'),db_name)
             if stats:
 
                 # Looking for position if the mob is in Vue
@@ -115,24 +122,30 @@ async def on_message(message):
 
 async def task_5min_kills():
     while client.is_ready:
-        channel = discord.utils.get(client.get_all_channels(), name='general')
-        then     = datetime.now() - timedelta(minutes=5)
-        then_str = then.strftime("%Y-%m-%d %H:%M:%S")
+        for channel_name in channels:
+            then     = datetime.now() - timedelta(minutes=5)
+            then_str = then.strftime("%Y-%m-%d %H:%M:%S")
 
-        infos = kills(then_str)
-        if infos:
-            for row in infos:
-                # Id,Date,IdMob,NomMob,IdGob,NomGob,PMSubject,PMText
-                id     = row[0]
-                date   = row[1]
-                idmob  = row[2]
-                nommob = row[3]
-                idgob  = row[4]
-                nomgob = row[5]
-                icon   = ':skull_crossbones:'
-                msgLine  = '{} {} a tué [{}] {}'.format(icon,nomgob,idmob,nommob)
-                answer   = msgLine
-                print('[task_5min_kills]', then_str, '|', answer)
+            if channel_name == 'les-rabatteurs':
+                db_name = '32'
+                channel = discord.utils.get(client.get_all_channels(), name='les-rabatteurs')
+            else:
+                return
+
+            infos = kills(then_str,db_name)
+            if infos and channel:
+                for row in infos:
+                    # Id,Date,IdMob,NomMob,IdGob,NomGob,PMSubject,PMText
+                    id     = row[0]
+                    date   = row[1]
+                    idmob  = row[2]
+                    nommob = row[3]
+                    idgob  = row[4]
+                    nomgob = row[5]
+                    icon   = ':skull_crossbones:'
+                    msgLine  = '{} {} a tué [{}] {}'.format(icon,nomgob,idmob,nommob)
+                    answer   = msgLine
+                    print('[task_5min_kills]', channel, then_str, '|', answer)
 
                 if channel:
                     await channel.send(answer)
@@ -141,32 +154,38 @@ async def task_5min_kills():
 
 async def task_5min_baratins():
     while client.is_ready:
-        channel = discord.utils.get(client.get_all_channels(), name='general')
-        then     = datetime.now() - timedelta(minutes=5)
-        then_str = then.strftime("%Y-%m-%d %H:%M:%S")
+        for channel_name in channels:
+            then     = datetime.now() - timedelta(minutes=5)
+            then_str = then.strftime("%Y-%m-%d %H:%M:%S")
 
-        infos = baratins(then_str)
-        if infos:
-            for row in infos:
-                # IdGob,Gobelin,PMSubject,PMDate,PMText
-                idgob   = row[0]
-                nomgob  = row[1]
-                subject = row[2]
-                icon   = ':cyclone:'
+            if channel_name == 'les-rabatteurs':
+                db_name = '32'
+                channel = discord.utils.get(client.get_all_channels(), name='les-rabatteurs')
+            else:
+                return
 
-                m = re.match(r"Résultat Baratin - (?P<nommob>\S*) \((?P<idmob>\d*)\)", subject)
-                if m is not None:
-                    nommob = m.group('nommob')
-                    idmob  = m.group('idmob')
+            infos = baratins(then_str,db_name)
+            if infos and channel:
+                for row in infos:
+                    # IdGob,Gobelin,PMSubject,PMDate,PMText
+                    idgob   = row[0]
+                    nomgob  = row[1]
+                    subject = row[2]
+                    icon   = ':cyclone:'
 
-                    msgLine  = '{} {} a baratiné [{}] {}'.format(icon,nomgob,idmob,nommob)
-                    answer   = msgLine
-                    print('[task_5min_baratins]', then_str, '|', answer)
+                    m = re.match(r"Résultat Baratin - (?P<nommob>\S*) \((?P<idmob>\d*)\)", subject)
+                    if m is not None:
+                        nommob = m.group('nommob')
+                        idmob  = m.group('idmob')
 
-                    if channel:
-                        await channel.send(answer)
+                        msgLine  = '{} {} a baratiné [{}] {}'.format(icon,nomgob,idmob,nommob)
+                        answer   = msgLine
+                        print('[task_5min_baratins]', channel, then_str, '|', answer)
 
-        await asyncio.sleep(60) # task runs every 300 seconds / 5 minutes
+                        if channel:
+                            await channel.send(answer)
+
+        await asyncio.sleep(300) # task runs every 300 seconds / 5 minutes
 
 client.loop.create_task(task_5min_kills())
 client.loop.create_task(task_5min_baratins())
