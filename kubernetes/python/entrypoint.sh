@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "`date +"%F %X"` Building PHP dependencies and system set-up ..."
+echo "`date +"%F %X"` Building Python dependencies and system set-up ..."
 
 apk update --no-cache \
     && apk add --no-cache python3 \
