@@ -31,6 +31,8 @@ async def on_message(message):
         # Select the right DB depending of the channel
         if channel == 'les-rabatteurs':
             db_name   = '32'
+        elif channel == 'les-neuneumeus':
+            db_name   = '31'
 
     # we do not want the bot to reply to itself
     if message.author == client.user:
@@ -130,6 +132,9 @@ async def task_5min_kills():
             if channel_name == 'les-rabatteurs':
                 db_name = '32'
                 channel = discord.utils.get(client.get_all_channels(), name='les-rabatteurs')
+            elif channel_name == 'les-neuneumeus':
+                db_name = '31'
+                channel = discord.utils.get(client.get_all_channels(), name='les-neuneumeus')
             else:
                 return
 
@@ -162,6 +167,9 @@ async def task_5min_baratins():
             if channel_name == 'les-rabatteurs':
                 db_name = '32'
                 channel = discord.utils.get(client.get_all_channels(), name='les-rabatteurs')
+            elif channel_name == 'les-neuneumeus':
+                db_name = '31'
+                channel = discord.utils.get(client.get_all_channels(), name='les-neuneumeus')
             else:
                 return
 
@@ -194,6 +202,9 @@ async def task_5min_wounded():
             if channel_name == 'les-rabatteurs':
                 db_name = '32'
                 channel = discord.utils.get(client.get_all_channels(), name='les-rabatteurs')
+            elif channel_name == 'les-neuneumeus':
+                db_name = '31'
+                channel = discord.utils.get(client.get_all_channels(), name='les-neuneumeus')
             else:
                 return
 
@@ -225,6 +236,9 @@ async def task_5min_deaths():
             if channel_name == 'les-rabatteurs':
                 db_name = '32'
                 channel = discord.utils.get(client.get_all_channels(), name='les-rabatteurs')
+            elif channel_name == 'les-neuneumeus':
+                db_name = '31'
+                channel = discord.utils.get(client.get_all_channels(), name='les-neuneumeus')
             else:
                 return
 
