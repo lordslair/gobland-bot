@@ -171,9 +171,9 @@ async def task_5min_baratins():
             if infos and channel:
                 for row in infos:
                     # IdGob,Gobelin,PMSubject,PMDate,PMText
-                    idgob   = row[0]
-                    nomgob  = row[1]
-                    subject = row[2]
+                    idgob  = row[0]
+                    nomgob = row[1]
+                    pms    = row[2]
                     icon   = ':cyclone:'
 
                     m = re.search(r" - (?P<mob>.*)", pms)
