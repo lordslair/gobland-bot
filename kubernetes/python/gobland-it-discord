@@ -139,13 +139,14 @@ async def task_5min_kills():
             if infos and channel:
                 for row in infos:
                     # IdGob,Gobelin,PMSubject,PMDate,PMText,Date
+                    idgob  = row[0]
                     nomgob = row[1]
                     pms    = row[2]
                     icon   = ':crossed_swords:'
 
                     m = re.search(r" - (?P<mob>.*)", pms)
                     if m is not None:
-                        answer = '{} {} a tué {}'.format(icon,nomgob,m.group('mob'))
+                        answer = '{} [{}] {} a tué {}'.format(icon,idgob,nomgob,m.group('mob'))
                         print('{} {:<20} {} | {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
 
                         await channel.send(answer)
