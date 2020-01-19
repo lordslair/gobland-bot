@@ -129,3 +129,30 @@ def wounded(then_str,db_name):
         return infos
     else:
         return None;
+
+# Returns Gobelins deaths line(s) from DB, since the date passed as param
+def death(then_str,db_name):
+    if (db_pass):
+
+        db        = mysql.connector.connect( host     = db_host,
+                                             database = db_name,
+                                             user     = db_user,
+                                             password = db_pass)
+        cursor   = db.cursor()
+        SQL      = "SELECT IdGob,Gobelins.Gobelin,PMSubject,PMDate,PMText,Date \
+                    FROM `MPBot` \
+                    INNER JOIN Gobelins on MPBot.IdGob = Gobelins.Id \
+                    WHERE PMSubject LIKE 'Vous êtes Mort%' \
+                    AND   Date > %s \
+                    ORDER BY PMDate DESC;"
+
+        cursor.execute(SQL, [then_str])
+        infos  = cursor.fetchall()
+
+        if db.is_connected():
+            cursor.close()
+            db.close()
+
+        return infos
+    else:
+        return None;

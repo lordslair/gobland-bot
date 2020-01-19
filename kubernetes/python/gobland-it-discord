@@ -222,7 +222,38 @@ async def task_5min_wounded():
 
         await asyncio.sleep(300) # task runs every 300 seconds / 5 minutes
 
+async def task_5min_deaths():
+    while client.is_ready:
+        for channel_name in channels:
+            then     = datetime.now() - timedelta(minutes=5)
+            then_str = then.strftime("%Y-%m-%d %H:%M:%S")
+
+            if channel_name == 'les-rabatteurs':
+                db_name = '32'
+                channel = discord.utils.get(client.get_all_channels(), name='les-rabatteurs')
+            else:
+                return
+
+            if channel: print('{} {:<20} {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel))
+
+            deaths = death(then_str,db_name)
+            if deaths and channel:
+                for row in deaths:
+                    # IdGob,Gobelin,PMSubject,PMDate,PMText,Date
+                    idgob  = row[0]
+                    nomgob = row[1]
+                    icon   = ':pirate_flag:'
+
+                    answer = '{} [{}] {} est mort(e)'.format(icon,idgob,nomgob)
+                    print('{} {:<20} {} | {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
+
+                    if channel:
+                        await channel.send(answer)
+
+        await asyncio.sleep(300) # task runs every 300 seconds / 5 minutes
+
 client.loop.create_task(task_5min_kills())
 client.loop.create_task(task_5min_baratins())
 client.loop.create_task(task_5min_wounded())
+client.loop.create_task(task_5min_deaths())
 client.run(token)
