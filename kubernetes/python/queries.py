@@ -90,7 +90,7 @@ def baratins(then_str,db_name):
                     FROM `MPBot` \
                     INNER JOIN Gobelins on MPBot.IdGob = Gobelins.Id \
                     WHERE PMSubject LIKE 'Résultat Baratin%' \
-                    AND   PMDate > %s \
+                    AND   Date > %s \
                     ORDER BY PMDate ASC;"
 
         cursor.execute(SQL, [then_str])
