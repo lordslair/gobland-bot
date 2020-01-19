@@ -11,7 +11,7 @@ from datetime import datetime,timedelta
 
 token    = os.environ['TOKEN']
 client   = discord.Client()
-channels = ['les-rabatteurs']
+channels = ['les-rabatteurs', 'les-neuneumeus']
 
 @client.event
 async def on_ready():
