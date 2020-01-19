@@ -138,20 +138,17 @@ async def task_5min_kills():
             infos = kills(then_str,db_name)
             if infos and channel:
                 for row in infos:
-                    # Id,Date,IdMob,NomMob,IdGob,NomGob,PMSubject,PMText
-                    id     = row[0]
-                    date   = row[1]
-                    idmob  = row[2]
-                    nommob = row[3]
-                    idgob  = row[4]
-                    nomgob = row[5]
+                    # IdGob,Gobelin,PMSubject,PMDate,PMText,Date
+                    nomgob = row[1]
+                    pms    = row[2]
                     icon   = ':skull_crossbones:'
-                    msgLine  = '{} {} a tué [{}] {}'.format(icon,nomgob,idmob,nommob)
-                    answer   = msgLine
-                    print('[task_5min_kills]', channel, then_str, '|', answer)
 
-                if channel:
-                    await channel.send(answer)
+                    m = re.search(r" - (?P<mob>.*)", pms)
+                    if m is not None:
+                        answer = '{} {} a tué {}'.format(icon,nomgob,m.group('mob'))
+                        print('{} {:<20} {} | {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
+
+                        await channel.send(answer)
 
         await asyncio.sleep(300) # task runs every 300 seconds / 5 minutes
 

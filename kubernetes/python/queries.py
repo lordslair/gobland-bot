@@ -59,7 +59,12 @@ def kills(then_str,db_name):
                                              user     = db_user,
                                              password = db_pass)
         cursor   = db.cursor()
-        SQL      = "SELECT * FROM Kills WHERE Date > %s ORDER BY Date ASC;"
+        SQL      = "SELECT IdGob,Gobelins.Gobelin,PMSubject,PMDate,PMText,Date \
+                    FROM `MPBot` \
+                    INNER JOIN Gobelins on MPBot.IdGob = Gobelins.Id \
+                    WHERE ( PMText LIKE '%débarrassé%' OR PMText LIKE '%Son cadavre%' ) \
+                    AND   Date > %s \
+                    ORDER BY PMDate DESC;"
 
         cursor.execute(SQL, [then_str])
         infos  = cursor.fetchall()
