@@ -180,12 +180,10 @@ async def task_5min_baratins():
                         nommob = m.group('nommob')
                         idmob  = m.group('idmob')
 
-                        msgLine  = '{} {} a baratiné [{}] {}'.format(icon,nomgob,idmob,nommob)
-                        answer   = msgLine
-                        print('[task_5min_baratins]', channel, then_str, '|', answer)
+                        answer = '{} {} a baratiné [{}] {}'.format(icon,nomgob,idmob,nommob)
+                        print('{} {:<20} {} | {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
 
-                        if channel:
-                            await channel.send(answer)
+                        await channel.send(answer)
 
         await asyncio.sleep(300) # task runs every 300 seconds / 5 minutes
 
@@ -213,12 +211,10 @@ async def task_5min_wounded():
                     bless  = row[3]
                     icon   = ':dart:'
 
-                    msgLine  = '{} [{}] {} est à finir (Blessé à {}%)'.format(icon,idmob,nommob,bless)
-                    answer   = msgLine
-                    print('[task_5min_wounded]', channel, then_str, '|', answer)
+                    answer = '{} [{}] {} est à finir (Blessé à {}%)'.format(icon,idmob,nommob,bless)
+                    print('{} {:<20} {} | {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
 
-                    if channel:
-                        await channel.send(answer)
+                    await channel.send(answer)
 
         await asyncio.sleep(300) # task runs every 300 seconds / 5 minutes
 
@@ -247,8 +243,7 @@ async def task_5min_deaths():
                     answer = '{} [{}] {} est mort(e)'.format(icon,idgob,nomgob)
                     print('{} {:<20} {} | {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
 
-                    if channel:
-                        await channel.send(answer)
+                    await channel.send(answer)
 
         await asyncio.sleep(300) # task runs every 300 seconds / 5 minutes
 
