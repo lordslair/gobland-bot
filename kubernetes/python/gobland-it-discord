@@ -15,10 +15,16 @@ channels = ['les-rabatteurs', 'les-neuneumeus']
 
 @client.event
 async def on_ready():
-    print('Logged in as', file=sys.stderr)
-    print(client.user.name, file=sys.stderr)
-    print(client.user.id, file=sys.stderr)
-    print('------', file=sys.stderr)
+    now     = datetime.now()
+    now_str = now.strftime("%Y-%m-%d %H:%M:%S")
+
+    for channel_name in channels:
+        channel = discord.utils.get(client.get_all_channels(), name=channel_name)
+
+        if channel:
+            answer = ':partying_face: Salutations, votre serviteur est l.. !'
+            print('{} {:<20} {} | {}'.format(now_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
+            await channel.send(answer)
 
 @client.event
 async def on_message(message):
