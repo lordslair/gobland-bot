@@ -141,7 +141,7 @@ async def task_5min_kills():
                     # IdGob,Gobelin,PMSubject,PMDate,PMText,Date
                     nomgob = row[1]
                     pms    = row[2]
-                    icon   = ':skull_crossbones:'
+                    icon   = ':crossed_swords:'
 
                     m = re.search(r" - (?P<mob>.*)", pms)
                     if m is not None:
