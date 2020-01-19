@@ -153,7 +153,8 @@ foreach my $db (@db_list)
                                   PMDate     TEXT,
                                   PMStatus   TEXT,
                                   PMExp      TEXT,
-                                  PMText     TEXT)");
+                                  PMText     TEXT
+                                  Date       DATETIME)");
 
     $dbh->do("CREATE TABLE IF NOT EXISTS Meutes (Id       INT PRIMARY KEY,
                                    Nom      TEXT,

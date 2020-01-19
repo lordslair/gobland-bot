@@ -4,6 +4,7 @@ use warnings;
 
 use LWP;
 use DBI;
+use POSIX qw(strftime);
 use Encode;
 
 my $logging   = 1;
@@ -61,13 +62,16 @@ foreach my $db (@db_list)
                             $line[5]     =~ s/\'/\'\'/g;
                         } else { $line[5] = '' } # To force in case of "Résultat Parchemin" MPBot
 
+                        my $now     = strftime "%Y-%m-%d %H:%M:%S", localtime;
+
                         my $sth  = $dbh->prepare( "INSERT IGNORE INTO MPBot VALUES( '$line[0]', \
                                                                                     '$gob_id' , \
                                                                                     '$line[1]', \
                                                                                     '$line[2]', \
                                                                                     '$line[3]', \
                                                                                     '$line[4]', \
-                                                                                    '$line[5]'  )" );
+                                                                                    '$line[5]', \
+                                                                                    '$now')" );
 
                         $sth->execute();
                         $sth->finish();
