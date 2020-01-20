@@ -265,8 +265,41 @@ async def task_5min_deaths():
 
         await asyncio.sleep(300) # task runs every 300 seconds / 5 minutes
 
+async def task_5min_drops():
+    while client.is_ready:
+        for channel_name in channels:
+            then     = datetime.now() - timedelta(minutes=5)
+            then_str = then.strftime("%Y-%m-%d %H:%M:%S")
+            channel  = discord.utils.get(client.get_all_channels(), name=channel_name)
+
+            if channel_name == 'les-rabatteurs':
+                db_name = '32'
+            elif channel_name == 'les-neuneumeus':
+                db_name = '31'
+            else:
+                return
+
+            if channel: print('{} {:<20} {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel))
+
+            infos = drops(then_str,db_name)
+            if infos and channel:
+                for row in infos:
+                    # PMText
+                    pmt    = row[0]
+                    icon   = ':construction_site:'
+
+                    m = re.search(r"^<B>\[\d*\] (?P<nomcot>.*)<\/B>.*>(?P<nommob>.*) \((?P<idmob>\d*)\)<", pmt)
+                    if m is not None:
+                        answer = '{} [{}] {} a déposé sa cargaison à {}'.format(icon,m.group('idmob'),m.group('nommob'),m.group('nomcot'))
+                        print('{} {:<20} {} | {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
+
+                        await channel.send(answer)
+
+        await asyncio.sleep(300) # task runs every 300 seconds / 5 minutes
+
 client.loop.create_task(task_5min_kills())
 client.loop.create_task(task_5min_baratins())
 client.loop.create_task(task_5min_wounded())
 client.loop.create_task(task_5min_deaths())
+client.loop.create_task(task_5min_drops())
 client.run(token)

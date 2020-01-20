@@ -156,3 +156,29 @@ def death(then_str,db_name):
         return infos
     else:
         return None;
+
+# Returns Coterie drops line(s) from DB, since the date passed as param
+def drops(then_str,db_name):
+    if (db_pass):
+
+        db        = mysql.connector.connect( host     = db_host,
+                                             database = db_name,
+                                             user     = db_user,
+                                             password = db_pass)
+        cursor   = db.cursor()
+        SQL      = "SELECT DISTINCT PMText \
+                    FROM `MPBot` \
+                    WHERE PMSubject = 'Dépôt d''objets' \
+                    AND   Date > %s \
+                    ORDER BY Date DESC;"
+
+        cursor.execute(SQL, [then_str])
+        infos  = cursor.fetchall()
+
+        if db.is_connected():
+            cursor.close()
+            db.close()
+
+        return infos
+    else:
+        return None;
