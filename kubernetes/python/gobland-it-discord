@@ -11,7 +11,7 @@ from datetime import datetime,timedelta
 
 token    = os.environ['TOKEN']
 client   = discord.Client()
-channels = ['les-rabatteurs', 'les-neuneumeus']
+channels = {'les-rabatteurs': '32','les-neuneumeus': '31'}
 
 @client.event
 async def on_ready():
@@ -34,11 +34,7 @@ async def on_message(message):
     if channel not in channels:
         return
     else:
-        # Select the right DB depending of the channel
-        if channel == 'les-rabatteurs':
-            db_name   = '32'
-        elif channel == 'les-neuneumeus':
-            db_name   = '31'
+        db_name   = channels[channel]
 
     # we do not want the bot to reply to itself
     if message.author == client.user:
@@ -131,17 +127,10 @@ async def on_message(message):
 
 async def task_5min_kills():
     while client.is_ready:
-        for channel_name in channels:
+        for channel_name, db_name in channels.items():
             then     = datetime.now() - timedelta(minutes=5)
             then_str = then.strftime("%Y-%m-%d %H:%M:%S")
             channel  = discord.utils.get(client.get_all_channels(), name=channel_name)
-
-            if channel_name == 'les-rabatteurs':
-                db_name = '32'
-            elif channel_name == 'les-neuneumeus':
-                db_name = '31'
-            else:
-                return
 
             if channel: print('{} {:<20} {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel))
 
@@ -165,17 +154,10 @@ async def task_5min_kills():
 
 async def task_5min_baratins():
     while client.is_ready:
-        for channel_name in channels:
+        for channel_name, db_name in channels.items():
             then     = datetime.now() - timedelta(minutes=5)
             then_str = then.strftime("%Y-%m-%d %H:%M:%S")
             channel  = discord.utils.get(client.get_all_channels(), name=channel_name)
-
-            if channel_name == 'les-rabatteurs':
-                db_name = '32'
-            elif channel_name == 'les-neuneumeus':
-                db_name = '31'
-            else:
-                return
 
             if channel: print('{} {:<20} {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel))
 
@@ -199,17 +181,10 @@ async def task_5min_baratins():
 
 async def task_5min_wounded():
     while client.is_ready:
-        for channel_name in channels:
+        for channel_name, db_name in channels.items():
             then     = datetime.now() - timedelta(minutes=5)
             then_str = then.strftime("%Y-%m-%d %H:%M:%S")
             channel  = discord.utils.get(client.get_all_channels(), name=channel_name)
-
-            if channel_name == 'les-rabatteurs':
-                db_name = '32'
-            elif channel_name == 'les-neuneumeus':
-                db_name = '31'
-            else:
-                return
 
             if channel: print('{} {:<20} {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel))
 
@@ -232,17 +207,10 @@ async def task_5min_wounded():
 
 async def task_5min_deaths():
     while client.is_ready:
-        for channel_name in channels:
+        for channel_name, db_name in channels.items():
             then     = datetime.now() - timedelta(minutes=5)
             then_str = then.strftime("%Y-%m-%d %H:%M:%S")
             channel  = discord.utils.get(client.get_all_channels(), name=channel_name)
-
-            if channel_name == 'les-rabatteurs':
-                db_name = '32'
-            elif channel_name == 'les-neuneumeus':
-                db_name = '31'
-            else:
-                return
 
             if channel: print('{} {:<20} {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel))
 
@@ -263,17 +231,10 @@ async def task_5min_deaths():
 
 async def task_5min_drops():
     while client.is_ready:
-        for channel_name in channels:
+        for channel_name, db_name in channels.items():
             then     = datetime.now() - timedelta(minutes=5)
             then_str = then.strftime("%Y-%m-%d %H:%M:%S")
             channel  = discord.utils.get(client.get_all_channels(), name=channel_name)
-
-            if channel_name == 'les-rabatteurs':
-                db_name = '32'
-            elif channel_name == 'les-neuneumeus':
-                db_name = '31'
-            else:
-                return
 
             if channel: print('{} {:<20} {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel))
 
