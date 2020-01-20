@@ -113,9 +113,10 @@ def wounded(then_str,db_name):
                                              user     = db_user,
                                              password = db_pass)
         cursor   = db.cursor()
-        SQL      = "SELECT IdMob,Name,Niveau,Blessure,Date \
-                    FROM `CdM` \
-                    WHERE Blessure > 90 \
+        SQL      = "SELECT Id,IdGob,PMDate,PMSubject,PMText,Date \
+                    FROM `MPBot` \
+                    WHERE PMSubject LIKE 'Résultat CdM%' \
+                    AND PMText LIKE '%Blessure : 9%' \
                     AND Date > %s \
                     ORDER BY Date ASC;"
 

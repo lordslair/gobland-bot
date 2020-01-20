@@ -191,17 +191,27 @@ async def task_5min_wounded():
             stats = wounded(then_str,db_name)
             if stats and channel:
                 for row in stats:
-                    # IdMob,Name,Niveau,Blessure,Date
-                    idmob  = row[0]
-                    nommob = row[1]
-                    niv    = row[2]
-                    bless  = row[3]
+                    # Id,IdGob,PMDate,PMSubject,PMText,Date
+                    pms    = row[3]
+                    pmt    = row[4]
+                    add    = ''
                     icon   = ':dart:'
 
-                    answer = '{} [{}] {} est à finir (Blessé à {}%)'.format(icon,idmob,nommob,bless)
-                    print('{} {:<20} {} | {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
+                    m = re.search(r"\[(?P<idmob>\d*)\] (?P<nommob>.*)", pms)
+                    if m is not None:
+                        o = re.search(r"Points de Vie : entre (?P<pvmin>\d*) et (?P<pvmax>\d*)", pmt)
+                        n = re.search(r"Blessure : (?P<bless>\d*)", pmt)
 
-                    await channel.send(answer)
+                        if o is not None:
+                            min = (100 - int(n.group('bless'))) * int(o.group('pvmin')) / 100
+                            max = (100 - int(n.group('bless'))) * int(o.group('pvmax')) / 100
+                            add = ', ~ {} à {} PV restants'.format(round(min),round(max))
+
+                        if n is not None:
+                            answer = '{} [{}] {} est à finir (Blessé à {}%{})'.format(icon,m.group('idmob'),m.group('nommob'),n.group('bless'),add)
+                            print('{} {:<20} {} | {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
+
+                            await channel.send(answer)
 
         await asyncio.sleep(300) # task runs every 300 seconds / 5 minutes
 
@@ -243,11 +253,11 @@ async def task_5min_drops():
                 for row in infos:
                     # PMText
                     pmt    = row[0]
-                    icon   = ':construction_site:'
+                    icon   = ':truck:'
 
-                    m = re.search(r"^<B>\[\d*\] (?P<nomcot>.*)<\/B>.*>(?P<nommob>.*) \((?P<idmob>\d*)\)<", pmt)
+                    m = re.search(r"^<B>\[(?P<idcot>\d*)\] (?P<nomcot>.*)<\/B>.*>(?P<nommob>.*) \((?P<idmob>\d*)\)<", pmt)
                     if m is not None:
-                        answer = '{} [{}] {} a déposé sa cargaison à {}'.format(icon,m.group('idmob'),m.group('nommob'),m.group('nomcot'))
+                        answer = '{} [{}] {} a d..pos.. sa cargaison .. {} ({})'.format(icon,m.group('idmob'),m.group('nommob'),m.group('nomcot'),m.group('idcot'))
                         print('{} {:<20} {} | {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
 
                         await channel.send(answer)
