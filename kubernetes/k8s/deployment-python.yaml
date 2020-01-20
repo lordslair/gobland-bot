@@ -43,6 +43,8 @@ spec:
           value: YYYYY
         - name: TOKEN
           value: AAAAA
+        - name: CHANNELS
+          value: "{'channel1': 'db1','channel2': 'db2'}"
         volumeMounts:
         - mountPath: /code
           name: code
