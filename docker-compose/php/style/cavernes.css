@@ -1,9 +1,0 @@
-/* Cavernes */
-table#stuff, table#composants, table#materiaux {
-}
-table#stuff td, table#composants td, table#materiaux td {
-    border-style: none;
-}
-table#stuff th, table#composants th, table#materiaux th {
-    background-color: none;
-}

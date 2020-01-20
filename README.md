@@ -2,42 +2,46 @@
 
 This project is mainly a Tactical Interface (IT) for the game Gobland (GL).  
 Its purpose is to parse data from GL from its API (Interface Externe - IE).  
-It's done by a Perl backend to INSERT in SQLite, and a PHP frontend for the web interface, served by nginx.  
+It's done by a Perl backend to INSERT in MySQL.  
+And a PHP frontend, served by nginx to render these pages.
+Additional Python code can be used for a Discord bot.
   
 All of this inside Docker containers for portable purposes.  
+These containers are powered up by Kubernetes since v4.0 (summer 2019)
 
-Actually, as 3.0, it works this way :
+Actually, as 4.10, it works this way :
 
- - (docker-perl) requests GL IE every 3600s to fetch new data
- - (volume-db) stores the SQLite DB 
- - (docker-php) requests the DB
- - (docker-nginx) redirect visitors to their own docker-php (one container /clan)
- - (docker-backup) run hourly/daily/monthly crons for backup
- - (volume-backup) stores the backups
+ - (gobland-it-perl) requests GL IE every 3600s to fetch new data
+ - (gobland-it-php) requests the DB / generates HTML
+ - (gobland-it-nginx) redirect visitors to the nginx layer
+ - (gobland-it-mariadb) handles the DB (one /clan)
+ - (gobland-it-python) runs the Discord bot (new v4.10 feature)
 
 ### Which script does what ?
 
 ```
-├── docker-compose.yml                |  To start the project
-├── Dockerfile-perl                   |  To build the gobland-it-perl
-├── Dockerfile-backup                 |  To build the gobland-it-backup
-├── perl
-│   ├── data
+├── k8s                               |  
+│   ├── configmap-*.yaml              |  ConfigMap files
+│   ├── deployment-*.yaml             |  Pods deployment files
+│   ├── service-*.yaml                |  Services deployment files
+│   └── volume-*.yaml                 |  Volumes deployment files
+├── perl                              |  
+│   ├── data                          |  
 │   |    ├── initDB.pl                |  DB creation if needed
-│   |    ├── initFP.pl                |  DP population using FP if needed
+│   |    ├── initFP.pl                |  DB population using FP if needed
 │   |    └── Lieux.csv                |  CSV containing already known location
 |   ├── getIE_*.pl                    |  Scripts used to REQUEST IE and INSERT data in DB
 │   ├── set*.pl                       |  Scripts used to modify data in DB
-│   ├── gobland-it                    |  Main Perl script, endpoint for gobland-it-perl
-│   └── master.yaml                   |  
-├── nginx                             |  DIR containig nginx conf
-│   ├── XX.conf                       |  nginx conf file      for gobland-it-php-XX
-│   └── XX.htpasswd                   |  nginx httpasswd file for gobland-it-php-XX
-└── php                               |  
-    ├── *.php                         |  PHP pages to render the IT
-    ├── images                        |  /images
-    ├── js                            |  /js
-    └── style                         |  /style
+│   └── gobland-it                    |  Perl daemon for IE data collection
+├── php                               |  
+│   ├── *.php                         |  PHP to render the IT HTML pages
+│   ├── images                        |  /images
+│   ├── js                            |  /js
+│   ├── sessions                      |  /sessions for new auth
+│   └── style                         |  /style
+└── python                            |  
+    ├── gobland-it-discord            |  Python Discord daemon
+    └── queries.py                    |  library to handle SQL layer
 ```
 
 ### Tech
@@ -46,114 +50,114 @@ I used mainy :
 
 * Perl - as a lazy animal
 * PHP
-* SQLite
-* [YAML::Tiny] - THE easy way to deal with YAML files
+* MySQL/MariaDB
 * [tristen/tablesort][tablesort] - One good JS to sort HTML tables
 * [ariutta/svg-pan-zoom][svg-pan-zoom] - One good JS to zoom an SVG in HTML
-* Docker to make it easy to maintain
-* Alipne - probably the best/lighter base container to work with
+* [docker/docker-ce][docker] to make it easy to maintain
+* [kubernetes/kubernetes][kubernetes] to make everything smooth
+* [Alpine][alpine] - probably the best/lighter base container to work with
+* [Daemon exemple script][daemon] - gobland-it Perl daemon is based on this (Kudos)
 
 And of course GitHub to store all these shenanigans. 
 
 ### Schematics
 
 ```
-                       +-------------+
-                       |    Nginx    |
-                       +--+---+---+--+
-                          |   |   |
-        +-----------------+   |   +-----------------+
-        |                     |                     |
-+-------v-------+     +-------v-------+     +-------v-------+
-|    php==01    |     |    php==01    |     |    php==01    |
-+-------+-------+     +-------+-------+     +-------+-------+
-        |                     |                     |
-        |            +--------v--------+            |
-        +----------->+  vol:sqlite|db  +<-----------+
-                     +--------^--------+
-                              |
-                     +--------+--------+    +---------------+
-                     |      Perl       +--->+    Gobland    |
-                     +-----------------+    +---------------+
+      +-----------------------------------------------+
+      |                  LoadBalancer                 |
+      +-+-------------------------------------------+-+
+        |                                           |
++-------v-------+                           +-------v-------+
+|     nginx     |                           |     nginx     |
++-------+-------+                           +-------+-------+
+        |                                           |
++-------v-------+                           +-------v-------+
+|      php      |                           |      php      |
++-------+-------+                           +-------+-------+
+        |            +-----------------+            |
+        +----------->+     mariadb     +<-----------+
+                     +-^-------------^-+
+                       |             |
+         +-------------+-+         +-+---------------+
+         |     python    |         |      perl       |
+         +----+----------+         +----------+------+
+              |                               |
++-------------v-+                           +-v-------------+
+|  discord bot  |                           |   gobland.fr  |
++---------------+                           +---------------+
 ```
 
 ### Installation
 
-The script and dependencies is meant to run in a Docker environment. 
-Could work without it, but more practical this way.  
+The core and its dependencies are meant to run in a Docker/k8s environment.  
+Could work without it, but more practical to maintain this way.  
+
+Every part is kept in a different k8s file separately for more details.  
 
 ```
 $ git clone https://github.com/lordslair/gobland-bot
-$ cd gobland-bot/docker-compose
-$ docker-compose up --build
+$ cd gobland-bot/kubernetes/k8s
+$ kubectl apply -f *
 ```
 
-```
-# docker images
-REPOSITORY                    TAG                         SIZE
-lordslair/gobland-it-perl     latest                      44.7MB
-lordslair/gobland-it-backup   latest                      12.1MB
-php                           fpm-alpine                  79.8MB
-nginx                         stable-alpine               16MB
-alpine                        latest                      5.53MB
-```
+This will create : 
+- The 5+ pods : perl, python, php, mariadb, nginx
 
 ```
-$ docker-compose ps
-      Name                     Command              State         Ports
-------------------------------------------------------------------------------
-gobland-it-backup   crond -l2 -f                    Up
-gobland-it-nginx    nginx -g daemon off;            Up      0.0.0.0:80->80/tcp
-gobland-it-perl     /code/gobland-it                Up
-gobland-it-php-31   docker-php-entrypoint php-fpm   Up      9000/tcp
-gobland-it-php-32   docker-php-entrypoint php-fpm   Up      9000/tcp
+$ kubectl get pods
+NAME                                     READY   STATUS    RESTARTS   AGE
+gobland-it-mariadb-67fd7658b-kcnfv       2/2     Running   2          121d
+gobland-it-nginx-77c56fcf5b-p47th        1/1     Running   1          118d
+gobland-it-nginx-77c56fcf5b-sqww4        1/1     Running   1          118d
+gobland-it-perl-6db49459df-rcs79         1/1     Running   0          10d
+gobland-it-php-b4f75dbfc-77rgb           1/1     Running   1          128d
+gobland-it-php-b4f75dbfc-zptbp           1/1     Running   1          128d
+gobland-it-phpmyadmin-67984b66c4-nhkcl   1/1     Running   2          150d
+gobland-it-python-5bdf47d9bc-bjhm2       1/1     Running   0          3h50m
 ```
 
+- The 4 volumes : code-perl, code-python, code-php, mariadb-db
+
 ```
-$ docker-compose up
-Starting gobland-it-php-32
-Starting gobland-it-php-31
-Starting gobland-it-perl
-Starting gobland-it-nginx
-Starting gobland-it-backup
-Attaching to gobland-it-php-31, gobland-it-php-32, gobland-it-perl, gobland-it-nginx, gobland-it-backup
-gobland-it-php-31 | [14-Feb-2019 12:58:52] NOTICE: fpm is running, pid 1
-gobland-it-php-31 | [14-Feb-2019 12:58:52] NOTICE: ready to handle connections
-gobland-it-php-32 | [14-Feb-2019 12:58:52] NOTICE: fpm is running, pid 1
-gobland-it-php-32 | [14-Feb-2019 12:58:52] NOTICE: ready to handle connections
-gobland-it-perl   | 2019-02-14 13:58:53 Starting daemon
-gobland-it-perl   | 2019-02-14 13:58:53 exec: initDB
-gobland-it-perl   | 2019-02-14 13:58:53 exec: initFP
-gobland-it-perl   | 2019-02-14 13:59:05 :o) Entering loop 1
-gobland-it-php-32 | 172.19.0.4 - User 14/Feb/2019:12:59:34 +0000 "GET /index.php" 200
-gobland-it-nginx  | 109.190.254.56 - User [14/Feb/2019:12:59:34 +0000] "GET /index.php HTTP/1.1" 200
-gobland-it-backup | Dumping : /db/32.db
-gobland-it-backup | Dumping : /db/31.db
-gobland-it-perl   | 2017-10-06 09:40:00 Stopping daemon
+$ kubectl get pvc
+NAME                     STATUS   VOLUME                   CAPACITY   [...]
+gobland-it-code-perl     Bound    pvc-[...]-568d3b4f5a48   1Gi        [...]
+gobland-it-code-php      Bound    pvc-[...]-568d3b4f5a48   1Gi        [...]
+gobland-it-code-python   Bound    pvc-[...]-8674a639f663   1Gi        [...]
+gobland-it-mariadb-db    Bound    pvc-[...]-568d3b4f5a48   1Gi        [...]
+```
+
+- The 4 services : php, mariadb, nginx & loadbalancer
+
+```
+$ kubectl get services
+NAME                         TYPE           CLUSTER-IP     EXTERNAL-IP  PORT(S)     
+gobland-it-lb                LoadBalancer   10.3.40.58     [...]        80:30632/TCP
+gobland-it-mariadb           ClusterIP      10.3.51.95     <none>       3306/TCP    
+gobland-it-nginx             ClusterIP      10.3.98.218    <none>       80/TCP      
+gobland-it-php               ClusterIP      10.3.159.93    <none>       9000/TCP     
 ```
 
 #### Disclaimer/Reminder
 
->The project is not mono-container, it requires at least 4 (perl/php/nginx/backup) + two volumes.  
->Each GL Clan has to be provisionned in its own container and DB for privacy reasons.
-
->Meaning that on a long term it could have to deal with dozens of -php containers,
->but still using one -nginx, one -perl and one -backup. No need to scale them.
+>The project is not mono-container, it requires at least 5 (perl/php/nginx/mariadb/python) + four volumes.  
+>Each GL Clan has to be provisionned in its own DB for privacy reasons.  
+>Meaning that on a long term it could have to deal with great numbers of DB, inside the same MariaDB container.  
+>Only nginx/php needs to be scaled up to handle the load (and maybe MariaDB clusterized at some point).  
 
 ### Todos
 
- - ~~Add a container for backups~~
+ - Add a container for backups
  - Add a container php-public with consolidated DB for CdM/Locator purposes
- - Add a container for Discord integration
+ - ~~Add a container for Discord integration~~
  - PHP Error logs accessible from outside the container (docker logs stuff)
- - /data accessible from outside the container (docker volume stuff)
- - Plan the Kubernetes integration instead of Compose
- 
-### Useful stuff
-   
-   * [Daemon exemple script][daemon] : the gobland-it doemon is based on this (Kudos to you)
+ - ~~Plan the Kubernetes integration instead of Compose~~
 
 ---
    [daemon]: <http://www.andrewault.net/2010/05/27/creating-a-perl-daemon-in-ubuntu/>
    [tablesort]: <https://github.com/tristen/tablesort>
    [svg-pan-zoom]: <https://github.com/ariutta/svg-pan-zoom>
+   [kubernetes]: <https://github.com/kubernetes/kubernetes>
+   [docker]: <https://github.com/docker/docker-ce>
+   [alpine]: <https://github.com/alpinelinux>
+
