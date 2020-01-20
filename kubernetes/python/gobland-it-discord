@@ -134,13 +134,12 @@ async def task_5min_kills():
         for channel_name in channels:
             then     = datetime.now() - timedelta(minutes=5)
             then_str = then.strftime("%Y-%m-%d %H:%M:%S")
+            channel  = discord.utils.get(client.get_all_channels(), name=channel_name)
 
             if channel_name == 'les-rabatteurs':
                 db_name = '32'
-                channel = discord.utils.get(client.get_all_channels(), name='les-rabatteurs')
             elif channel_name == 'les-neuneumeus':
                 db_name = '31'
-                channel = discord.utils.get(client.get_all_channels(), name='les-neuneumeus')
             else:
                 return
 
@@ -169,13 +168,12 @@ async def task_5min_baratins():
         for channel_name in channels:
             then     = datetime.now() - timedelta(minutes=5)
             then_str = then.strftime("%Y-%m-%d %H:%M:%S")
+            channel  = discord.utils.get(client.get_all_channels(), name=channel_name)
 
             if channel_name == 'les-rabatteurs':
                 db_name = '32'
-                channel = discord.utils.get(client.get_all_channels(), name='les-rabatteurs')
             elif channel_name == 'les-neuneumeus':
                 db_name = '31'
-                channel = discord.utils.get(client.get_all_channels(), name='les-neuneumeus')
             else:
                 return
 
@@ -204,13 +202,12 @@ async def task_5min_wounded():
         for channel_name in channels:
             then     = datetime.now() - timedelta(minutes=5)
             then_str = then.strftime("%Y-%m-%d %H:%M:%S")
+            channel  = discord.utils.get(client.get_all_channels(), name=channel_name)
 
             if channel_name == 'les-rabatteurs':
                 db_name = '32'
-                channel = discord.utils.get(client.get_all_channels(), name='les-rabatteurs')
             elif channel_name == 'les-neuneumeus':
                 db_name = '31'
-                channel = discord.utils.get(client.get_all_channels(), name='les-neuneumeus')
             else:
                 return
 
@@ -238,13 +235,12 @@ async def task_5min_deaths():
         for channel_name in channels:
             then     = datetime.now() - timedelta(minutes=5)
             then_str = then.strftime("%Y-%m-%d %H:%M:%S")
+            channel  = discord.utils.get(client.get_all_channels(), name=channel_name)
 
             if channel_name == 'les-rabatteurs':
                 db_name = '32'
-                channel = discord.utils.get(client.get_all_channels(), name='les-rabatteurs')
             elif channel_name == 'les-neuneumeus':
                 db_name = '31'
-                channel = discord.utils.get(client.get_all_channels(), name='les-neuneumeus')
             else:
                 return
 
