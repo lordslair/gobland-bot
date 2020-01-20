@@ -22,7 +22,7 @@ async def on_ready():
         channel = discord.utils.get(client.get_all_channels(), name=channel_name)
 
         if channel:
-            answer = ':partying_face: Salutations, votre serviteur est l.. !'
+            answer = ':partying_face: Salutations, votre serviteur est là !'
             print('{} {:<20} {} | {}'.format(now_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
             #await channel.send(answer)
 
