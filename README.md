@@ -9,17 +9,21 @@ Additional Python code can be used for a Discord bot.
 All of this inside Docker containers for portable purposes.  
 These containers are powered up by Kubernetes since v4.0 (summer 2019)
 
-Actually, as 4.10, it works this way :
+Actually, as 4.11, it works this way :
 
  - (gobland-it-perl) requests GL IE every 3600s to fetch new data
  - (gobland-it-php) requests the DB / generates HTML
  - (gobland-it-nginx) redirect visitors to the nginx layer
  - (gobland-it-mariadb) handles the DB (one /clan)
  - (gobland-it-python) runs the Discord bot (new v4.10 feature)
+ - (gobland-it-backup) runs the rolling backups (new v4.11 feature)
 
 ### Which script does what ?
 
 ```
+.
+├── bash
+│   └── cron-backup-sh.*              |  Shell scripts to automate backups with cron
 ├── k8s                               |  
 │   ├── configmap-*.yaml              |  ConfigMap files
 │   ├── deployment-*.yaml             |  Pods deployment files
@@ -76,15 +80,15 @@ And of course GitHub to store all these shenanigans.
 +-------+-------+                           +-------+-------+
         |            +-----------------+            |
         +----------->+     mariadb     +<-----------+
-                     +-^-------------^-+
-                       |             |
-         +-------------+-+         +-+---------------+
-         |     python    |         |      perl       |
-         +----+----------+         +----------+------+
-              |                               |
-+-------------v-+                           +-v-------------+
-|  discord bot  |                           |   gobland.fr  |
-+---------------+                           +---------------+
+                     +-^------^------^-+
+                       |      |      |
+         +-------------+-+    |    +-+---------------+
+         |     python    |    |    |      perl       |
+         +----+----------+    |    +----------+------+
+              |               |               |
++-------------v-+     +-------+-------+     +-v-------------+
+|  discord bot  |     |     backup    |     |   gobland.fr  |
++---------------+     +---------------+     +---------------+
 ```
 
 ### Installation
@@ -101,11 +105,12 @@ $ kubectl apply -f *
 ```
 
 This will create : 
-- The 5+ pods : perl, python, php, mariadb, nginx
+- The 6+ pods : perl, python, php, mariadb, nginx, backup
 
 ```
 $ kubectl get pods
 NAME                                     READY   STATUS    RESTARTS   AGE
+gobland-it-backup-7f57f8bb7c-nhj64       1/1     Running   0          13m
 gobland-it-mariadb-67fd7658b-kcnfv       2/2     Running   2          121d
 gobland-it-nginx-77c56fcf5b-p47th        1/1     Running   1          118d
 gobland-it-nginx-77c56fcf5b-sqww4        1/1     Running   1          118d
@@ -116,11 +121,12 @@ gobland-it-phpmyadmin-67984b66c4-nhkcl   1/1     Running   2          150d
 gobland-it-python-5bdf47d9bc-bjhm2       1/1     Running   0          3h50m
 ```
 
-- The 4 volumes : code-perl, code-python, code-php, mariadb-db
+- The 5 volumes : code-perl, code-python, code-php, mariadb-db, backup-db
 
 ```
 $ kubectl get pvc
 NAME                     STATUS   VOLUME                   CAPACITY   [...]
+gobland-it-backup-db     Bound    pvc-[...]-5e59fec92f65   5Gi        [...]
 gobland-it-code-perl     Bound    pvc-[...]-568d3b4f5a48   1Gi        [...]
 gobland-it-code-php      Bound    pvc-[...]-568d3b4f5a48   1Gi        [...]
 gobland-it-code-python   Bound    pvc-[...]-8674a639f663   1Gi        [...]
@@ -147,9 +153,9 @@ gobland-it-php               ClusterIP      10.3.159.93    <none>       9000/TCP
 
 ### Todos
 
- - Add a container for backups
+ - ~~Add a container for backups~~ (v4.11)
  - Add a container php-public with consolidated DB for CdM/Locator purposes
- - ~~Add a container for Discord integration~~
+ - ~~Add a container for Discord integration~~ (v4.10)
  - PHP Error logs accessible from outside the container (docker logs stuff)
  - ~~Plan the Kubernetes integration instead of Compose~~
 
@@ -160,4 +166,5 @@ gobland-it-php               ClusterIP      10.3.159.93    <none>       9000/TCP
    [kubernetes]: <https://github.com/kubernetes/kubernetes>
    [docker]: <https://github.com/docker/docker-ce>
    [alpine]: <https://github.com/alpinelinux>
+
 
