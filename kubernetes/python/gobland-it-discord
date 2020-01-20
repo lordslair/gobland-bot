@@ -24,7 +24,7 @@ async def on_ready():
         if channel:
             answer = ':partying_face: Salutations, votre serviteur est l.. !'
             print('{} {:<20} {} | {}'.format(now_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
-            await channel.send(answer)
+            #await channel.send(answer)
 
 @client.event
 async def on_message(message):
