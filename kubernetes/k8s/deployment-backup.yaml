@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gobland-it-backup
+  labels:
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backup
+      tier: backend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: backup
+        tier: backend
+    spec:
+      initContainers:
+      - name: gobland-it-backup-init
+        image: busybox
+        volumeMounts:
+        - name: backup
+          mountPath: /backup
+        command: ["/bin/sh"]
+        args: [
+         "-c",
+         "(
+              wget   https://github.com/lordslair/gobland-bot/archive/master.zip -O /backup/gobland-it.zip &&
+              unzip  /backup/gobland-it.zip -d /backup/ &&
+              cp -a  /backup/gobland-bot-master/kubernetes/bash/* /backup/ &&
+              rm -rf /backup/gobland-bot-master /backup/gobland-it.zip
+          ) || echo 1"
+        ]
+      containers:
+      - name: gobland-it-backup
+        image: alpine
+        command: ["/backup/entrypoint.sh"]
+        env:
+        - name: DBLIST
+          value: "global,1,29,31,32"
+        - name: MARIADB_ROOT_PASSWORD
+          value: Trustno1
+        volumeMounts:
+        - mountPath: /backup
+          name: backup
+      restartPolicy: Always
+      volumes:
+      - name: backup
+        persistentVolumeClaim:
+          claimName: gobland-it-backup-db
