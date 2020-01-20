@@ -1,0 +1,27 @@
+#!/bin/bash
+
+MONTH=$(date +%B)
+
+db_host='gobland-it-mariadb'
+db_user='root'
+db_pass=$MARIADB_ROOT_PASSWORD
+
+bk_path="/backup"
+
+for db_name in `echo $DBLIST | tr "," "\n"`;do
+    DEST="$bk_path/$db_name/monthly/$MONTH/db/"
+
+    if [ ! -d "$DEST" ]; then
+        mkdir -p $DEST
+    fi
+
+    echo "Dumping : $db_host/$db_name"
+    mysqldump --opt --lock-tables --user=$db_user --password=$db_pass --host=$db_host $db_name > $DEST/dump-$db_name.SQL
+    if [[ -e "$DEST/dump-$db_name.SQL" ]]
+        then
+            bzip2 -f -9 $DEST/dump-$db_name.SQL
+        else
+            echo "WARN: Dump $DEST/dump-$db_name.SQL not created. Shit happened !"
+        fi
+
+done;
