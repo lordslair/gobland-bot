@@ -8,178 +8,105 @@ db_host   = 'gobland-it-mariadb';
 db_user   = 'root'
 db_pass   = os.environ['MARIADB_ROOT_PASSWORD']
 
-def oukilest(oukilest_id,db_name):
+# Meta Query using one parameter, and a fetchone()
+def query_fetchone(db_name,SQL,param):
     if (db_pass):
 
         db        = mysql.connector.connect( host     = db_host,
                                              database = db_name,
                                              user     = db_user,
                                              password = db_pass)
-        cursor   = db.cursor()
-        SQL      = "SELECT Id,Nom,Niveau,Type,Clan,X,Y,N,Z FROM Vue WHERE Id = %s"
+        cursor    = db.cursor()
 
-        cursor.execute(SQL, (oukilest_id,))
-        stats  = cursor.fetchone()
+        cursor.execute(SQL, (param,))
+        result = cursor.fetchone()
 
         if db.is_connected():
             cursor.close()
             db.close()
 
-        return stats
+        return result
     else:
         return None;
 
-def cdm(cdm_id,db_name):
+# Meta Query using one parameter, and a fetchall()
+def query_fetchall(db_name,SQL,param):
     if (db_pass):
 
         db        = mysql.connector.connect( host     = db_host,
                                              database = db_name,
                                              user     = db_user,
                                              password = db_pass)
-        cursor   = db.cursor()
-        SQL      = "SELECT * FROM CdM WHERE IdMob = %s ORDER BY Date ASC LIMIT 1;"
+        cursor    = db.cursor()
 
-        cursor.execute(SQL, [cdm_id])
-        stats  = cursor.fetchone()
-
-        if db.is_connected():
-            cursor.close()
-            db.close()
-
-        return stats
-    else:
-        return None;
-
-# Returns kill line(s) from DB, since the date passed as param
-def kills(then_str,db_name):
-    if (db_pass):
-
-        db        = mysql.connector.connect( host     = db_host,
-                                             database = db_name,
-                                             user     = db_user,
-                                             password = db_pass)
-        cursor   = db.cursor()
-        SQL      = "SELECT IdGob,Gobelins.Gobelin,PMSubject,PMDate,PMText,Date \
-                    FROM `MPBot` \
-                    INNER JOIN Gobelins on MPBot.IdGob = Gobelins.Id \
-                    WHERE ( PMText LIKE '%débarrassé%' OR PMText LIKE '%Son cadavre%' ) \
-                    AND   Date > %s \
-                    ORDER BY PMDate DESC;"
-
-        cursor.execute(SQL, [then_str])
-        infos  = cursor.fetchall()
+        cursor.execute(SQL, [param])
+        result = cursor.fetchall()
 
         if db.is_connected():
             cursor.close()
             db.close()
 
-        return infos
+        return result
     else:
         return None;
+
+# Returns one line with position of requested PJ/PNJ
+def oukilest(id,db_name):
+    SQL    = "SELECT Id,Nom,Niveau,Type,Clan,X,Y,N,Z FROM Vue WHERE Id = %s"
+    result = query_fetchone(db_name,SQL,id)
+
+    if result: return result
+
+# Returns one line with last stored CdM of requested PNJ
+def cdm(id,db_name):
+    SQL    = "SELECT * FROM CdM WHERE IdMob = %s ORDER BY Date ASC LIMIT 1"
+    result = query_fetchone(db_name,SQL,id)
+
+    if result: return result
 
 # Returns baratin line(s) from DB, since the date passed as param
 def baratins(then_str,db_name):
-    if (db_pass):
+    SQL    = "SELECT IdGob,Gobelins.Gobelin,PMSubject,PMDate,PMText \
+              FROM `MPBot` \
+              INNER JOIN Gobelins on MPBot.IdGob = Gobelins.Id \
+              WHERE PMSubject LIKE 'Résultat Baratin%' \
+              AND   Date > %s \
+              ORDER BY PMDate ASC;"
+    result = query_fetchall(db_name,SQL,then_str)
 
-        db        = mysql.connector.connect( host     = db_host,
-                                             database = db_name,
-                                             user     = db_user,
-                                             password = db_pass)
-        cursor   = db.cursor()
-        SQL      = "SELECT IdGob,Gobelins.Gobelin,PMSubject,PMDate,PMText \
-                    FROM `MPBot` \
-                    INNER JOIN Gobelins on MPBot.IdGob = Gobelins.Id \
-                    WHERE PMSubject LIKE 'Résultat Baratin%' \
-                    AND   Date > %s \
-                    ORDER BY PMDate ASC;"
-
-        cursor.execute(SQL, [then_str])
-        infos  = cursor.fetchall()
-
-        if db.is_connected():
-            cursor.close()
-            db.close()
-
-        return infos
-    else:
-        return None;
+    if result: return result
 
 # Returns wounded Creatures line(s) from DB, since the date passed as param
 def wounded(then_str,db_name):
-    if (db_pass):
+    SQL    = "SELECT Id,IdGob,PMDate,PMSubject,PMText,Date \
+              FROM `MPBot` \
+              WHERE PMSubject LIKE 'Résultat CdM%' \
+              AND PMText LIKE '%Blessure : 9%' \
+              AND Date > %s \
+              ORDER BY Date ASC;"
+    result = query_fetchall(db_name,SQL,then_str)
 
-        db        = mysql.connector.connect( host     = db_host,
-                                             database = db_name,
-                                             user     = db_user,
-                                             password = db_pass)
-        cursor   = db.cursor()
-        SQL      = "SELECT Id,IdGob,PMDate,PMSubject,PMText,Date \
-                    FROM `MPBot` \
-                    WHERE PMSubject LIKE 'Résultat CdM%' \
-                    AND PMText LIKE '%Blessure : 9%' \
-                    AND Date > %s \
-                    ORDER BY Date ASC;"
-
-        cursor.execute(SQL, [then_str])
-        infos  = cursor.fetchall()
-
-        if db.is_connected():
-            cursor.close()
-            db.close()
-
-        return infos
-    else:
-        return None;
+    if result: return result
 
 # Returns Gobelins deaths line(s) from DB, since the date passed as param
 def death(then_str,db_name):
-    if (db_pass):
+    SQL    = "SELECT IdGob,Gobelins.Gobelin,PMSubject,PMDate,PMText,Date \
+              FROM `MPBot` \
+              INNER JOIN Gobelins on MPBot.IdGob = Gobelins.Id \
+              WHERE PMSubject LIKE 'Vous êtes Mort%' \
+              AND   Date > %s \
+              ORDER BY PMDate DESC;"
+    result = query_fetchall(db_name,SQL,then_str)
 
-        db        = mysql.connector.connect( host     = db_host,
-                                             database = db_name,
-                                             user     = db_user,
-                                             password = db_pass)
-        cursor   = db.cursor()
-        SQL      = "SELECT IdGob,Gobelins.Gobelin,PMSubject,PMDate,PMText,Date \
-                    FROM `MPBot` \
-                    INNER JOIN Gobelins on MPBot.IdGob = Gobelins.Id \
-                    WHERE PMSubject LIKE 'Vous êtes Mort%' \
-                    AND   Date > %s \
-                    ORDER BY PMDate DESC;"
-
-        cursor.execute(SQL, [then_str])
-        infos  = cursor.fetchall()
-
-        if db.is_connected():
-            cursor.close()
-            db.close()
-
-        return infos
-    else:
-        return None;
+    if result: return result
 
 # Returns Coterie drops line(s) from DB, since the date passed as param
 def drops(then_str,db_name):
-    if (db_pass):
+    SQL    = "SELECT DISTINCT PMText \
+              FROM `MPBot` \
+              WHERE PMSubject = 'Dépôt d''objets' \
+              AND   Date > %s \
+              ORDER BY Date DESC;"
+    result = query_fetchall(db_name,SQL,then_str)
 
-        db        = mysql.connector.connect( host     = db_host,
-                                             database = db_name,
-                                             user     = db_user,
-                                             password = db_pass)
-        cursor   = db.cursor()
-        SQL      = "SELECT DISTINCT PMText \
-                    FROM `MPBot` \
-                    WHERE PMSubject = 'Dépôt d''objets' \
-                    AND   Date > %s \
-                    ORDER BY Date DESC;"
-
-        cursor.execute(SQL, [then_str])
-        infos  = cursor.fetchall()
-
-        if db.is_connected():
-            cursor.close()
-            db.close()
-
-        return infos
-    else:
-        return None;
+    if result: return result
