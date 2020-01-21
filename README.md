@@ -3,7 +3,7 @@
 This project is mainly a Tactical Interface (IT) for the game Gobland (GL).  
 Its purpose is to parse data from GL from its API (Interface Externe - IE).  
 It's done by a Perl backend to INSERT in MySQL.  
-And a PHP frontend, served by nginx to render these pages.
+And a PHP frontend, served by nginx to render these pages.  
 Additional Python code can be used for a Discord bot.
   
 All of this inside Docker containers for portable purposes.  
@@ -117,7 +117,6 @@ gobland-it-nginx-77c56fcf5b-sqww4        1/1     Running   1          118d
 gobland-it-perl-6db49459df-rcs79         1/1     Running   0          10d
 gobland-it-php-b4f75dbfc-77rgb           1/1     Running   1          128d
 gobland-it-php-b4f75dbfc-zptbp           1/1     Running   1          128d
-gobland-it-phpmyadmin-67984b66c4-nhkcl   1/1     Running   2          150d
 gobland-it-python-5bdf47d9bc-bjhm2       1/1     Running   0          3h50m
 ```
 
