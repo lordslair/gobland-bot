@@ -257,7 +257,7 @@ async def task_5min_drops():
 
                     m = re.search(r"^<B>\[(?P<idcot>\d*)\] (?P<nomcot>.*)<\/B>.*>(?P<nommob>.*) \((?P<idmob>\d*)\)<", pmt)
                     if m is not None:
-                        answer = '{} [{}] {} a d..pos.. sa cargaison .. {} ({})'.format(icon,m.group('idmob'),m.group('nommob'),m.group('nomcot'),m.group('idcot'))
+                        answer = '{} [{}] {} a déposé sa cargaison à {} ({})'.format(icon,m.group('idmob'),m.group('nommob'),m.group('nomcot'),m.group('idcot'))
                         print('{} {:<20} {} | {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
 
                         await channel.send(answer)
