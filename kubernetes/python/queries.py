@@ -64,6 +64,18 @@ def cdm(id,db_name):
 
     if result: return result
 
+# Returns kill line(s) from DB, since the date passed as param
+def kills(then_str,db_name):
+    SQL    = "SELECT IdGob,Gobelins.Gobelin,PMSubject,PMDate,PMText,Date \
+              FROM `MPBot` \
+              INNER JOIN Gobelins on MPBot.IdGob = Gobelins.Id \
+              WHERE ( PMText LIKE '%débarrassé%' OR PMText LIKE '%Son cadavre%' ) \
+              AND   Date > %s \
+              ORDER BY PMDate DESC;"
+    result = query_fetchall(db_name,SQL,then_str)
+
+    if result: return result
+
 # Returns baratin line(s) from DB, since the date passed as param
 def baratins(then_str,db_name):
     SQL    = "SELECT IdGob,Gobelins.Gobelin,PMSubject,PMDate,PMText \
