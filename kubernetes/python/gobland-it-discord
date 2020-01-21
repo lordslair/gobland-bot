@@ -15,8 +15,7 @@ channels = eval(os.environ['CHANNELS'])
 
 @client.event
 async def on_ready():
-    now     = datetime.now()
-    now_str = now.strftime("%Y-%m-%d %H:%M:%S")
+    now_str  = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     for channel_name in channels:
         channel = discord.utils.get(client.get_all_channels(), name=channel_name)
@@ -28,6 +27,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+    now_str  = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     # we do not want the bot to reply outside registered clan channels
     channel = str(message.channel)
@@ -41,7 +41,7 @@ async def on_message(message):
         return
 
     if message.content.startswith('!!help'):
-        print('[{}] !!help'.format(message.author))
+        print('{} {:<20} {} | [{}] !!help'.format(now_str, '[' + inspect.stack()[0][3] + ']', channel,message.author))
         h_oukilest = '!!oulikest ID  -> Renvoie la position de <ID>\n'
         h_cdm      = '!!cdm ID       -> Renvoie la dernière CdM de <ID>\n'
         help       = '```' + h_oukilest + h_cdm + '```'
@@ -50,7 +50,8 @@ async def on_message(message):
     elif message.content.startswith('!!oukilest'):
         m = re.match(r"!!oukilest (?P<id>\d*)", message.content)
         if m is not None:
-            print('[{}] !!oukilest {}'.format(message.author,m.group('id')))
+            print('{} {:<20} {} | [{}] !!oukilest {}'.format(now_str, '[' + inspect.stack()[0][3] + ']', channel,
+                                                             message.author,m.group('id')))
             stats = oukilest(m.group('id'),db_name)
             if stats:
                 # Id,Nom,Niveau,Type,Clan,X,Y,N,Z
@@ -67,12 +68,15 @@ async def on_message(message):
             await message.channel.send(answer)
         else:
             answer   = '<ID> n\'est pas un nombre entier [REGEX: (\d*)]'
-        print ('[{}] !!oukilest {}'.format(message.author,answer))
+        print('{} {:<20} {} | [{}] !!oukilest {} | {}'.format(now_str, '[' + inspect.stack()[0][3] + ']', channel,
+                                                         message.author, m.group('id'),
+                                                         answer))
 
     elif message.content.startswith('!!cdm'):
         m = re.match(r"!!cdm (?P<id>\d*)", message.content)
         if m is not None:
-            print('[{}] !!cdm {}'.format(message.author,m.group('id')))
+            print('{} {:<20} {} | [{}] !!cdm {}'.format(now_str, '[' + inspect.stack()[0][3] + ']', channel,
+                                                             message.author,m.group('id')))
             stats = cdm(m.group('id'),db_name)
             if stats:
 
@@ -121,7 +125,9 @@ async def on_message(message):
             await message.channel.send(answer)
         else:
             answer   = '<ID> n\'est pas un nombre entier [REGEX: (\d*)]'
-        print ('[{}] !!cdm {}'.format(message.author, '```' + answer.rstrip() + '```'))
+        print('{} {:<20} {} | [{}] !!cdm {} | {}'.format(now_str, '[' + inspect.stack()[0][3] + ']', channel,
+                                                         message.author, m.group('id'),
+                                                         answer.splitlines()[0]))
 
 # Tasks definitions
 
@@ -130,9 +136,10 @@ async def task_5min_kills():
         for channel_name, db_name in channels.items():
             then     = datetime.now() - timedelta(minutes=5)
             then_str = then.strftime("%Y-%m-%d %H:%M:%S")
+            now_str  = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             channel  = discord.utils.get(client.get_all_channels(), name=channel_name)
 
-            if channel: print('{} {:<20} {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel))
+            if channel: print('{} {:<20} {}'.format(now_str, '[' + inspect.stack()[0][3] + ']', channel))
 
             infos = kills(then_str,db_name)
             if infos and channel:
@@ -146,7 +153,7 @@ async def task_5min_kills():
                     m = re.search(r" - (?P<mob>.*)", pms)
                     if m is not None:
                         answer = '{} [{}] {} a tué {}'.format(icon,idgob,nomgob,m.group('mob'))
-                        print('{} {:<20} {} | {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
+                        print('{} {:<20} {} | {}'.format(now_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
 
                         await channel.send(answer)
 
@@ -157,9 +164,10 @@ async def task_5min_baratins():
         for channel_name, db_name in channels.items():
             then     = datetime.now() - timedelta(minutes=5)
             then_str = then.strftime("%Y-%m-%d %H:%M:%S")
+            now_str  = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             channel  = discord.utils.get(client.get_all_channels(), name=channel_name)
 
-            if channel: print('{} {:<20} {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel))
+            if channel: print('{} {:<20} {}'.format(now_str, '[' + inspect.stack()[0][3] + ']', channel))
 
             infos = baratins(then_str,db_name)
             if infos and channel:
@@ -173,7 +181,7 @@ async def task_5min_baratins():
                     m = re.search(r" - (?P<mob>.*)", pms)
                     if m is not None:
                         answer = '{} [{}] {} a baratiné {}'.format(icon,idgob,nomgob,m.group('mob'))
-                        print('{} {:<20} {} | {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
+                        print('{} {:<20} {} | {}'.format(now_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
 
                         await channel.send(answer)
 
@@ -184,9 +192,10 @@ async def task_5min_wounded():
         for channel_name, db_name in channels.items():
             then     = datetime.now() - timedelta(minutes=5)
             then_str = then.strftime("%Y-%m-%d %H:%M:%S")
+            now_str  = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             channel  = discord.utils.get(client.get_all_channels(), name=channel_name)
 
-            if channel: print('{} {:<20} {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel))
+            if channel: print('{} {:<20} {}'.format(now_str, '[' + inspect.stack()[0][3] + ']', channel))
 
             stats = wounded(then_str,db_name)
             if stats and channel:
@@ -209,7 +218,7 @@ async def task_5min_wounded():
 
                         if n is not None:
                             answer = '{} [{}] {} est à finir (Blessé à {}%{})'.format(icon,m.group('idmob'),m.group('nommob'),n.group('bless'),add)
-                            print('{} {:<20} {} | {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
+                            print('{} {:<20} {} | {}'.format(now_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
 
                             await channel.send(answer)
 
@@ -220,9 +229,10 @@ async def task_5min_deaths():
         for channel_name, db_name in channels.items():
             then     = datetime.now() - timedelta(minutes=5)
             then_str = then.strftime("%Y-%m-%d %H:%M:%S")
+            now_str  = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             channel  = discord.utils.get(client.get_all_channels(), name=channel_name)
 
-            if channel: print('{} {:<20} {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel))
+            if channel: print('{} {:<20} {}'.format(now_str, '[' + inspect.stack()[0][3] + ']', channel))
 
             deaths = death(then_str,db_name)
             if deaths and channel:
@@ -233,7 +243,7 @@ async def task_5min_deaths():
                     icon   = ':pirate_flag:'
 
                     answer = '{} [{}] {} est mort(e)'.format(icon,idgob,nomgob)
-                    print('{} {:<20} {} | {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
+                    print('{} {:<20} {} | {}'.format(now_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
 
                     await channel.send(answer)
 
@@ -244,9 +254,10 @@ async def task_5min_drops():
         for channel_name, db_name in channels.items():
             then     = datetime.now() - timedelta(minutes=5)
             then_str = then.strftime("%Y-%m-%d %H:%M:%S")
+            now_str  = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             channel  = discord.utils.get(client.get_all_channels(), name=channel_name)
 
-            if channel: print('{} {:<20} {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel))
+            if channel: print('{} {:<20} {}'.format(now_str, '[' + inspect.stack()[0][3] + ']', channel))
 
             infos = drops(then_str,db_name)
             if infos and channel:
@@ -258,7 +269,7 @@ async def task_5min_drops():
                     m = re.search(r"^<B>\[(?P<idcot>\d*)\] (?P<nomcot>.*)<\/B>.*>(?P<nommob>.*) \((?P<idmob>\d*)\)<", pmt)
                     if m is not None:
                         answer = '{} [{}] {} a déposé sa cargaison à {} ({})'.format(icon,m.group('idmob'),m.group('nommob'),m.group('nomcot'),m.group('idcot'))
-                        print('{} {:<20} {} | {}'.format(then_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
+                        print('{} {:<20} {} | {}'.format(now_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
 
                         await channel.send(answer)
 
