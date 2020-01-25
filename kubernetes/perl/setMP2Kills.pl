@@ -26,7 +26,9 @@ foreach my $db (@db_list)
     my $req_mps = $dbh->prepare( "SELECT MPBot.Id,Gobelins.Id,Gobelins.Gobelin,PMSubject,PMDate,PMText \
                                   FROM Gobelins \
                                   INNER JOIN MPBot on Gobelins.Id = MPBot.IdGob \
-                                  WHERE ( PMText LIKE '%débarrassé%' OR PMText LIKE '%Son cadavre%' ) \
+                                  WHERE ( PMText LIKE '%débarrassé%' \
+                                       OR PMText LIKE '%Son cadavre%' \
+                                       OR PMText LIKE '%Cela <B>TUE%') \
                                   AND PMDate LIKE '$now%'");
     $req_mps->execute();
 
@@ -75,6 +77,7 @@ foreach my $db (@db_list)
                       $mob_id   = $3;
                       $mob_name =~ s/\'/\'\'/g;
 
+                      logEntry("[setMP2Kills] DB: $db | [$gob_id] $gob_name -> $mob_name ($mob_id)");
                       my $sth  = $dbh->prepare( "INSERT IGNORE INTO Kills VALUES( '$mp_id'      , \
                                                                                   '$mp_date'    , \
                                                                                   '$mob_id'     , \
@@ -99,6 +102,7 @@ foreach my $db (@db_list)
             next;
         }
 
+        logEntry("[setMP2Kills] DB: $db | [$gob_id] $gob_name -> $mob_name ($mob_id)");
         my $sth  = $dbh->prepare( "INSERT IGNORE INTO Kills VALUES( '$mp_id'      , \
                                                                     '$mp_date'    , \
                                                                     '$mob_id'     , \
