@@ -50,13 +50,13 @@
 
         $req_mp_kill = "INSERT IGNORE INTO `Kills`
                         VALUES ('$mp_kill_id', '', '$mob_id', '', '000', 'Gobland-IT', 'Gobland-IT ($mob_id)', 'débarrassé');";
-        $res_mp_kill = $db->query($req_mp_kill); 
+        $res_mp_kill = $db->query($req_mp_kill);
     }
 
     $req_cdm_ids    = "SELECT IdMob,Name
-                       FROM CdM 
+                       FROM CdM
                        GROUP BY IdMob
-                       ORDER BY MAX(Date) 
+                       ORDER BY MAX(Date)
                        DESC LIMIT 50;";
     $query_cdm_ids = $db->query($req_cdm_ids);
 
@@ -118,8 +118,7 @@
 
         $req_kill    = "SELECT COUNT(*)
                         FROM `Kills`
-                        WHERE ( PMSubject LIKE '%$mob_id%' AND PMText LIKE '%débarrassé%' )
-                        OR ( PMSubject = 'Résultat Potion' AND PMText LIKE '%$mob_id%Son cadavre%')";
+                        WHERE IdMob = '$mob_id'";
         $kill        = $db->query($req_kill)->fetch_row()[0];
 
         if ( $kill >= 1 )
@@ -127,9 +126,7 @@
             # The mob is dead, print a skull emoji
             $req_kill_id   = "SELECT IdGob,NomGob,Date
                               FROM `Kills`
-                              WHERE ( PMSubject LIKE '%$mob_id%' AND PMText LIKE '%débarrassé%' )
-                              OR ( PMSubject = 'Résultat Potion' AND PMText LIKE '%$mob_id%Son cadavre%')
-                              LIMIT 1";
+                              WHERE IdMob = '$mob_id'";
             $kill_id       = $db->query($req_kill_id, true)->fetch_row();
             $kill_title    = 'Tueur: '.$kill_id['1'].' ('.$kill_id['0'].') Date: '.$kill_id['2'];
             $bless         = '<font size="3,5" title="'.$kill_title.'">☠️</font>';
