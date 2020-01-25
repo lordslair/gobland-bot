@@ -62,8 +62,31 @@ foreach my $db (@db_list)
         }
         elsif ( $mp_subject eq 'Résultat Eclair' )
         {
-            # Too complicated to parse for now
-            next;
+            # DATA: <H1>[...]</CENTER>Votre éclair a touché le  Gnu Sauvage (346102).[...]<BR>Vous avez <B>débarrassé</B> le Monde Souterrain de sa présence maléfique.[...]
+            # DATA: Votre éclair a touché l' Ombre (346103).[...]<BR>Vous avez <B>débarrassé</B> le Monde Souterrain de sa présence maléfique.[...]
+            # DATA: Votre éclair a touché l' Ombre (346105).[...]<BR>Vous avez <B>débarrassé</B> le Monde Souterrain de sa présence maléfique.[...]
+            # DATA: Il vous reste 2 PA<BR>[...]
+            my @eclair_lines = split /<BR><HR><BR>/, $mp_text;
+            foreach my $line (@eclair_lines)
+            {
+                 if ( $line =~ /touché (le\s?|la\s?|l') ([-\P{Latin}\w\s\']*) \((\d*)\)[.].* <B>débarrassé/ )
+                 {
+                      $mob_name = $2;
+                      $mob_id   = $3;
+                      $mob_name =~ s/\'/\'\'/g;
+
+                      my $sth  = $dbh->prepare( "INSERT IGNORE INTO Kills VALUES( '$mp_id'      , \
+                                                                                  '$mp_date'    , \
+                                                                                  '$mob_id'     , \
+                                                                                  '$mob_name'   , \
+                                                                                  '$gob_id'     , \
+                                                                                  '$gob_name'   , \
+                                                                                  \"$mp_subject\" , \
+                                                                                  \"$mp_text\"  )" );
+
+                      $sth->execute();
+                }
+            }
         }
 
         my $sth  = $dbh->prepare( "INSERT IGNORE INTO Kills VALUES( '$mp_id'      , \
