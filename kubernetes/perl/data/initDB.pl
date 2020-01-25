@@ -310,9 +310,9 @@ foreach my $db (@db_list)
                                      IdGob     INT,
                                      Nom       TEXT)");
 
-    $dbh->do("CREATE TABLE IF NOT EXISTS Kills (Id         INT PRIMARY KEY,
+    $dbh->do("CREATE TABLE IF NOT EXISTS Kills (Id         INT,
                                   Date       TEXT,
-                                  IdMob      INT,
+                                  IdMob      INT PRIMARY KEY,
                                   NomMob     TEXT,
                                   IdGob      INT,
                                   NomGob     TEXT,
