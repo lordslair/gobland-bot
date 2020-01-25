@@ -60,6 +60,7 @@ foreach my $db (@db_list)
             {
                 $mob_id   = $1;
                 $mob_name = $2;
+                $mob_name =~ s/\'/\'\'/g;
             }
         }
         elsif ( $mp_subject eq 'Résultat Eclair' )
