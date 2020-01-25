@@ -88,6 +88,16 @@ foreach my $db (@db_list)
                 }
             }
         }
+        elsif ( $mp_subject =~ 'Résultat d\'explosion - Bombe à retardement' )
+        {
+            # Too complicated to parse for now
+            next;
+        }
+        elsif ( $mp_subject =~ 'Résultat Foudre' )
+        {
+            # Too complicated to parse for now
+            next;
+        }
 
         my $sth  = $dbh->prepare( "INSERT IGNORE INTO Kills VALUES( '$mp_id'      , \
                                                                     '$mp_date'    , \
