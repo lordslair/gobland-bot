@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-    
+
 use DBI;
 use POSIX qw(strftime);
 use Encode;
