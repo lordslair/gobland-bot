@@ -13,8 +13,14 @@
         <h1>Changelog</h1>
         <div id="profilInfos">
           <fieldset>
-          <legend>Gobland-IT Version 3</legend>
+          <legend>Gobland-IT Version 4.11</legend>
             <ul>
+              <li>2020-01-26 : Hotfix de l'affichage du contenu des Cavernes de Gobelins (<b>@Tagadatsointsoin</b>)</li>
+              <li>2020-01-25 : Ajout de le prise en charge des kills par Eclair/Potion (<b>@Internal</b>)</li>
+              <li>2020-01-25 : Ajout de le prise en charge des kills par les suivants (<b>@Internal</b>)</li>
+              <li>2020-01-20 : Passage officiel en v4.11 (<b>Internal</b>)</li>
+              <li>2020-01-15 : Hotfix de l'affichage des Dieux dans la vue (<b>@Pachavor</b>)</li>
+              <li>2020-01-15 : Correction de la prise en compte des enchantements (<b>@Internal</b>)</li>
               <li>2020-01-13 : Correction de l'affichage des Gobelins dans la vue (<b>@Globulus</b>)</li>
               <li>2020-01-12 : Amélioration de la détection des suivants (<b>@Pachavor</b>)</li>
               <li>2020-01-06 : Deplacement de /cavernes.php vers /clan-cavernes.php (<b>Internal</b>)</li>
