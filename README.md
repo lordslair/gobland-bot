@@ -5,7 +5,7 @@ Its purpose is to parse data from GL from its API (Interface Externe - IE).
 It's done by a Perl backend to INSERT in MySQL.  
 And a PHP frontend, served by nginx to render these pages.  
 Additional Python code can be used for a Discord bot.
-  
+
 All of this inside Docker containers for portable purposes.  
 These containers are powered up by Kubernetes since v4.0 (summer 2019)
 
@@ -62,7 +62,7 @@ I used mainy :
 * [Alpine][alpine] - probably the best/lighter base container to work with
 * [Daemon exemple script][daemon] - gobland-it Perl daemon is based on this (Kudos)
 
-And of course GitHub to store all these shenanigans. 
+And of course GitHub to store all these shenanigans.
 
 ### Schematics
 
@@ -104,7 +104,7 @@ $ cd gobland-bot/kubernetes/k8s
 $ kubectl apply -f *
 ```
 
-This will create : 
+This will create :
 - The 6+ pods : perl, python, php, mariadb, nginx, backup
 
 ```
@@ -155,7 +155,7 @@ gobland-it-php               ClusterIP      10.3.159.93    <none>       9000/TCP
  - ~~Add a container for backups~~ (v4.11)
  - Add a container php-public with consolidated DB for CdM/Locator purposes
  - ~~Add a container for Discord integration~~ (v4.10)
- - PHP Error logs accessible from outside the container (docker logs stuff)
+ - ~~PHP Error logs accessible from outside the container (docker logs stuff)~~
  - ~~Plan the Kubernetes integration instead of Compose~~
 
 ---
@@ -165,5 +165,3 @@ gobland-it-php               ClusterIP      10.3.159.93    <none>       9000/TCP
    [kubernetes]: <https://github.com/kubernetes/kubernetes>
    [docker]: <https://github.com/docker/docker-ce>
    [alpine]: <https://github.com/alpinelinux>
-
-
