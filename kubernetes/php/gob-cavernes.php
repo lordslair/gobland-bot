@@ -43,10 +43,10 @@
 
     print('        <center>'."\n");
     print('          Afficher les Non Identifiés : '."\n");
-    print('          <a href="/cavernes.php?IdT=TRUE" title="Afficher les non-IdT">[🔎]</a>'."\n");
+    print('          <a href="/gob-cavernes.php?IdT=TRUE" title="Afficher les non-IdT">[🔎]</a>'."\n");
     print('          <br>'."\n");
     print('          Retirer les Non Identifiés : '."\n");
-    print('          <a href="/cavernes.php"          title="Retirer les non-IdT">[🚫]</a>'."\n");
+    print('          <a href="/gob-cavernes.php"          title="Retirer les non-IdT">[🚫]</a>'."\n");
     print('        <center>'."\n");
 ?>
         <table cellspacing="0" id="profilInfos" style="border-style:none;">
