@@ -28,7 +28,7 @@ $dbh->do("CREATE TABLE IF NOT EXISTS `users` (
     `account_since` datetime DEFAULT current_timestamp(),
     PRIMARY KEY (`account_id`))");
 
-$dbh->do("CREATE TABLE `FP_Monstre` (
+$dbh->do("CREATE TABLE IF NOT EXISTS `FP_Monstre` (
     `Id` int(11) NOT NULL AUTO_INCREMENT,
     `Nom` text NOT NULL,
     `Famille` text NOT NULL,
@@ -153,7 +153,7 @@ foreach my $db (@db_list)
                                   PMDate     TEXT,
                                   PMStatus   TEXT,
                                   PMExp      TEXT,
-                                  PMText     TEXT
+                                  PMText     TEXT,
                                   Date       DATETIME)");
 
     $dbh->do("CREATE TABLE IF NOT EXISTS Meutes (Id       INT PRIMARY KEY,
