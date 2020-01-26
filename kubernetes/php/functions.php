@@ -287,7 +287,7 @@ function GetCraft($type,$nom,$desc,$template)
     }
     else
     {
-        if    ( $desc != '<b>Non Identifié</b>' )
+        if    ( !preg_match('/^<b>Non (I|i)dentifié/', $desc) )
         {
             if     ( ($nom == 'Bottes')             && ($desc != 'ESQ:+2') )                                     { return $craft; }
             elseif ( ($nom == 'Sandales')           && ($desc != 'ESQ:+1') )                                     { return $craft; }
