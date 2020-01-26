@@ -40,9 +40,9 @@ spec:
         command: ["/backup/entrypoint.sh"]
         env:
         - name: DBLIST
-          value: "global,1,29,31,32"
+          value: "XX,YY"
         - name: MARIADB_ROOT_PASSWORD
-          value: Trustno1
+          value: YYYYY
         volumeMounts:
         - mountPath: /backup
           name: backup
