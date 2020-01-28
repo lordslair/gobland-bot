@@ -32,8 +32,7 @@ Actually, as 4.11, it works this way :
 ├── perl                              |  
 │   ├── data                          |  
 │   |    ├── initDB.pl                |  DB creation if needed
-│   |    ├── initFP.pl                |  DB population using FP if needed
-│   |    └── Lieux.csv                |  CSV containing already known location
+│   |    └── initFP.pl                |  DB population using FP if needed
 |   ├── getIE_*.pl                    |  Scripts used to REQUEST IE and INSERT data in DB
 │   ├── set*.pl                       |  Scripts used to modify data in DB
 │   └── gobland-it                    |  Perl daemon for IE data collection
