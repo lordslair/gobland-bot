@@ -54,14 +54,18 @@ $dbh->do("CREATE TABLE IF NOT EXISTS `FP_Monstre` (
                                  Affinite    TEXT)");
 
     $dbh->do("CREATE TABLE IF NOT EXISTS FP_Lieu (IdLieu         INT PRIMARY KEY,
+                                    Categorie      TEXT,
                                     Nom            TEXT,
+                                    Niveau         INT,
                                     Type           TEXT,
                                     IdProprietaire TEXT,
                                     architecture   TEXT,
                                     mobile         TEXT,
-                                    X              TEXT,
-                                    Y              TEXT,
-                                    Z              TEXT)");
+                                    X              SMALLINT,
+                                    Y              SMALLINT,
+                                    N              SMALLINT,
+                                    Z              TEXT,
+                                    Date           DATETIME DEFAULT current_timestamp())");
 
     $dbh->do("CREATE TABLE IF NOT EXISTS FP_Clan (Id         INT PRIMARY KEY,
                                     Nom            TEXT,

@@ -127,9 +127,7 @@
     # We use $_GET["niveau"] to restrict the view
     if ( $_GET["niveau"] ) { $n_min = $n_max = $N;}
 
-    $req_vue = "SELECT Id,Categorie,Nom,Niveau,Type,Clan,X,Y,N,Z
-                FROM Vue
-                WHERE X      BETWEEN '$x_min'   AND '$x_max'
+    $req_vue = "WHERE X      BETWEEN '$x_min'   AND '$x_max'
                 AND   Y      BETWEEN '$y_min'   AND '$y_max'
                 AND   N      BETWEEN '$n_min'   AND '$n_max'";
 
@@ -152,7 +150,15 @@
         $req_vue .= " AND ($req_vue_items)";
     }
 
-    $query_vue = $db->query($req_vue);
+    $req_final = "(SELECT Id,Categorie,Nom,Niveau,X,Y,N,Z
+                     FROM Vue
+                     $req_vue)
+                     UNION
+                     (SELECT IdLieu,Categorie,Nom,Niveau,X,Y,N,Z
+                     FROM global.FP_Lieu
+                     $req_vue)";
+
+    $query_vue = $db->query($req_final);
 
     $ITEMS = [];
 
