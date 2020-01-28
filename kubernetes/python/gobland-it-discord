@@ -214,7 +214,11 @@ async def task_5min_wounded():
                         if o is not None:
                             min = (100 - int(n.group('bless'))) * int(o.group('pvmin')) / 100
                             max = (100 - int(n.group('bless'))) * int(o.group('pvmax')) / 100
-                            add = ', ~ {} à {} PV restants'.format(round(min),round(max))
+
+                            if round(min) <= 0:
+                                add = ', < {} PV restants'.format(round(max))
+                            else:
+                                add = ', ~ {} à {} PV restants'.format(round(min),round(max))
 
                         if n is not None:
                             answer = '{} [{}] {} est à finir (Blessé à {}%{})'.format(icon,m.group('idmob'),m.group('nommob'),n.group('bless'),add)
