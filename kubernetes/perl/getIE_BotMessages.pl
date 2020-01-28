@@ -50,34 +50,23 @@ foreach my $db (@db_list)
             {
                 foreach my $line (split(/\n/,$response->content))
                 {
-                    chomp ($line);
-                    #IdPM;PMSubject;PMDate;PMStatus;PMExp;PMText
-                    $line =~ s/"//g;
-                    my @line = split /;/, $line;
-                    if ( $line !~ /(^#|Entretien|Espionnage|Parchemin)/)
-                    {
-                        $line[1] =~ s/\'/\'\'/g;
-                        $line[5] =~ s/\'/\'\'/g;
-                    }
-                    elsif ( $line =~ /(Entretien|Espionnage|Parchemin)/)
-                    {
-                      $line[1] =~ s/\'/\'\'/g;
-                      $line[5] =  ''; # To force empty result (too complex to parse)
-                    }
-                    else { next } # We jump ^# lines
+                  chomp ($line);
+                  #IdPM;PMSubject;PMDate;PMStatus;PMExp;PMText
+                  $line =~ s/"//g;
+                  my @line = split /;/, $line;
+                  if ( $line =~ /(^#)/ ) { next } # We jump ^# lines
 
-                    my $now     = strftime "%Y-%m-%d %H:%M:%S", localtime;
-
-                    my $sth  = $dbh->prepare( "INSERT IGNORE INTO MPBot VALUES( '$line[0]', \
-                                                                                '$gob_id' , \
-                                                                                '$line[1]', \
-                                                                                '$line[2]', \
-                                                                                '$line[3]', \
-                                                                                '$line[4]', \
-                                                                                '$line[5]', \
-                                                                                '$now')" );
-                    $sth->execute();
-                    $sth->finish();
+                  my $now     = strftime "%Y-%m-%d %H:%M:%S", localtime;
+                  my $sth  = $dbh->prepare( "INSERT IGNORE INTO MPBot VALUES( '$line[0]', \
+                                                                              '$gob_id' , \
+                                                                              ?, \
+                                                                              '$line[2]', \
+                                                                              '$line[3]', \
+                                                                              '$line[4]', \
+                                                                              ?, \
+                                                                              '$now')" );
+                  $sth->execute($line[1],$line[5]);
+                  $sth->finish();
                 }
             }
         }
