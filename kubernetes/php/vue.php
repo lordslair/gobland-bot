@@ -168,9 +168,9 @@
         $cat  = $row[1];
         $nom  = $row[2];
         $niv  = $row[3];
-        $x    = $row[6];
-        $y    = $row[7];
-        $n    = $row[8];
+        $x    = $row[4];
+        $y    = $row[5];
+        $n    = $row[6];
 
         if     ( $cat == 'T'                                     ) { $T_count++; }
         elseif ( $cat == 'C'                                     ) { $C_count++; }
