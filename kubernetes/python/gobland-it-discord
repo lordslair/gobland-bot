@@ -42,7 +42,7 @@ async def on_message(message):
 
     if message.content.startswith('!!help'):
         print('{} {:<20} {} | [{}] !!help'.format(now_str, '[' + inspect.stack()[0][3] + ']', channel,message.author))
-        h_oukilest = '!!oulikest ID  -> Renvoie la position de <ID>\n'
+        h_oukilest = '!!oukilest ID  -> Renvoie la position de <ID>\n'
         h_cdm      = '!!cdm ID       -> Renvoie la dernière CdM de <ID>\n'
         help       = '```' + h_oukilest + h_cdm + '```'
         await message.channel.send(help)
