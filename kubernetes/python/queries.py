@@ -122,3 +122,15 @@ def drops(then_str,db_name):
     result = query_fetchall(db_name,SQL,then_str)
 
     if result: return result
+
+# Returns soin line(s) from DB, since the date passed as param
+def soins(then_str,db_name):
+    SQL    = "SELECT IdGob,Gobelins.Gobelin,PMSubject,PMDate,PMText,Date \
+              FROM `MPBot` \
+              INNER JOIN Gobelins on MPBot.IdGob = Gobelins.Id \
+              WHERE PMText LIKE '%Vous avez soigné%' \
+              AND   Date > %s \
+              ORDER BY PMDate DESC;"
+    result = query_fetchall(db_name,SQL,then_str)
+
+    if result: return result

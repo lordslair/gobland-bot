@@ -279,9 +279,44 @@ async def task_5min_drops():
 
         await asyncio.sleep(300) # task runs every 300 seconds / 5 minutes
 
+async def task_5min_soins():
+    while client.is_ready:
+        for channel_name, db_name in channels.items():
+            then     = datetime.now() - timedelta(minutes=5)
+            then_str = then.strftime("%Y-%m-%d %H:%M:%S")
+            now_str  = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            channel  = discord.utils.get(client.get_all_channels(), name=channel_name)
+
+            if channel: print('{} {:<20} {}'.format(now_str, '[' + inspect.stack()[0][3] + ']', channel))
+
+            infos = soins(then_str,db_name)
+            if infos and channel:
+                for row in infos:
+                    # IdGob,Gobelin,PMSubject,PMDate,PMText
+                    idgob  = row[0]
+                    nomgob = row[1]
+                    pms    = row[2]
+                    pmt    = row[4]
+                    icon   = ':syringe: '
+
+                    m = re.search(r" - (?P<target>.*)", pms)
+                    if m is not None:
+                        answer = '{} [{}] {} a soigné {}'.format(icon,idgob,nomgob,m.group('target'))
+
+                        n = re.search(r"de (?P<soin>\d*) PV", pmt)
+                        if n is not None:
+                            if ( int(n.group('soin')) > 0 ):
+                                answer = answer + ' de ' + n.group('soin') + ' PV'
+                                print('{} {:<20} {} | {}'.format(now_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
+
+                        await channel.send(answer)
+
+        await asyncio.sleep(300) # task runs every 300 seconds / 5 minutes
+
 client.loop.create_task(task_5min_kills())
 client.loop.create_task(task_5min_baratins())
 client.loop.create_task(task_5min_wounded())
 client.loop.create_task(task_5min_deaths())
 client.loop.create_task(task_5min_drops())
+client.loop.create_task(task_5min_soins())
 client.run(token)
