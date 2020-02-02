@@ -15,6 +15,8 @@
           <fieldset>
           <legend>Gobland-IT Version 4.11</legend>
             <ul>
+              <li>2020-02-02 : Ajout de la page /kikimeter.php (<b>@DeathMetal</b>)</li>
+              <br>
               <li>2020-01-28 : Modification de la gestion de la Vue et du GPS | FP_Lieu (<b>@Internal</b>)</li>
               <li>2020-01-26 : Hotfix de l'affichage du contenu des Cavernes de Gobelins (<b>@Tagadatsointsoin</b>)</li>
               <li>2020-01-25 : Ajout de le prise en charge des kills par Eclair/Potion (<b>@Internal</b>)</li>
