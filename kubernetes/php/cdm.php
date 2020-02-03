@@ -166,18 +166,26 @@
             else { $baratin_png = ''; }
         }
 
+        if ( $mob_pv_min == $mob_pv_max   ) { $pvs = '<b>'.$mob_pv_min.'</b>';  } else { $pvs = $mob_pv_min.'-'.$mob_pv_max;   }
+        if ( $mob_att_min == $mob_att_max ) { $att = '<b>'.$mob_att_min.'</b>'; } else { $att = $mob_att_min.'-'.$mob_att_max; }
+        if ( $mob_esq_min == $mob_esq_max ) { $esq = '<b>'.$mob_esq_min.'</b>'; } else { $esq = $mob_esq_min.'-'.$mob_esq_max; }
+        if ( $mob_deg_min == $mob_deg_max ) { $deg = '<b>'.$mob_deg_min.'</b>'; } else { $deg = $mob_deg_min.'-'.$mob_deg_max; }
+        if ( $mob_reg_min == $mob_reg_max ) { $reg = '<b>'.$mob_reg_min.'</b>'; } else { $reg = $mob_reg_min.'-'.$mob_reg_max; }
+        if ( $mob_arm_min == $mob_arm_max ) { $arm = '<b>'.$mob_arm_min.'</b>'; } else { $arm = $mob_arm_min.'-'.$mob_arm_max; }
+        if ( $mob_per_min == $mob_per_max ) { $per = '<b>'.$mob_per_min.'</b>'; } else { $per = $mob_per_min.'-'.$mob_per_max; }
+
         print('          <tr>'."\n");
         print('            <td>'.$cdm_ids[0].'</td>'."\n");
         print('            <td>'.$mob_name.$baratin_png.'</td>'."\n");
         print('            <td>'.$mob_niv.'</td>'."\n");
         print('            <td style="height: 25px">'.$bless.'</td>'."\n");
-        print('            <td>'.$mob_pv_min.'-'.$mob_pv_max.'</td>'."\n");
-        print('            <td>'.$mob_att_min.'-'.$mob_att_max.'</td>'."\n");
-        print('            <td>'.$mob_esq_min.'-'.$mob_esq_max.'</td>'."\n");
-        print('            <td>'.$mob_deg_min.'-'.$mob_deg_max.'</td>'."\n");
-        print('            <td>'.$mob_reg_min.'-'.$mob_reg_max.'</td>'."\n");
-        print('            <td>'.$mob_arm_min.'-'.$mob_arm_max.'</td>'."\n");
-        print('            <td>'.$mob_per_min.'-'.$mob_per_max.'</td>'."\n");
+        print('            <td>'.$pvs.'</td>'."\n");
+        print('            <td>'.$att.'</td>'."\n");
+        print('            <td>'.$esq.'</td>'."\n");
+        print('            <td>'.$deg.'</td>'."\n");
+        print('            <td>'.$reg.'</td>'."\n");
+        print('            <td>'.$arm.'</td>'."\n");
+        print('            <td>'.$per.'</td>'."\n");
         print('            <td>'.$mob_date.' (<b>'.$update.'</b>)</td>'."\n");
         print('            <td><a href="/cdm.php?kill='.$cdm_ids[0].'" title="Kill monstre">[🚫]</a></td>'."\n");
         print('          </tr>'."\n");
