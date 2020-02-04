@@ -21,13 +21,12 @@ foreach my $db (@db_list)
     logEntry("[setMP2Suivants] DB: $db");
 
     my $now       = strftime "%Y-%m-%d", localtime;
-    my $yesterday = strftime "%Y-%m-%d", localtime(time-60*60*(12+(localtime)[2]));
+    my $this_week = strftime "%Y-%m-%d", localtime(time-7*60*60*(12+(localtime)[2]));
 
-    my $req_mps = $dbh->prepare( "SELECT Id,IdGob,PMDate,PMSubject,PMText \
+    my $req_mps = $dbh->prepare( "SELECT Id,IdGob,PMDate,PMSubject \
                                   FROM MPBot \
-                                  WHERE PMSubject LIKE 'Infos Suivant%' AND ( PMDate LIKE '$now%' OR PMDate LIKE '$yesterday%' ) \
-                                  ORDER BY PMDate \
-                                  LIMIT 250;" ); # To avoid a slow SELECT as MPBot can be huge
+                                  WHERE PMSubject LIKE 'Infos Suivant%' AND PMDate > '$this_week' \
+                                  ORDER BY PMDate" );
        $req_mps->execute();
 
     my %suivants;
