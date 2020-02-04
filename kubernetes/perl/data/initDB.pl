@@ -345,6 +345,15 @@ foreach my $db (@db_list)
                                           Compo2    TEXT,
                                           Compo2Q   TEXT,
                                           Status    TEXT)");
+
+    $dbh->do("CREATE TABLE `Wanted` (
+        `Id` int(11) NOT NULL AUTO_INCREMENT,
+        `Target` text NOT NULL,
+        `NivMin` int(11) DEFAULT 0,
+        `NivMax` int(11) DEFAULT 99,
+        `Date` datetime DEFAULT current_timestamp(),
+        PRIMARY KEY (`Id`)
+    )");
 }
 
 $dbh->disconnect();

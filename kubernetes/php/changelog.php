@@ -15,6 +15,7 @@
           <fieldset>
           <legend>Gobland-IT Version 4.11</legend>
             <ul>
+              <li>2020-02-04 : Ajout de la page /wanted.php (<b>@Globulus</b>)</li>
               <li>2020-02-02 : Ajout de la page /kikimeter.php (<b>@DeathMetal</b>)</li>
               <br>
               <li>2020-01-28 : Modification de la gestion de la Vue et du GPS | FP_Lieu (<b>@Internal</b>)</li>

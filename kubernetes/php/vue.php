@@ -51,6 +51,7 @@
     $F_emoji = '<img src="/images/1f33a.png" width="16" height="16">'; #🌺
     $R_emoji = '<img src="/images/1f331.png" width="16" height="16">'; #🌱
     $B_emoji = '<img src="/images/1f352.png" width="16" height="16">'; #🍒
+    $D_emoji = '<img src="/images/1f3af.png" width="16" height="16">'; #🎯
 
     $arr_suivants      = [];
     $req_suivants_full = "SELECT Id FROM Suivants";
@@ -203,6 +204,10 @@
         {
             $ITEMS[$x][$y]['td'] .= $S_emoji;
         }
+        elseif ( $cat == 'C' && !preg_match('/1f3af/', $ITEMS[$x][$y]['td']) && $count > 0 )
+        {
+            $ITEMS[$x][$y]['td'] .= $D_emoji;
+        }
         elseif ( $cat == 'C' && !preg_match('/1f47f/', $ITEMS[$x][$y]['td']) )
         {
             $ITEMS[$x][$y]['td'] .= $C_emoji;
@@ -238,6 +243,7 @@
         if   ($cat == 'C')                                  { $tt_text_c = 'orange';};
         if ( ($cat == 'C') && ( $id <= 14 ) )               { $tt_text_c = 'yellow';};
         if ( ($cat == 'C') && in_array($id,$arr_suivants) ) { $tt_text_c = 'springgreen';};
+        if ( ($cat == 'C') && ( $count > 0 ) )              { $tt_text_c = 'red';};
 
         if ($cat == 'G' or $cat == 'C')
         {
