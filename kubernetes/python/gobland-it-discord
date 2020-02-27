@@ -148,11 +148,17 @@ async def task_5min_kills():
                     idgob  = row[0]
                     nomgob = row[1]
                     pms    = row[2]
+                    pmt    = row[4]
                     icon   = ':crossed_swords:'
 
                     m = re.search(r" - (?P<mob>.*)", pms)
                     if m is not None:
-                        answer = '{} [{}] {} a tué {}'.format(icon,idgob,nomgob,m.group('mob'))
+                        if m.group('mob').startswith('Bombe'):
+                            n = re.search(r"<A HREF.*>(?P<mob>.*)</A>.*TUE.*<A HREF", pmt)
+                            answer = '{} [{}] {} a tué {}'.format(icon,idgob,nomgob,n.group('mob'))
+                        else:
+                            answer = '{} [{}] {} a tué {}'.format(icon,idgob,nomgob,m.group('mob'))
+
                         print('{} {:<20} {} | {}'.format(now_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
 
                         await channel.send(answer)
