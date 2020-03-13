@@ -1,5 +1,6 @@
 (function(){
   var cleanNumber = function(i) {
+
     var match = i.match(/^(\d*)[dD](\d*)/);    // To parse the numbre of dices, and their type
     var minus = i.match(/[dD]\d?\s?[-](\d?)/); // To parse the bonus
     var plus  = i.match(/[dD]\d?\s?[+](\d?)/); // To parse the malus

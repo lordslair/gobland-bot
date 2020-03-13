@@ -12,7 +12,7 @@
       <div id="content">
         <h1>Kiki-meter</h1>
         <h3>(Alias: Qui a la plus grosse ...)</h3>
-        <table cellspacing="0" id="px">
+        <table cellspacing="0" id="caracs">
         <thread>
           <tr>
             <th style="cursor: pointer;" data-sort-method='default'>Pseudo</th>
@@ -123,7 +123,7 @@
         <script type="text/javascript" src="/js/tristen-tablesort.js"></script>
         <script type="text/javascript" src="/js/tristen-tablesort.dice.js"></script>
         <script type="text/javascript" src="/js/tristen-tablesort.number.js"></script>
-        <script>new Tablesort(document.getElementById('px'));</script>
+        <script>new Tablesort(document.getElementById('caracs'));</script>
       </div> <!-- content -->
     </div> <!-- page -->
   </body>
