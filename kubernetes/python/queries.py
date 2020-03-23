@@ -134,3 +134,17 @@ def soins(then_str,db_name):
     result = query_fetchall(db_name,SQL,then_str)
 
     if result: return result
+
+# Returns patates line(s) from DB, since the date passed as param
+def patates(then_str,db_name):
+    SQL    = "SELECT IdGob,Gobelins.Gobelin,PMSubject,PMDate,PMText,Date,Gobelins.PV,Gobelins2.PVMax \
+              FROM `MPBot` \
+              INNER JOIN Gobelins  on MPBot.IdGob = Gobelins.Id \
+              INNER JOIN Gobelins2 on MPBot.IdGob = Gobelins2.Id \
+              WHERE PMSubject LIKE 'Résultat Défense%' \
+              AND   Date > %s \
+              ORDER BY PMDate DESC;"
+
+    result = query_fetchall(db_name,SQL,then_str)
+
+    if result: return result
