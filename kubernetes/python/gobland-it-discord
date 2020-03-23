@@ -151,17 +151,24 @@ async def task_5min_kills():
                     pmt    = row[4]
                     icon   = ':crossed_swords:'
 
-                    m = re.search(r" - (?P<mob>.*)", pms)
+                    m = re.search(r"Attaque - (?P<mob>.*)", pms)
                     if m is not None:
                         if m.group('mob').startswith('Bombe'):
                             n = re.search(r"<A HREF.*>(?P<mob>.*)</A>.*TUE.*<A HREF", pmt)
                             answer = '{} [{}] {} a tué {}'.format(icon,idgob,nomgob,n.group('mob'))
                         else:
                             answer = '{} [{}] {} a tué {}'.format(icon,idgob,nomgob,m.group('mob'))
-
                         print('{} {:<20} {} | {}'.format(now_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
-
                         await channel.send(answer)
+
+                    m = re.search(r"Attaque Suivant - (?P<mob>.*)", pms)
+                    if m is not None:
+                        icon   = icon + ':horse:'
+                        n = re.search(r"<BR>(la )? (?P<nommob>.*) \((?P<idmob>\d*)\) a attaqué", pmt)
+                        if n is not None:
+                            answer = '{} [{}] {} a tué {}'.format(icon,n.group('idmob'),n.group('nommob'),m.group('mob'))
+                            print('{} {:<20} {} | {}'.format(now_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
+                            await channel.send(answer)
 
         await asyncio.sleep(300) # task runs every 300 seconds / 5 minutes
 
