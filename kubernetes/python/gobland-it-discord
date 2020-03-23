@@ -303,7 +303,7 @@ async def task_5min_soins():
                     nomgob = row[1]
                     pms    = row[2]
                     pmt    = row[4]
-                    icon   = ':syringe: '
+                    icon   = ':syringe:'
 
                     m = re.search(r" - (?P<target>.*)", pms)
                     if m is not None:
