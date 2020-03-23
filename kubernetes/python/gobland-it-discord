@@ -319,10 +319,49 @@ async def task_5min_soins():
 
         await asyncio.sleep(300) # task runs every 300 seconds / 5 minutes
 
+async def task_5min_patates():
+    while client.is_ready:
+        for channel_name, db_name in channels.items():
+            then     = datetime.now() - timedelta(minutes=5)
+            then_str = then.strftime("%Y-%m-%d %H:%M:%S")
+            now_str  = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            channel  = discord.utils.get(client.get_all_channels(), name=channel_name)
+
+            if channel: print('{} {:<20} {}'.format(now_str, '[' + inspect.stack()[0][3] + ']', channel))
+
+            infos = patates(then_str,db_name)
+            if infos and channel:
+                for row in infos:
+                    # IdGob,Gobelin,PMSubject,PMDate,PMText,PV,PVMax
+                    idgob   = row[0]
+                    nomgob  = row[1]
+                    pms     = row[2]
+                    pmt     = row[4]
+                    pv      = row[6]
+                    pvmax   = row[7]
+                    icon    = ':right_facing_fist:'
+                    trigger = int(pv)*0.25 # The bot notifies if the hit is > 25% of actual HP
+
+                    m = re.search(r" - (?P<nommob>.*) \((?P<idmob>\d*)\)", pms)
+                    if m is not None:
+                        answer = '{} [{}] {} a cogné {} ({})'.format(icon,m.group('idmob'),m.group('nommob'),nomgob,idgob)
+
+                        n = re.search(r"(?P<pv>\d*) points de vie", pmt)
+                        if n is not None:
+                            if ( int(n.group('pv')) > 0 ):
+                                answer = answer + ' de ' + n.group('pv') + ' PV'
+                                if ( int(n.group('pv')) >= int(trigger) ):
+                                    answer = answer + ' | ' + str(pv) + '/' + str(pvmax) + ' PV'
+                                    print('{} {:<20} {} | {}'.format(now_str, '[' + inspect.stack()[0][3] + ']', channel, answer))
+                                    await channel.send(answer)
+
+        await asyncio.sleep(300) # task runs every 300 seconds / 5 minutes
+
 client.loop.create_task(task_5min_kills())
 client.loop.create_task(task_5min_baratins())
 client.loop.create_task(task_5min_wounded())
 client.loop.create_task(task_5min_deaths())
 client.loop.create_task(task_5min_drops())
 client.loop.create_task(task_5min_soins())
+client.loop.create_task(task_5min_patates())
 client.run(token)
