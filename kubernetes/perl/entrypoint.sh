@@ -14,4 +14,12 @@ apk update \
 
 echo "`date +"%F %X"` Build done ..."
 
+echo "`date +"%F %X"` Loading Perl scripts ..."
+mkdir  /code && cd /code
+wget   https://github.com/lordslair/gobland-bot/archive/master.zip -O /tmp/gobland-it.zip &&
+unzip  /code/gobland-it.zip -d /code/ &&
+cp -a  /code/gobland-bot-master/kubernetes/perl/* /code/ &&
+rm -rf /code/gobland-bot-master /code/gobland-it.zip
+echo "`date +"%F %X"` Loading done ..."
+
 exec /code/gobland-it
