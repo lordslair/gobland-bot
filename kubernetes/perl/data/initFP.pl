@@ -20,7 +20,7 @@ my $monstres_csv = 'FP_Monstre.csv';
 
 my @db_list   = ('global');
 my $db_driver = 'mysql';
-my $db_host   = 'gobland-it-mariadb';
+my $db_host   = $ENV{'MARIADB_HOST'};
 my $db_port   = '3306';
 my $db_pass   = $ENV{'MARIADB_ROOT_PASSWORD'};
 my $dsn       = "DBI:$db_driver:host=$db_host;port=$db_port";

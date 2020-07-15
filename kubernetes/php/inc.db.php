@@ -1,6 +1,6 @@
 <?php
     $db_file = $_SESSION["gob_clan"];
-    $db_host = 'gobland-it-mariadb';
+    $db_host = $_ENV["MARIADB_HOST"];
     $db_port = '3306';
     $db_user = 'root';
     $db_pass = $_ENV["MARIADB_ROOT_PASSWORD"];

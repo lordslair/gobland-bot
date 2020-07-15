@@ -10,12 +10,12 @@ my $logging   = 1;
 
 my @db_list   = split(',', $ENV{'DBLIST'});
 my $db_driver = 'mysql';
-my $db_host   = 'gobland-it-mariadb';
+my $db_host   = $ENV{'MARIADB_HOST'};
 my $db_port   = '3306';
 my $db_pass   = $ENV{'MARIADB_ROOT_PASSWORD'};
 my $dsn       = "DBI:$db_driver:host=$db_host;port=$db_port";
 my $dbh       = DBI->connect($dsn, 'root', $db_pass, { RaiseError => 1 }) or die $DBI::errstr;
- 
+
 foreach my $db (@db_list)
 {
     $dbh->do("USE `$db`");
