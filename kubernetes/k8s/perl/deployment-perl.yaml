@@ -1,22 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
+  namespace: glit
   name: gobland-it-perl
   labels:
-    tier: backend
+    tier: glit
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: perl
-      tier: backend
+      tier: glit
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
         app: perl
-        tier: backend
+        tier: glit
     spec:
       restartPolicy: Always
 
@@ -32,6 +34,17 @@ spec:
         ]
         env:
         - name: DBLIST
-          value: "XX,YY"
+          valueFrom:
+            secretKeyRef:
+              name: gobland-it-perl-secret
+              key: dblist
         - name: MARIADB_ROOT_PASSWORD
-          value: YYYYY
+          valueFrom:
+            secretKeyRef:
+              name: gobland-it-mariadb-secret
+              key: pass
+        - name: MARIADB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: gobland-it-mariadb-secret
+              key: host
