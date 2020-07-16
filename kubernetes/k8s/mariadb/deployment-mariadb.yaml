@@ -1,9 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
+  namespace: glit
   name: gobland-it-mariadb
   labels:
-    tier: backend
+    tier: glit
 spec:
   selector:
     matchLabels:
@@ -14,20 +16,25 @@ spec:
     metadata:
       labels:
         app: mariadb
-        tier: backend
+        tier: glit
     spec:
       containers:
+
       - image: mariadb/server:10.3
         name: gobland-it-mariadb
         env:
         - name: MARIADB_ROOT_PASSWORD
-          value: YYYYY
+          valueFrom:
+            secretKeyRef:
+              name: gobland-it-mariadb-secret
+              key: pass
         ports:
         - containerPort: 3306
           name: mariadb
         volumeMounts:
         - name: gobland-it-mariadb-db
           mountPath: /var/lib/mysql
+
       volumes:
       - name: gobland-it-mariadb-db
         persistentVolumeClaim:

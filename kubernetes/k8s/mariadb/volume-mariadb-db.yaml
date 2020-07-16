@@ -1,9 +1,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
+
 metadata:
+  namespace: glit
   name: gobland-it-mariadb-db
 spec:
-  storageClassName: cinder-classic
+  storageClassName: csi-cinder-classic
   accessModes:
   - ReadWriteOnce
   resources:
