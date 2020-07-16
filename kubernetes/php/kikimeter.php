@@ -48,16 +48,16 @@
                           INNER JOIN Gobelins2 on Gobelins.Id = Gobelins2.Id";
     $query_gob_kiki    = $db->query($req_gob_kiki);
 
-    $req_max_ct   = "SELECT MAX(CT) FROM `Gobelins`";
-    $req_max_marm = "SELECT MAX(BMArm) FROM `Gobelins2`";
-    $req_max_parm = "SELECT MAX(BPArm) FROM `Gobelins2`";
-    $req_max_pv   = "SELECT MAX(PVMax) FROM `Gobelins2`";
-    $req_max_dla  = "SELECT MIN(DLA) FROM `Gobelins2`";
-    $req_max_att  = "SELECT MAX(`ATT` * 3.5 + `BPATT` + `BMATT`) FROM `Gobelins2`";
-    $req_max_deg  = "SELECT MAX(`DEG` * 3.5 + `BPDEG` + `BMDEG`) FROM `Gobelins2`";
-    $req_max_esq  = "SELECT MAX(`ESQ` * 3.5 + `BPESQ` + `BMESQ`) FROM `Gobelins2`";
-    $req_max_reg  = "SELECT MAX(`REG` * 1.5 + `BPREG` + `BMREG`) FROM `Gobelins2`";
-    $req_max_per  = "SELECT MAX(`PER` + `BPPER` + `BMPER`) FROM `Gobelins2`";
+    $req_max_ct   = "SELECT MAX(CT),MIN(CT) FROM `Gobelins`";
+    $req_max_marm = "SELECT MAX(BMArm),MIN(BMArm) FROM `Gobelins2`";
+    $req_max_parm = "SELECT MAX(BPArm),MIN(BPArm) FROM `Gobelins2`";
+    $req_max_pv   = "SELECT MAX(PVMax),MIN(PVMax) FROM `Gobelins2`";
+    $req_max_dla  = "SELECT MIN(DLA),MAX(DLA) FROM `Gobelins2`";
+    $req_max_att  = "SELECT MAX(`ATT` * 3.5 + `BPATT` + `BMATT`),MIN(`ATT` * 3.5 + `BPATT` + `BMATT`) FROM `Gobelins2`";
+    $req_max_deg  = "SELECT MAX(`DEG` * 3.5 + `BPDEG` + `BMDEG`),MIN(`DEG` * 3.5 + `BPDEG` + `BMDEG`) FROM `Gobelins2`";
+    $req_max_esq  = "SELECT MAX(`ESQ` * 3.5 + `BPESQ` + `BMESQ`),MIN(`ESQ` * 3.5 + `BPESQ` + `BMESQ`) FROM `Gobelins2`";
+    $req_max_reg  = "SELECT MAX(`REG` * 2.0 + `BPREG` + `BMREG`),MIN(`REG` * 2.0 + `BPREG` + `BMREG`) FROM `Gobelins2`";
+    $req_max_per  = "SELECT MAX(`PER` + `BPPER` + `BMPER`),MIN(`PER` + `BPPER` + `BMPER`) FROM `Gobelins2`";
 
     $max_pv       = $db->query($req_max_pv)->fetch_row()[0];
     $max_parm     = $db->query($req_max_parm)->fetch_row()[0];
@@ -69,6 +69,17 @@
     $max_esq      = $db->query($req_max_esq)->fetch_row()[0];
     $max_reg      = $db->query($req_max_reg)->fetch_row()[0];
     $max_per      = $db->query($req_max_per)->fetch_row()[0];
+
+    $min_pv       = $db->query($req_max_pv)->fetch_row()[1];
+    $min_parm     = $db->query($req_max_parm)->fetch_row()[1];
+    $min_marm     = $db->query($req_max_marm)->fetch_row()[1];
+    $min_ct       = $db->query($req_max_ct)->fetch_row()[1];
+    $min_dla      = $db->query($req_max_dla)->fetch_row()[1];
+    $min_att      = $db->query($req_max_att)->fetch_row()[1];
+    $min_deg      = $db->query($req_max_deg)->fetch_row()[1];
+    $min_esq      = $db->query($req_max_esq)->fetch_row()[1];
+    $min_reg      = $db->query($req_max_reg)->fetch_row()[1];
+    $min_per      = $db->query($req_max_per)->fetch_row()[1];
 
     while ($row = $query_gob_kiki->fetch_assoc())
     {
@@ -82,23 +93,72 @@
         $att_nbr = $row['ATT'] * 3.5 + $att_bm;
         $deg_nbr = $row['DEG'] * 3.5 + $deg_bm;
         $esq_nbr = $row['ESQ'] * 3.5 + $esq_bm;
-        $reg_nbr = $row['REG'] * 1.5 + $reg_bm;
+        $reg_nbr = $row['REG'] * 2.0 + $reg_bm;
 
         $att_d   = $row['ATT'].'D6 '.sprintf("%+d",$att_bm);
         $deg_d   = $row['DEG'].'D6 '.sprintf("%+d",$deg_bm);
         $esq_d   = $row['ESQ'].'D6 '.sprintf("%+d",$esq_bm);
         $reg_d   = $row['REG'].'D3 '.sprintf("%+d",$reg_bm);
 
-        if ( $row['CT'] == $max_ct ) { $ct = '<b style="color:SpringGreen;">'.$max_ct.'</b>'; } else { $ct = $row['CT']; }
-        if ( $row['PVMax'] == $max_pv ) { $pv = '<b style="color:SpringGreen;">'.$max_pv.'</b>'; } else { $pv = $row['PVMax']; }
-        if ( $row['BPArm'] == $max_parm ) { $parm = '<b style="color:SpringGreen;">'.$max_parm.'</b>'; } else { $parm = $row['BPArm']; }
-        if ( $row['BMArm'] == $max_marm ) { $marm = '<b style="color:SpringGreen;">'.$max_marm.'</b>'; } else { $marm = $row['BMArm']; }
-        if ( $row['DLA_s'] == $max_dla ) { $dla = '<b style="color:SpringGreen;">'.$duree_b.'</b>'; } else { $dla = $duree_b; }
-        if ( $att_nbr      == $max_att ) { $att = '<b style="color:SpringGreen;">'.$att_d.'</b>'; } else { $att = $att_d; }
-        if ( $deg_nbr      == $max_deg ) { $deg = '<b style="color:SpringGreen;">'.$deg_d.'</b>'; } else { $deg = $deg_d; }
-        if ( $esq_nbr      == $max_esq ) { $esq = '<b style="color:SpringGreen;">'.$esq_d.'</b>'; } else { $esq = $esq_d; }
-        if ( $reg_nbr      == $max_reg ) { $reg = '<b style="color:SpringGreen;">'.$reg_d.'</b>'; } else { $reg = $reg_d; }
-        if ( $portee       == $max_per ) { $per = '<b style="color:SpringGreen;">'.$portee.'</b>'; } else { $per = $portee; }
+        if ( $row['CT'] == $max_ct ) {
+          $ct = '<b style="color:SpringGreen;">'.$row['CT'].'</b>';
+        } elseif ( $row['CT'] == $min_ct ) {
+          $ct = '<b style="color:OrangeRed;">'.$row['CT'].'</b>';
+        } else { $ct = $row['CT']; }
+
+        if ( $row['PVMax'] == $max_pv ) {
+          $pv = '<b style="color:SpringGreen;">'.$row['PVMax'].'</b>';
+        } elseif ( $row['PVMax'] == $min_pv ) {
+          $pv = '<b style="color:OrangeRed;">'.$row['PVMax'].'</b>';
+        } else { $pv = $row['PVMax']; }
+
+        if ( $row['BPArm'] == $max_parm ) {
+          $parm = '<b style="color:SpringGreen;">'.$row['BPArm'].'</b>';
+        } elseif ( $row['BPArm'] == $min_parm ) {
+          $parm = '<b style="color:OrangeRed;">'.$row['BPArm'].'</b>';
+        } else { $parm = $row['BPArm']; }
+
+        if ( $row['BMArm'] == $max_marm ) {
+          $marm = '<b style="color:SpringGreen;">'.$row['BMArm'].'</b>';
+        } elseif ( $row['BMArm'] == $min_marm ) {
+          $marm = '<b style="color:OrangeRed;">'.$row['BMArm'].'</b>';
+        } else { $marm = $row['BMArm']; }
+
+        if ( $row['DLA_s'] == $max_dla ) {
+          $dla = '<b style="color:SpringGreen;">'.$duree_b.'</b>';
+        } elseif ( $row['DLA_s'] == $min_dla ) {
+          $dla = '<b style="color:OrangeRed;">'.$duree_b.'</b>';
+        } else { $dla = $duree_b; }
+
+        if ( $att_nbr      == $max_att ) {
+          $att = '<b style="color:SpringGreen;">'.$att_d.'</b>';
+        } elseif ( $att_nbr      == $min_att ) {
+          $att = '<b style="color:OrangeRed;">'.$att_d.'</b>';
+        } else { $att = $att_d; }
+
+        if ( $deg_nbr      == $max_deg ) {
+          $deg = '<b style="color:SpringGreen;">'.$deg_d.'</b>';
+        } elseif ( $deg_nbr      == $min_deg ) {
+          $deg = '<b style="color:OrangeRed;">'.$deg_d.'</b>';
+        } else { $deg = $deg_d; }
+
+        if ( $esq_nbr      == $max_esq ) {
+          $esq = '<b style="color:SpringGreen;">'.$esq_d.'</b>';
+        } elseif ( $esq_nbr      == $min_esq ) {
+          $esq = '<b style="color:OrangeRed;">'.$esq_d.'</b>';
+        } else { $esq = $esq_d; }
+
+        if ( $reg_nbr      == $max_reg ) {
+          $reg = '<b style="color:SpringGreen;">'.$reg_d.'</b>';
+        } elseif ( $reg_nbr      == $min_reg ) {
+          $reg = '<b style="color:OrangeRed;">'.$reg_d.'</b>';
+        } else { $reg = $reg_d; }
+
+        if ( $portee       == $max_per ) {
+          $per = '<b style="color:SpringGreen;">'.$portee.'</b>';
+        } elseif ( $portee       == $min_per ) {
+          $per = '<b style="color:OrangeRed;">'.$portee.'</b>';
+        } else { $per = $portee; }
 
         print('          <tr>'."\n");
         print('            <td>'.$row['Gobelin'].'</td>'."\n");

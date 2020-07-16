@@ -15,6 +15,7 @@
           <fieldset>
           <legend>Gobland-IT Version 4.12</legend>
             <ul>
+              <li>2020-07-16 : Ajout des petikiki dans /kikimeter.php (<b>@Omnivore</b>)</li>
               <li>2020-07-16 : Passage officiel en v4.12 (<b>Internal</b>)</li>
               <br>
               <li>2020-02-04 : Ajout de la page /wanted.php (<b>@Globulus</b>)</li>
