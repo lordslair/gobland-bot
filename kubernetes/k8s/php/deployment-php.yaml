@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  namespace: glit
+  name: gobland-it-php
+  labels:
+    tier: glit
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: php
+      tier: glit
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: php
+        tier: glit
+    spec:
+      restartPolicy: Always
+
+      initContainers:
+      - name: gobland-it-php-init
+        image: busybox
+        volumeMounts:
+        - name: code
+          mountPath: /code
+        command: ["/bin/sh"]
+        args: [
+         "-c",
+         "(
+              wget   https://github.com/lordslair/gobland-bot/archive/master.zip -O /code/gobland-it.zip &&
+              unzip  /code/gobland-it.zip -d /code/ &&
+              cp -a  /code/gobland-bot-master/kubernetes/php/* /code/ &&
+              rm -rf /code/gobland-bot-master /code/gobland-it.zip
+          ) || echo 1"
+        ]
+
+      containers:
+      - name: gobland-it-php
+        image: php:7.4-fpm-alpine3.12
+        command: ["/code/entrypoint.sh"]
+        env:
+        - name: MARIADB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: gobland-it-mariadb-secret
+              key: pass
+        - name: MARIADB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: gobland-it-mariadb-secret
+              key: host
+        volumeMounts:
+        - mountPath: /code
+          name: code
+
+      volumes:
+      - name: code
+        persistentVolumeClaim:
+          claimName: gobland-it-code-php
