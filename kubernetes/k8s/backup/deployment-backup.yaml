@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  namespace: glit
+  name: gobland-it-backup
+  labels:
+    tier: glit
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backup
+      tier: glit
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: backup
+        tier: glit
+    spec:
+      restartPolicy: Always
+
+      containers:
+      - name: gobland-it-backup
+        image: alpine:3.12
+        command: ["/bin/sh"]
+        args: [
+         "-c",
+         "(
+              wget -O - https://raw.githubusercontent.com/lordslair/gobland-bot/master/kubernetes/backup/entrypoint.sh | sh
+          ) || echo 1"
+        ]
+        env:
+          - name: DBLIST
+            valueFrom:
+              secretKeyRef:
+                name: gobland-it-backup-secret
+                key: dblist
+          - name: DB_HOST
+            valueFrom:
+              secretKeyRef:
+                name: gobland-it-mariadb-secret
+                key: host
+          - name: DB_PORT
+            valueFrom:
+              secretKeyRef:
+                name: gobland-it-mariadb-secret
+                key: port
+          - name: DB_PASS
+            valueFrom:
+              secretKeyRef:
+                name: gobland-it-mariadb-secret
+                key: pass
+          - name: PCA_USER
+            valueFrom:
+              secretKeyRef:
+                name: gobland-it-backup-secret
+                key: pcauser
+          - name: PCA_PASS
+            valueFrom:
+              secretKeyRef:
+                name: gobland-it-backup-secret
+                key: pcapass
