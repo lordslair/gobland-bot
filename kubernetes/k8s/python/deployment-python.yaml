@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  namespace: glit
+  name: gobland-it-python
+  labels:
+    tier: glit
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python
+      tier: glit
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: python
+        tier: glit
+    spec:
+      restartPolicy: Always
+
+      containers:
+      - name: gobland-it-python
+        image: alpine:3.7
+        command: ["/bin/sh"]
+        args: [
+         "-c",
+         "(
+              wget -O - https://raw.githubusercontent.com/lordslair/gobland-bot/master/kubernetes/python/entrypoint.sh | sh
+          ) || echo 1"
+        ]
+        env:
+        - name: MARIADB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: gobland-it-mariadb-secret
+              key: pass
+        - name: MARIADB_USER
+          valueFrom:
+            secretKeyRef:
+              name: gobland-it-mariadb-secret
+              key: user
+        - name: MARIADB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: gobland-it-mariadb-secret
+              key: host
+        - name: TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: gobland-it-python-secret
+              key: token
+        - name: CHANNELS
+          valueFrom:
+            secretKeyRef:
+              name: gobland-it-python-secret
+              key: channels
