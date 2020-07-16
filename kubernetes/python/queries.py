@@ -4,8 +4,8 @@ import sys
 import mysql.connector
 from mysql.connector import Error
 
-db_host   = 'gobland-it-mariadb';
-db_user   = 'root'
+db_host   = os.environ['MARIADB_HOST']
+db_user   = os.environ['MARIADB_USER']
 db_pass   = os.environ['MARIADB_ROOT_PASSWORD']
 
 # Meta Query using one parameter, and a fetchone()
