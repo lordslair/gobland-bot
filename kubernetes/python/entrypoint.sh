@@ -17,4 +17,12 @@ apk update --no-cache \
 
 echo "`date +"%F %X"` Build done ..."
 
+echo "`date +"%F %X"` Loading Python scripts ..."
+mkdir  /code && cd /code
+wget   https://github.com/lordslair/gobland-bot/archive/master.zip -O /code/gobland-it.zip &&
+unzip  /code/gobland-it.zip -d /code/ &&
+cp -a  /code/gobland-bot-master/kubernetes/python/* /code/ &&
+rm -rf /code/gobland-bot-master /code/gobland-it.zip
+echo "`date +"%F %X"` Loading done ..."
+
 exec /code/gobland-it-discord
