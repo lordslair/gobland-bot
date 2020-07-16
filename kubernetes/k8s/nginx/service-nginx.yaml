@@ -1,13 +1,15 @@
 apiVersion: v1
 kind: Service
+
 metadata:
-  name: gobland-it-nginx
+  namespace: glit
+  name: gobland-it-nginx-svc
   labels:
-    tier: backend
+    tier: glit
 spec:
   selector:
     app: nginx
-    tier: backend
+    tier: glit
   ports:
   - protocol: TCP
     port: 80

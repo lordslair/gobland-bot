@@ -1,39 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
+  namespace: glit
   name: gobland-it-nginx
   labels:
-    tier: backend
+    tier: glit
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: nginx
-      tier: backend
+      tier: glit
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
         app: nginx
-        tier: backend
+        tier: glit
     spec:
-      initContainers:
-      - name: gobland-it-php-init
-        image: busybox
-        volumeMounts:
-        - name: code
-          mountPath: /code
-        command: ["/bin/sh"]
-        args: [
-         "-c",
-         "(
-              wget   https://github.com/lordslair/gobland-bot/archive/master.zip -O /code/gobland-it.zip &&
-              unzip  /code/gobland-it.zip -d /code/ &&
-              cp -a  /code/gobland-bot-master/kubernetes/php/* /code/ &&
-              rm -rf /code/gobland-bot-master /code/gobland-it.zip
-          ) || echo 1"
-        ]
+      restartPolicy: Always
+
       containers:
       - name: gobland-it-nginx
         image: nginx:stable-alpine
@@ -44,7 +32,7 @@ spec:
           name: code
         - name: config
           mountPath: /etc/nginx/conf.d
-      restartPolicy: Always
+
       volumes:
       - name: code
         persistentVolumeClaim:
