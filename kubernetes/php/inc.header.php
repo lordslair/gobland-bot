@@ -8,7 +8,7 @@
                 <li><a href="/materiaux.php" title="Matériaux des Gob' du Clan">Matériaux du Clan</a></li>
                 <li><a href="/composants.php" title="Composants des Gob' du Clan">Composants du Clan</a></li>
                 <li><a href="/clan-cavernes.php" title="Cavernes du Clan">Cavernes du Clan</a></li>
-                <li><a href="/gob-cavernes.php" title="Cavernes du Gobelin">Cavernes du Clan</a></li>
+                <li><a href="/gob-cavernes.php" title="Cavernes du Gobelin">Cavernes du Gobelin</a></li>
               </ul>
             </li>
             <li><a href="" title="">Outils</a>
@@ -20,6 +20,7 @@
                 <li><a href="/bestiaire.php" title="Bestiaire">Bestiaire</a></li>
                 <li><a href="/enchantor.php" title="Enchantor">Enchantor</a></li>
                 <li><a href="/kikimeter.php" title="SuperGob">SuperGob</a></li>
+                <li><a href="/wanted.php" title="Wanted">Wanted</a></li>
               </ul>
             </li>
             <li><a href="" title="">Liens</a>
