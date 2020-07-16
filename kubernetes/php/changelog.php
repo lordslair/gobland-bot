@@ -13,8 +13,10 @@
         <h1>Changelog</h1>
         <div id="profilInfos">
           <fieldset>
-          <legend>Gobland-IT Version 4.11</legend>
+          <legend>Gobland-IT Version 4.12</legend>
             <ul>
+              <li>2020-07-16 : Passage officiel en v4.12 (<b>Internal</b>)</li>
+              <br>
               <li>2020-02-04 : Ajout de la page /wanted.php (<b>@Globulus</b>)</li>
               <li>2020-02-02 : Ajout de la page /kikimeter.php (<b>@DeathMetal</b>)</li>
               <br>
