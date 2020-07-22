@@ -143,9 +143,10 @@ foreach my $db (@db_list)
                     my @line = split /;/, $line;
                     if ( ($line !~ /^#/) and ($line !~ /^$/) )
                     {
-                        if ( $line[4] eq '' ) { $line[4] = 0 }
+                        if ( !$line[4] or $line[4] eq '' ) { $line[4] = 0 } # Arbre & Lieux weirds
+                        if ( !$line[5]) { $line[5] = ''}                    # Arbre & Lieux weirds
                         if ( $line[5] =~ /Musculeux|Nodef|Trad|Yonnair|Zozo|Mentalo|Gobelin/ ) { $line[0] = 'G' }
-
+                        if ( !$line[6]) { $line[6] = ''}                    # Arbre & Lieux weirds
                         if ( ($line[0] eq 'L') and ($line[3] ne 'Arbre') )
                         {
                             $sth       = $dbh->prepare( "UPDATE global.FP_Lieu \
