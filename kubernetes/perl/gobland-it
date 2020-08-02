@@ -6,7 +6,7 @@ use File::Pid;
 
 my $daemonName    = "gobland-bot";
 my $dieNow        = 0;                                     # used for "infinte loop" construct - allows daemon mode to gracefully exit
-my $sleepMainLoop = 300;                                   # number of seconds to wait between "do something" execution after queue is clear
+my $sleepMainLoop = $ENV{'FREQUENCY'};                     # number of seconds to wait between "do something" execution after queue is clear
 my $logging       = 1;                                     # 1= logging is on
 my $pidFilePath   = "/var/run/";                           # PID file path
 my $pidFile       = $pidFilePath . $daemonName . ".pid";

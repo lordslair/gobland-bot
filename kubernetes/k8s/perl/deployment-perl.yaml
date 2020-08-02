@@ -48,3 +48,8 @@ spec:
             secretKeyRef:
               name: gobland-it-mariadb-secret
               key: host
+        - name: FREQUENCY
+          valueFrom:
+            secretKeyRef:
+              name: gobland-it-perl-secret
+              key: frequency
