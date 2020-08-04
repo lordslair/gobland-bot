@@ -323,19 +323,6 @@ foreach my $db (@db_list)
                                   PMSubject  TEXT,
                                   PMText     TEXT)");
 
-    $dbh->do("CREATE TABLE IF NOT EXISTS Carte (Id        INT PRIMARY KEY,
-                                  Categorie TEXT,
-                                  Nom       TEXT,
-                                  Niveau    INT,
-                                  Type      TEXT,
-                                  Clan      TEXT,
-                                  X         INT,
-                                  Y         INT,
-                                  N         INT,
-                                  Z         TEXT,
-                                  Time      INT,
-                                  Date      TEXT)");
-
     $dbh->do("CREATE TABLE IF NOT EXISTS Enchantements (Id        INT PRIMARY KEY,
                                           Item      TEXT,
                                           Plante    TEXT,
