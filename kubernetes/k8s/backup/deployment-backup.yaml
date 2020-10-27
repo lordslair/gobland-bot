@@ -24,14 +24,15 @@ spec:
 
       containers:
       - name: gobland-it-backup
-        image: alpine:3.12
-        command: ["/bin/sh"]
-        args: [
-         "-c",
-         "(
-              wget -O - https://raw.githubusercontent.com/lordslair/gobland-bot/master/kubernetes/backup/entrypoint.sh | sh
-          ) || echo 1"
-        ]
+        image: lordslair/easydbbackup:1.1.0
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: 32Mi
+            cpu: 100m
+          requests:
+            memory: 16Mi
+            cpu: 10m
         env:
           - name: DBLIST
             valueFrom:
@@ -53,6 +54,11 @@ spec:
               secretKeyRef:
                 name: gobland-it-mariadb-secret
                 key: pass
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: gobland-it-mariadb-secret
+                key: user
           - name: PCA_USER
             valueFrom:
               secretKeyRef:
@@ -63,3 +69,13 @@ spec:
               secretKeyRef:
                 name: gobland-it-backup-secret
                 key: pcapass
+          - name: PCA_HOST
+            valueFrom:
+              secretKeyRef:
+                name: gobland-it-backup-secret
+                key: pcahost
+          - name: PCA_DIR
+            valueFrom:
+              secretKeyRef:
+                name: gobland-it-backup-secret
+                key: pcadir
