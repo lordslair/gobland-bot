@@ -119,15 +119,12 @@ gobland-it-php-b4f75dbfc-zptbp           1/1     Running   1          128d
 gobland-it-python-5bdf47d9bc-bjhm2       1/1     Running   0          3h50m
 ```
 
-- The 5 volumes : code-perl, code-python, code-php, mariadb-db, backup-db
+- The 2 volumes : code-php, mariadb-db
 
 ```
 $ kubectl get pvc
 NAME                     STATUS   VOLUME                   CAPACITY   [...]
-gobland-it-backup-db     Bound    pvc-[...]-5e59fec92f65   5Gi        [...]
-gobland-it-code-perl     Bound    pvc-[...]-568d3b4f5a48   1Gi        [...]
 gobland-it-code-php      Bound    pvc-[...]-568d3b4f5a48   1Gi        [...]
-gobland-it-code-python   Bound    pvc-[...]-8674a639f663   1Gi        [...]
 gobland-it-mariadb-db    Bound    pvc-[...]-568d3b4f5a48   1Gi        [...]
 ```
 
@@ -144,7 +141,7 @@ gobland-it-php               ClusterIP      10.3.159.93    <none>       9000/TCP
 
 #### Disclaimer/Reminder
 
->The project is not mono-container, it requires at least 5 (perl/php/nginx/mariadb/python) + four volumes.  
+>The project is not mono-container, it requires at least 5 (perl/php/nginx/mariadb/python) + two volumes.  
 >Each GL Clan has to be provisionned in its own DB for privacy reasons.  
 >Meaning that on a long term it could have to deal with great numbers of DB, inside the same MariaDB container.  
 >Only nginx/php needs to be scaled up to handle the load (and maybe MariaDB clusterized at some point).  
