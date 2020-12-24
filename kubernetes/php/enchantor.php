@@ -37,14 +37,14 @@
         if     ( preg_match('/Pour enchanter ton objet (.*) \[(\d*)\] j/', $_POST['search'], $matches) )
         {
             # Item to enchant found
-            $ENCHANT['Item']['Name'] = $matches[1];
-            $ENCHANT['Item']['Id']   = $matches[2];
+            $item = $db->real_escape_string($matches[1]);
+            $id   = $matches[2];
 
             $array = explode(PHP_EOL, $_POST['search']);
             $counter = 0;
-            for ($i = 0; $i <= count($array); $i++) 
+            for ($i = 0; $i <= count($array); $i++)
             {
-                if ( preg_match('/^([A-Z\'\s]*) (\w*) \[(Graine|Racine|Fleur)\]/', $array[$i], $matches_compo) )
+                if ( preg_match('/^([A-Z\'\s]*) (\w*) \[(Mousse|Graine|Racine|Fleur)\]/', $array[$i], $matches_compo) )
                 {
                     $counter += 1;
                     $ENCHANT[$counter] = $matches_compo[1];
@@ -52,7 +52,7 @@
                     $counter += 1;
                     $ENCHANT[$counter] = $matches_compo[2];
                 }
-                elseif ( preg_match('/^(.*) de qualité (\w*)/', $array[$i], $matches_compo) )
+                elseif ( preg_match('/^(.*) de qualité (.*) \[/u', $array[$i], $matches_compo) )
                 {
                     $counter += 1;
                     $ENCHANT[$counter] = $matches_compo[1];
@@ -64,13 +64,13 @@
 
             $req_insert_enchant = "REPLACE
                                    INTO Enchantements
-                                   VALUES ('$matches[2]', '$matches[1]',
+                                   VALUES ('$id',         '$item',
                                            '$ENCHANT[5]', '$ENCHANT[6]',
                                            '$ENCHANT[1]', '$ENCHANT[2]',
                                            '$ENCHANT[3]', '$ENCHANT[4]',
                                            'DOING')";
             $res_insert_enchant = $db->query($req_insert_enchant);
-	    print("<center>Enchantement sur <b>[$matches[2]] $matches[1]</b> ajouté en DB</center>");
+	      print("<center>Enchantement sur <b>[$matches[2]] $matches[1]</b> ajouté en DB</center>");
         }
 
         if     ( preg_match('/[!]debug[!]/', $_POST['search'], $matches) )
