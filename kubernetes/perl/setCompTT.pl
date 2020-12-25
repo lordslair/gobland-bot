@@ -273,7 +273,7 @@ foreach my $db (@db_list)
 
                 my $vue    = $attr[6] + $attr[7];
                 my $mm_total = $attr[12] + $attr[13];
-                my $db = int((sqrt( 19 + 8 * (($mm_total * $coeff)/5 + 3)) - 7)/ 2);
+                my $db = int((sqrt(abs(19 + 8 * (($mm_total * $coeff)/5 + 3))) - 7)/ 2);
                 my $portee_h = $db + 20 + $vue;
                 my $portee_v = int($db /3) + 3;
                 $tt  = Encode::decode_utf8('Portée H').' : '.$portee_h.' Case(s)<br>';
@@ -529,6 +529,7 @@ foreach my $db (@db_list)
                 elsif ( $range < 22 )   { $portee = 4 }
                 elsif ( $range < 30 )   { $portee = 5 }
                 elsif ( $range < 39 )   { $portee = 6 }
+                else  { $portee = 7 }
 
                 $tt  = Encode::decode_utf8('Portée H').' : '.$portee.' Case(s)<br>';
                 $tt .= '<br>';
